@@ -38,17 +38,25 @@ export default {
 
     return !!response;
   },
-
+  //Lấy danh sách các permissions của người đăng nhập hiện tại
   async getProfile() {
     try {
       let response = await axios.get(BASE_API + "profile?include=roles");
-      return response.data.code;
+      if (response.data.data.roles) {
+        let permissions = {};
+        forEach(response.data.data.roles.data, role => {
+          permissions = { ...permissions, ...role.permissions };
+        });
+        return permissions;
+      }
     } catch (error) {
       console.log("Error", error.message);
     }
   },
-  async canAccess(status) {
-    if (status == 200) {
+
+  //Check phân quyền của user đối với từng hành động
+  async canAccess(permissions, per) {
+    if (permissions["admin.super-admin"] || permissions[per]) {
       return true;
     }
     return false;

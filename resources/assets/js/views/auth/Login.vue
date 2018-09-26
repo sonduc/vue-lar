@@ -57,18 +57,18 @@
 </template>
 
 <script type="text/babel">
-import {required, minLength, email} from 'vuelidate/lib/validators'
-import Auth from '../../services/auth'
+import { required, minLength, email } from "vuelidate/lib/validators";
+import Auth from "../../services/auth";
 
 export default {
-  data () {
+  data() {
     return {
       loginData: {
-        email: 'admin@westay.org',
-        password: 'admin',
-        remember: ''
+        email: "admin@westay.org",
+        password: "admin",
+        remember: ""
       }
-    }
+    };
   },
   validations: {
     loginData: {
@@ -83,17 +83,17 @@ export default {
     }
   },
   methods: {
-    validateBeforeSubmit () {
-      this.$v.$touch()
+    validateBeforeSubmit() {
+      this.$v.$touch();
 
       if (!this.$v.$error) {
-        Auth.login(this.loginData).then((res) => {
+        Auth.login(this.loginData).then(res => {
           if (res) {
-            this.$router.push('/admin/dashboard/basic')
+            this.$router.push("/admin/dashboard/basic");
           }
-        })
+        });
       }
     }
   }
-}
+};
 </script>

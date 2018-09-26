@@ -142,20 +142,36 @@
 </template>
 
 <script type="text/babel">
-import LineGraph from '../../../components/chartjs/LineChart.vue'
-import BarGraph from '../../../components/chartjs/BarChart.vue'
-import PieGraph from '../../../components/chartjs/PieChart.vue'
-
+import LineGraph from "../../../components/chartjs/LineChart.vue";
+import BarGraph from "../../../components/chartjs/BarChart.vue";
+import PieGraph from "../../../components/chartjs/PieChart.vue";
+import Auth from "../../../services/auth";
 export default {
+  props: {
+    permissions: {
+      type: String
+    }
+  },
   components: {
     LineGraph,
     BarGraph,
     PieGraph
   },
-  data () {
+  data() {
     return {
-      'header': 'header'
-    }
+      header: "header"
+    };
+  },
+  mounted() {
+    Auth.getProfile().then(res => {
+      if (res) {
+        Auth.canAccess(res, this.permissions).then(response => {
+          if (!response) {
+            this.$router.push("permission-denied-403");
+          }
+        });
+      }
+    });
   }
-}
+};
 </script>

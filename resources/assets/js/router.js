@@ -1,6 +1,6 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import AuthService from './services/auth'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import AuthService from "./services/auth";
 
 /*
  |--------------------------------------------------------------------------
@@ -9,68 +9,71 @@ import AuthService from './services/auth'
  */
 
 // Dashboard
-import Basic from './views/admin/dashboard/Basic.vue'
-import Ecommerce from './views/admin/dashboard/Ecommerce.vue'
-import Finance from './views/admin/dashboard/Finance.vue'
+import Basic from "./views/admin/dashboard/Basic.vue";
+import Ecommerce from "./views/admin/dashboard/Ecommerce.vue";
+import Finance from "./views/admin/dashboard/Finance.vue";
 
 // Layouts
-import LayoutBasic from './views/layouts/LayoutBasic.vue'
-import LayoutHorizontal from './views/layouts/LayoutHorizontal.vue'
-import LayoutIconSidebar from './views/layouts/LayoutIconSidebar.vue'
-import LayoutLogin from './views/layouts/LayoutLogin.vue'
-import LayoutLogin2 from './views/layouts/LayoutLogin2.vue'
-import LayoutLogin3 from './views/layouts/LayoutLogin3.vue'
-import LayoutFront from './views/layouts/LayoutFront.vue'
+import LayoutBasic from "./views/layouts/LayoutBasic.vue";
+import LayoutHorizontal from "./views/layouts/LayoutHorizontal.vue";
+import LayoutIconSidebar from "./views/layouts/LayoutIconSidebar.vue";
+import LayoutLogin from "./views/layouts/LayoutLogin.vue";
+import LayoutLogin2 from "./views/layouts/LayoutLogin2.vue";
+import LayoutLogin3 from "./views/layouts/LayoutLogin3.vue";
+import LayoutFront from "./views/layouts/LayoutFront.vue";
 
 // Basic UI
-import Buttons from './views/admin/basic-ui/Buttons.vue'
-import Cards from './views/admin/basic-ui/Cards.vue'
-import Typography from './views/admin/basic-ui/Typography.vue'
-import Tables from './views/admin/basic-ui/Tables.vue'
-import ProgressBar from './views/admin/basic-ui/ProgressBars.vue'
+import Buttons from "./views/admin/basic-ui/Buttons.vue";
+import Cards from "./views/admin/basic-ui/Cards.vue";
+import Typography from "./views/admin/basic-ui/Typography.vue";
+import Tables from "./views/admin/basic-ui/Tables.vue";
+import ProgressBar from "./views/admin/basic-ui/ProgressBars.vue";
 
 // Components
-import Notifications from './views/admin/components/Notifications.vue'
-import SweetModals from './views/admin/components/SweetModals.vue'
-import VueCarousel from './views/admin/components/VueCarousel.vue'
-import VueDropzone from './views/admin/components/VueDropzone.vue'
-import VueTable from './views/admin/components/VueTables.vue'
-import VueTabs from './views/admin/components/VueTabs.vue'
-import VueTooltips from './views/admin/components/VueTooltips.vue'
-import VueCollapse from './views/admin/components/VueCollapse.vue'
+import Notifications from "./views/admin/components/Notifications.vue";
+import SweetModals from "./views/admin/components/SweetModals.vue";
+import VueCarousel from "./views/admin/components/VueCarousel.vue";
+import VueDropzone from "./views/admin/components/VueDropzone.vue";
+import VueTable from "./views/admin/components/VueTables.vue";
+import VueTabs from "./views/admin/components/VueTabs.vue";
+import VueTooltips from "./views/admin/components/VueTooltips.vue";
+import VueCollapse from "./views/admin/components/VueCollapse.vue";
 
 // Charts
-import Chartjs from './views/admin/charts/Chartjs.vue'
-import Gauges from './views/admin/charts/Gauge.vue'
+import Chartjs from "./views/admin/charts/Chartjs.vue";
+import Gauges from "./views/admin/charts/Gauge.vue";
 
 // Icons
-import Fontawesome from './views/admin/icons/Fontawesome.vue'
-import Fpsline from './views/admin/icons/FpsLine.vue'
-import IcoMoon from './views/admin/icons/IcoMoon.vue'
-import Line from './views/admin/icons/Line.vue'
-import Meteo from './views/admin/icons/Meteo.vue'
+import Fontawesome from "./views/admin/icons/Fontawesome.vue";
+import Fpsline from "./views/admin/icons/FpsLine.vue";
+import IcoMoon from "./views/admin/icons/IcoMoon.vue";
+import Line from "./views/admin/icons/Line.vue";
+import Meteo from "./views/admin/icons/Meteo.vue";
 
 // Forms
-import General from './views/admin/forms/General.vue'
-import Advanced from './views/admin/forms/Advanced.vue'
-import Layouts from './views/admin/forms/FormLayouts.vue'
-import VeeValidate from './views/admin/forms/VeeValidate.vue'
-import Vuelidate from './views/admin/forms/Vuelidate.vue'
+import General from "./views/admin/forms/General.vue";
+import Advanced from "./views/admin/forms/Advanced.vue";
+import Layouts from "./views/admin/forms/FormLayouts.vue";
+import VeeValidate from "./views/admin/forms/VeeValidate.vue";
+import Vuelidate from "./views/admin/forms/Vuelidate.vue";
+import FormWizard from "./views/admin/forms/FormWizard.vue";
 
 // Gallery
-import ImageGallery from './views/admin/gallery/ImageGallery.vue'
-import VideoGallery from './views/admin/gallery/VideoGallery.vue'
+import ImageGallery from "./views/admin/gallery/ImageGallery.vue";
+import VideoGallery from "./views/admin/gallery/VideoGallery.vue";
 
 // Apps
-import TodosApp from './views/admin/apps/todos/TodosApp.vue'
-import MailboxApp from './views/admin/apps/mailbox/MailboxApp.vue'
+import TodosApp from "./views/admin/apps/todos/TodosApp.vue";
+import MailboxApp from "./views/admin/apps/mailbox/MailboxApp.vue";
 
 // Users
-import Users from './views/admin/users/Users.vue'
-import Profile from './views/admin/users/Profile.vue'
-
+import Admin from "./views/admin/users/Admin.vue";
+import Merchant from "./views/admin/users/Merchant.vue";
+import Customer from "./views/admin/users/Customer.vue";
+import Profile from "./views/admin/users/Profile.vue";
+import EditUser from "./views/admin/users/EditUser.vue";
 // Settings
-import Settings from './views/admin/Settings.vue'
+import Settings from "./views/admin/Settings.vue";
 
 /*
  |--------------------------------------------------------------------------
@@ -79,10 +82,11 @@ import Settings from './views/admin/Settings.vue'
  */
 
 // Auth
-import Login from './views/auth/Login.vue'
-import Register from './views/auth/Register.vue'
+import Login from "./views/auth/Login.vue";
+import Register from "./views/auth/Register.vue";
 
-import NotFoundPage from './views/errors/404.vue'
+import NotFoundPage from "./views/errors/404.vue";
+import PermissionForbidden from "./views/errors/403.vue";
 
 /*
  |--------------------------------------------------------------------------
@@ -90,12 +94,11 @@ import NotFoundPage from './views/errors/404.vue'
  |--------------------------------------------------------------------------|
  */
 
-import Home from './views/front/Home.vue'
+import Home from "./views/front/Home.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
-
   /*
    |--------------------------------------------------------------------------
    | Layout Routes for DEMO
@@ -103,31 +106,31 @@ const routes = [
    */
 
   {
-    path: '/admin/layouts',
+    path: "/admin/layouts",
     component: LayoutBasic,
     children: [
       {
-        path: 'sidebar',
+        path: "sidebar",
         component: Basic
       }
     ]
   },
   {
-    path: '/admin/layouts',
+    path: "/admin/layouts",
     component: LayoutHorizontal,
     children: [
       {
-        path: 'horizontal',
+        path: "horizontal",
         component: Basic
       }
     ]
   },
   {
-    path: '/admin/layouts',
+    path: "/admin/layouts",
     component: LayoutIconSidebar,
     children: [
       {
-        path: 'icons-sidebar',
+        path: "icons-sidebar",
         component: Basic
       }
     ]
@@ -140,13 +143,13 @@ const routes = [
    */
 
   {
-    path: '/',
+    path: "/",
     component: LayoutFront,
     children: [
       {
-        path: '/',
+        path: "/",
         component: Home,
-        name: 'home'
+        name: "home"
       }
     ]
   },
@@ -157,169 +160,191 @@ const routes = [
    |--------------------------------------------------------------------------|
    */
   {
-    path: '/admin',
+    path: "/admin",
     component: LayoutBasic, // Change the desired Layout here
     meta: { requiresAuth: true },
     children: [
       // Dashboard
       {
-        path: 'dashboard/basic',
+        path: "dashboard/basic",
         component: Basic,
-        name: 'dashboard'
+        name: "dashboard"
       },
       {
-        path: 'dashboard/ecommerce',
+        path: "dashboard/ecommerce",
         component: Ecommerce
       },
       {
-        path: 'dashboard/finance',
+        path: "dashboard/finance",
         component: Finance
       },
 
       // Basic UI
       {
-        path: 'basic-ui/buttons',
+        path: "basic-ui/buttons",
         component: Buttons
       },
       {
-        path: 'basic-ui/cards',
+        path: "basic-ui/cards",
         component: Cards
       },
       {
-        path: 'basic-ui/typography',
+        path: "basic-ui/typography",
         component: Typography
       },
       {
-        path: 'basic-ui/tables',
+        path: "basic-ui/tables",
         component: Tables
       },
 
       {
-        path: 'basic-ui/progress-bars',
+        path: "basic-ui/progress-bars",
         component: ProgressBar
       },
 
       // Components
       {
-        path: 'components/vue-tabs',
+        path: "components/vue-tabs",
         component: VueTabs
       },
       {
-        path: 'components/vue-collapse',
+        path: "components/vue-collapse",
         component: VueCollapse
       },
       {
-        path: 'components/notifications',
+        path: "components/notifications",
         component: Notifications
       },
       {
-        path: 'components/vue-dropzone',
+        path: "components/vue-dropzone",
         component: VueDropzone
       },
       {
-        path: 'components/sweet-modals',
+        path: "components/sweet-modals",
         component: SweetModals
       },
       {
-        path: 'components/vue-tables',
+        path: "components/vue-tables",
         component: VueTable
       },
       {
-        path: 'components/vue-carousel',
+        path: "components/vue-carousel",
         component: VueCarousel
       },
       {
-        path: 'components/tooltips',
+        path: "components/tooltips",
         component: VueTooltips
       },
 
       // Charts
       {
-        path: 'charts/chartjs',
+        path: "charts/chartjs",
         component: Chartjs
       },
       {
-        path: 'charts/gauges',
+        path: "charts/gauges",
         component: Gauges
       },
 
       //  Icons
       {
-        path: 'icons/fontawesome',
+        path: "icons/fontawesome",
         component: Fontawesome
       },
       {
-        path: 'icons/fpsline',
+        path: "icons/fpsline",
         component: Fpsline
       },
       {
-        path: 'icons/icomoon',
+        path: "icons/icomoon",
         component: IcoMoon
       },
       {
-        path: 'icons/line',
+        path: "icons/line",
         component: Line
       },
       {
-        path: 'icons/meteo',
+        path: "icons/meteo",
         component: Meteo
       },
 
       // Forms
       {
-        path: 'forms/general',
+        path: "forms/general",
         component: General
       },
       {
-        path: 'forms/advanced',
+        path: "forms/advanced",
         component: Advanced
       },
       {
-        path: 'forms/layouts',
+        path: "forms/layouts",
         component: Layouts
       },
       {
-        path: 'forms/vuelidate',
+        path: "forms/vuelidate",
         component: Vuelidate
       },
       {
-        path: 'forms/vee-validate',
+        path: "forms/vee-validate",
         component: VeeValidate
+      },
+      {
+        path: "forms/wizard",
+        name: "form.wizard",
+        component: FormWizard
       },
 
       // Gallery
       {
-        path: 'gallery/image',
+        path: "gallery/image",
         component: ImageGallery
       },
       {
-        path: 'gallery/video',
+        path: "gallery/video",
         component: VideoGallery
       },
 
       // Users
       {
-        path: 'users/profile',
+        path: "users/profile/:userId",
+        name: "user.profile",
         component: Profile
       },
       {
-        path: 'users/all',
-        component: Users
+        path: "users/edit/:userId",
+        name: "user.edit",
+        component: EditUser
+      },
+      {
+        path: "users/customers",
+        name: "user.customer",
+        component: Customer
+      },
+      {
+        path: "users/merchants",
+        name: "user.merchant",
+        component: Merchant
+      },
+      {
+        path: "users/admins",
+        name: "user.admin",
+        component: Admin
       },
 
       // Apps
       {
-        path: 'apps/mailbox',
+        path: "apps/mailbox",
         component: MailboxApp
       },
       {
-        path: 'apps/todos',
+        path: "apps/todos",
         component: TodosApp
       },
 
       // Settings
       {
-        path: 'settings',
+        path: "settings",
         component: Settings
       }
     ]
@@ -332,89 +357,90 @@ const routes = [
    */
 
   {
-    path: '/',
+    path: "/",
     component: LayoutLogin,
     children: [
       {
-        path: 'login',
+        path: "login",
         component: Login,
-        name: 'login'
+        name: "login"
       },
       {
-        path: 'register',
+        path: "register",
         component: Register,
-        name: 'register'
+        name: "register"
       }
     ]
   },
 
   // Demo Pages
   {
-    path: '/admin/pages',
+    path: "/admin/pages",
     component: LayoutLogin,
     children: [
       {
-        path: 'login',
+        path: "login",
         component: Login
       },
       {
-        path: 'register',
+        path: "register",
         component: Register
       }
     ]
   },
   {
-    path: '/admin/pages',
+    path: "/admin/pages",
     component: LayoutLogin2,
     children: [
       {
-        path: 'login-2',
+        path: "login-2",
         component: Login
       },
       {
-        path: 'register-2',
+        path: "register-2",
         component: Register
       }
     ]
   },
   {
-    path: '/admin/pages',
+    path: "/admin/pages",
     component: LayoutLogin3,
     children: [
       {
-        path: 'login-3',
+        path: "login-3",
         component: Login
       },
       {
-        path: 'register-3',
+        path: "register-3",
         component: Register
       }
     ]
   },
 
   //  DEFAULT ROUTE
-  { path: '*', component: NotFoundPage }
-]
+  { path: "*", component: NotFoundPage },
+  { path: "/permission-denied-403", component: PermissionForbidden }
+];
 
 const router = new VueRouter({
   routes,
-  mode: 'history',
-  linkActiveClass: 'active'
-})
+  mode: "history",
+  linkActiveClass: "active"
+});
 
 router.beforeEach((to, from, next) => {
   //  If the next route is requires user to be Logged IN
   if (to.matched.some(m => m.meta.requiresAuth)) {
     return AuthService.check().then(authenticated => {
       if (!authenticated) {
-        return next({ path: '/login' })
+        return next({ path: "/login" });
       }
 
-      return next()
-    })
+      return next();
+    });
   }
 
-  return next()
-})
+  return next();
+});
 
-export default router
+export default router;

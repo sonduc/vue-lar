@@ -167,6 +167,11 @@
             <router-link to="/admin/forms/layouts">
               Form Layouts
             </router-link>
+            
+
+            <router-link to="/admin/forms/wizard">
+              Form Wizard
+            </router-link>
 
             <router-link to="/admin/forms/vuelidate">
               Vuelidate
@@ -230,12 +235,14 @@
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link to="/admin/users/profile">
-              Profile
+            <router-link to="/admin/users/customers">
+              Customer
             </router-link>
-
-            <router-link to="/admin/users/all">
-              All Users
+            <router-link to="/admin/users/merchants">
+              Merchant
+            </router-link>
+            <router-link to="/admin/users/admins">
+              Admin
             </router-link>
           </v-collapse-item>
 

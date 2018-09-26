@@ -3,6 +3,7 @@ import VeeValidate from 'vee-validate'
 import Vuelidate from 'vuelidate'
 import VuePrism from 'vue-prism'
 import VTooltip from 'v-tooltip'
+import VueSweetalert2 from 'vue-sweetalert2'
 
 import Ls from './services/ls'
 import VDropdown from './components/dropdown/VDropdown'
@@ -90,6 +91,7 @@ Vue.component('v-dropdown-divider', VDropdownDivider)
 Vue.component('v-collapse', VCollapse)
 Vue.component('v-collapse-item', VCollapseItem)
 
+Vue.use(VueSweetalert2)
 Vue.use(VueRouter)
 Vue.use(VuePrism)
 Vue.use(VTooltip)

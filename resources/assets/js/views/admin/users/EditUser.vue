@@ -1,0 +1,157 @@
+<template>
+  <div class="main-content">
+    <div class="page-header">
+      <h3 class="page-title">Form Layouts</h3>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Forms</a></li>
+        <li class="breadcrumb-item active">Form Layouts</li>
+      </ol>
+    </div>
+    <div class="row" v-if="user">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header">
+            <h6>Basic Form</h6>
+          </div>
+          <div class="card-body">
+            <form @submit.prevent="editUser">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="inputFirstName">First Name</label>
+                  <input
+                    id="inputFirstName"
+                    type="text"
+                    v-model="user.name"
+                    class="form-control"
+                    placeholder="First Name"
+                  >
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="exampleInputEmail">Email address</label>
+                    <input
+                    id="exampleInputEmail"
+                    type="email"
+                    v-model="user.email"
+                    class="form-control"
+                    aria-describedby="emailHelp"
+                    placeholder="Enter email"
+                    >
+                    <small id="emailHelp" class="form-text text-muted">
+                    We'll never share your email with
+                    anyone else.
+                    </small>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputUserName">Phone Number</label>
+                    <input
+                    id="inputUserName"
+                    type="number"
+                    v-model="user.phone"
+                    class="form-control"
+                    placeholder="Phone number"
+                    >
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputUserName">Address</label>
+                    <input
+                    id="inputUserName"
+                    type="text"
+                    v-model="user.address"
+                    class="form-control"
+                    placeholder="Address"
+                    >
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Gender</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      id="checkMale"
+                      class="form-check-input"
+                      type="radio"
+                      v-model="user.gender"
+                      name="gender"
+                      value="1"
+                    >
+                    <label class="form-check-label" for="checkMale">Male</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      id="checkFemale"
+                      class="form-check-input"
+                      type="radio"
+                      v-model="user.gender"
+                      name="gender"
+                      value="2"
+                    >
+                    <label class="form-check-label" for="checkFemale">Female</label>
+                  </div>
+                </div>
+              </div>
+              
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</template>
+<script>
+import Auth from "../../../services/auth";
+export default {
+  data() {
+    return {
+      user: null,
+      permissions: "user.edit"
+    };
+  },
+  methods: {
+    async getUsers() {
+      try {
+        const response = await axios.get(
+          `http://ws-api.lc/api/users/${this.$route.params.userId}`
+        );
+        return (this.user = response.data.data);
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
+    editUser() {
+      console.log(this.user);
+      //   this.$swal("OK", "OK", "success");
+      axios
+        .put(
+          `http://ws-api.lc/api/users/${this.$route.params.userId}`,
+          this.user
+        )
+        .then(result => {
+          if (result) {
+            this.$swal("success", "success", "success");
+          }
+        });
+    }
+  },
+  mounted() {
+    Auth.getProfile().then(res => {
+      if (res) {
+        Auth.canAccess(res, this.permissions).then(response => {
+          if (!response) {
+            this.$router.push("permission-denied-403"); // push về page 403
+          } else {
+            this.getUsers(); //fetch data sau khi check permissions của người đang đăng nhập
+          }
+        });
+      }
+    });
+  }
+};
+</script>
+

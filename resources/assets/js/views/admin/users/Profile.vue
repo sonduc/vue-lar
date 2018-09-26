@@ -5,10 +5,10 @@
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
         <li class="breadcrumb-item"><a href="#">Users</a></li>
-        <li class="breadcrumb-item active">Jane Doe</li>
+        <li class="breadcrumb-item active">Profile</li>
       </ol>
     </div>
-    <div class="row">
+    <div class="row" v-if="user">
       <div class="col-sm-12">
         <div class="card">
           <div class="card-body">
@@ -25,10 +25,10 @@
                     </div>
                   </div>
                   <div class="col-sm-9">
-                    <h4>Jane Doe</h4>
-                    <p class="detail-row"><i class="icon-fa icon-fa-map-marker"/> New York , United States</p>
-                    <p class="detail-row"><i class="icon-fa icon-fa-birthday-cake"/> September 7, 1991</p>
-                    <p class="detail-row"><i class="icon-fa icon-fa-wrench"/> UI Designer / Pro Model</p>
+                    <h4>{{user.name}}</h4>
+                    <p class="detail-row"><i class="icon-fa icon-fa-map-marker"/> {{user.address}}</p>
+                    <p class="detail-row"><i class="icon-fa icon-fa-birthday-cake"/> {{user.birthday}}</p>
+                    <p class="detail-row"><i class="icon-fa icon-fa-wrench"/> {{user.gender}}</p>
                   </div>
                 </div>
                 <div class="row mt-4">
@@ -218,12 +218,45 @@
   </div>
 </template>
 <script>
-import { Tabs, Tab } from 'vue-tabs-component'
-
+import { Tabs, Tab } from "vue-tabs-component";
+import Auth from "../../../services/auth";
 export default {
   components: {
-    'tabs': Tabs,
-    'tab': Tab
+    tabs: Tabs,
+    tab: Tab
+  },
+  data() {
+    return {
+      user: null,
+      permissions: "user.view"
+    };
+  },
+  methods: {
+    async getUsers() {
+      try {
+        const response = await axios.get(
+          `http://ws-api.lc/api/users/${this.$route.params.userId}`
+        );
+        return (this.user = response.data.data);
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    }
+  },
+  mounted() {
+    Auth.getProfile().then(res => {
+      if (res) {
+        Auth.canAccess(res, this.permissions).then(response => {
+          if (!response) {
+            this.$router.push("permission-denied-403"); // push về page 403
+          } else {
+            this.getUsers(); //fetch data sau khi check permissions của người đang đăng nhập
+          }
+        });
+      }
+    });
   }
-}
+};
 </script>
