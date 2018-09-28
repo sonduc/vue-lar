@@ -1,5 +1,7 @@
 import VueRouter from 'vue-router'
 import VeeValidate from 'vee-validate'
+import vi from 'vee-validate/dist/locale/vi'
+import en from 'vee-validate/dist/locale/en'
 import Vuelidate from 'vuelidate'
 import VuePrism from 'vue-prism'
 import VTooltip from 'v-tooltip'
@@ -95,5 +97,8 @@ Vue.use(VueSweetalert2)
 Vue.use(VueRouter)
 Vue.use(VuePrism)
 Vue.use(VTooltip)
-Vue.use(VeeValidate)
-Vue.use(Vuelidate)
+Vue.use(VeeValidate, {
+  locale: 'vi',
+  dictionary: { vi, en }
+})
+Vue.use(Vuelidate);

@@ -246,6 +246,14 @@
             </router-link>
           </v-collapse-item>
 
+          <v-collapse-item active-url="/admin/roles">
+            <router-link
+              slot="item-title"
+              to="/admin/roles">
+              <i class="icon-fa icon-fa-key"/>Roles
+            </router-link>
+          </v-collapse-item>
+          
           <v-collapse-item active-url="/admin/apps">
             <a slot="item-title" href="#">
               <i class="icon-fa icon-fa-adn"/>Apps

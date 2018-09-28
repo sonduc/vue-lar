@@ -60,25 +60,19 @@
             <div class="form-group row">
               <label for="firstName" class="col-sm-3 col-form-label">Name</label>
               <div class="col-sm-9">
-                <input id="firstName" autofocus v-validate="'required'" type="text" class="form-control" placeholder="Full name">
+                <input id="firstName" autofocus v-model="user.name" v-validate="'required'" type="text" class="form-control" placeholder="Full name">
               </div>
             </div>
             <div class="form-group row">
               <label for="email" class="col-sm-3 col-form-label">Email</label>
               <div class="col-sm-9">
-                <input id="email" v-validate="'required'" type="email" class="form-control" placeholder="Email">
+                <input id="email" v-model="user.email" v-validate="'required'" type="email" class="form-control" placeholder="Email">
               </div>
             </div>
             <div class="form-group row">
               <label for="lastName" class="col-sm-3 col-form-label">Password</label>
               <div class="col-sm-9">
-                <input id="lastName" v-validate="'required'" type="text" class="form-control" placeholder="Last Name">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="password" class="col-sm-3 col-form-label">Password Confirm</label>
-              <div class="col-sm-9">
-                <input id="password" v-validate="'required'" type="password" class="form-control" placeholder="Password">
+                <input id="lastName" v-model="user.password" v-validate="'required'" type="text" class="form-control" placeholder="Last Name">
               </div>
             </div>
             <button type="submit" class="btn btn-success">Save</button>
@@ -107,8 +101,7 @@ export default {
       user: {
         name: null,
         email: null,
-        password: null,
-        confirmation: null
+        password: null
       }
     };
   },

@@ -56,29 +56,26 @@
       <!-- Modal New User -->
       <sweet-modal ref="dark_html_modal" modal-theme="light" title="Create User" overlay-theme="dark">
         <div class="col-sm-12">
-          <form @submit.prevent="createUser">
-            <div class="form-group row">
-              <label for="firstName" class="col-sm-3 col-form-label">Name</label>
-              <div class="col-sm-9">
-                <input id="firstName" type="text" class="form-control" placeholder="Full name">
+          <form @submit.prevent="createUser" id="needs-validation" novalidate="novalidate" class="was-validated">
+            <div class="form-group">
+              <label for="firstName">Name</label>
+              <input name="Name" id="firstName" type="text" required="required" placeholder="First name" v-validate="'required'" class="form-control is-valid">
+              <div v-if="errors.has('Name')" class="invalid-feedback">
+                {{errors.first('Name')}}
               </div>
             </div>
-            <div class="form-group row">
-              <label for="email" class="col-sm-3 col-form-label">Email</label>
-              <div class="col-sm-9">
-                <input id="email" type="email" class="form-control" placeholder="Email">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input name="Email" id="email" type="text" required="required" v-validate="'required|email'" class="form-control is-valid">
+              <div v-if="errors.has('Email')" class="invalid-feedback">
+                {{errors.first('Email')}}
               </div>
             </div>
-            <div class="form-group row">
-              <label for="lastName" class="col-sm-3 col-form-label">Password</label>
-              <div class="col-sm-9">
-                <input id="lastName" type="text" class="form-control" placeholder="Last Name">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="password" class="col-sm-3 col-form-label">Password Confirm</label>
-              <div class="col-sm-9">
-                <input id="password" type="password" class="form-control" placeholder="Password">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input name="Password" id="password" type="password" required="required" v-validate="'required|min:6'" class="form-control is-valid">
+              <div v-if="errors.has('Password')" class="invalid-feedback">
+                {{errors.first('Password')}}
               </div>
             </div>
             <button type="submit" class="btn btn-success">Save</button>
@@ -107,8 +104,7 @@ export default {
       user: {
         name: null,
         email: null,
-        password: null,
-        confirmation: null
+        password: null
       }
     };
   },
@@ -122,7 +118,6 @@ export default {
           `http://ws-api.lc/api/users?type=0&page=${page}`
         );
         let paginate = response.data.meta.pagination;
-        console.log(paginate);
         return {
           data: response.data.data,
           pagination: {
@@ -166,16 +161,23 @@ export default {
     createUser() {
       this.$validator.validateAll().then(result => {
         if (result) {
-          axios.post("http://ws-api.lc/api/users", this.user).then(response => {
-            if (response) {
-              this.$swal("Success", "Success", "success");
-            } else {
-              this.$swal("Failed", "Some errors", "erorr");
-            }
-          });
+          axios
+            .post("http://ws-api.lc/api/users", {
+              name: this.user.name,
+              email: this.user.email,
+              password: this.user.password,
+              password_confirmation: this.user.password
+            })
+            .then(response => {
+              if (response) {
+                this.$swal("Success", "Success", "success");
+              } else {
+                this.$swal("Failed", "Some errors", "error");
+              }
+            });
           return;
         }
-        this.$swal("Failed", "Some errors", "erorr");
+        this.$swal("Failed", "Some errors", "error");
       });
     }
   },
@@ -193,3 +195,12 @@ export default {
   }
 };
 </script>
+<style scoped>
+.swal2-container {
+  z-index: 10000;
+}
+
+.sweet-modal-overlay {
+  z-index: 1000;
+}
+</style>

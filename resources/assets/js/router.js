@@ -74,6 +74,8 @@ import Profile from "./views/admin/users/Profile.vue";
 import EditUser from "./views/admin/users/EditUser.vue";
 // Settings
 import Settings from "./views/admin/Settings.vue";
+// Roles
+import Roles from "./views/admin/roles/Roles.vue";
 
 /*
  |--------------------------------------------------------------------------
@@ -330,6 +332,13 @@ const routes = [
         path: "users/admins",
         name: "user.admin",
         component: Admin
+      },
+
+      //Roles
+      {
+        path: "roles",
+        name: "role.list",
+        component: Roles
       },
 
       // Apps
