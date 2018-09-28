@@ -86,25 +86,7 @@
             </tr>
           </tbody>
         </table>
-        <div class="mailbox-content-footer">
-          <ul class="pagination">
-            <li class="page-item">
-              <button :class="currentPage == 1 ? 'page-link disabled' : 'page-link'" :disabled="currentPage == 1" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-              </button>
-            </li>
-            <li v-for="i in 10" :class=" i == currentPage ? 'page-item active' : 'page-item'">
-              <button @click="reloadData(i)" :disabled="i == currentPage" class="page-link">{{i}}</button>
-            </li>
-            <li class="page-item">
-              <button :class="currentPage == totalPages ? 'page-link disabled' : 'page-link'" :disabled="currentPage == totalPages" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-              </button>
-            </li>
-          </ul>
-        </div>
+        <pagination @clicked="reloadData" :total-pages="totalPages" :current-page="currentPage" />
       </div>
       <transition name="fade">
         <mailbox-modal v-show="isModalVisible" :is-visible="isModalVisible" @close="closeMailModal" />
@@ -117,9 +99,11 @@
 <script>
 import MailboxModal from "../apps/mailbox/MailboxModal";
 import Auth from "../../../services/auth";
+import Pagination from "../../../components/paginate/ServerPagination";
 export default {
   components: {
-    MailboxModal
+    MailboxModal,
+    Pagination
   },
   data() {
     return {
@@ -298,6 +282,9 @@ export default {
     this.hideSidebarOnMobile();
   },
   methods: {
+    onClickChild(value) {
+      console.log(value); // someValue
+    },
     async getRoles({ page, filter, sort }) {
       try {
         const response = await axios.get(

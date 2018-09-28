@@ -1,47 +1,40 @@
 <template>
-  
+  <div class="mailbox-content-footer">
+    <ul class="pagination">
+      <li class="page-item">
+        <button :class="currentPage == 1 ? 'page-link disabled' : 'page-link'" :disabled="currentPage == 1" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </button>
+      </li>
+      <li v-for="pageNumber in totalPages" :key="pageNumber+'a'" v-if="Math.abs(pageNumber - currentPage) < 3 || pageNumber == totalPages - 1 || totalPages == 0"
+        :class=" pageNumber == currentPage ? 'page-item active' : 'page-item'">
+        <button @click="updatePage(pageNumber)" :disabled="pageNumber == currentPage" class="page-link">{{pageNumber}}</button>
+      </li>
+      <li class="page-item">
+        <button :class="currentPage == totalPages ? 'page-link disabled' : 'page-link'" :disabled="currentPage == totalPages"
+          aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </button>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
-export default {
-  props: {
-    pagination: {
-      type: Object,
-      default: () => {
-        return {
-          count: 25,
-          totalPages: 1,
-          currentPage: 1
-        };
-      }
+  export default {
+    props: {
+      totalPages: null,
+      currentPage: null
     },
-    apiUrl: {
-      type: String,
-      default: ""
-    }
-  },
-  methods: {
-    async fetchData({ page, filter, sort }) {
-      try {
-        const response = await axios.get(
-          `http://ws-api.lc/api/${this.apiUrl}/&page=${page}`
-        );
-        return {
-          data: response.data.data,
-          pagination: {
-            totalPages: paginate.total_pages,
-            currentPage: page,
-            count: paginate.count
-          }
-        };
-      } catch (error) {
-        if (error) {
-          window.toastr["error"]("There was an error", "Error");
-        }
+    methods: {
+      updatePage(page) {
+        this.$emit("clicked", page);
       }
     }
-  }
-};
+  };
+
 </script>
 
 <style>
