@@ -282,9 +282,6 @@ export default {
     this.hideSidebarOnMobile();
   },
   methods: {
-    onClickChild(value) {
-      console.log(value); // someValue
-    },
     async getRoles({ page, filter, sort }) {
       try {
         const response = await axios.get(

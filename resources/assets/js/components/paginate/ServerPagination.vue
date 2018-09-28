@@ -23,18 +23,17 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      totalPages: null,
-      currentPage: null
-    },
-    methods: {
-      updatePage(page) {
-        this.$emit("clicked", page);
-      }
+export default {
+  props: {
+    totalPages: null,
+    currentPage: null
+  },
+  methods: {
+    updatePage(page) {
+      this.$emit("clicked", page);
     }
-  };
-
+  }
+};
 </script>
 
 <style>
