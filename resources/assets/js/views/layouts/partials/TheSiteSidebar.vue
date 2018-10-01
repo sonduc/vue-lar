@@ -246,11 +246,13 @@
             </router-link>
           </v-collapse-item>
 
-          <v-collapse-item active-url="/admin/roles">
-            <router-link
-              slot="item-title"
-              to="/admin/roles">
-              <i class="icon-fa icon-fa-key"/>Roles
+          <v-collapse-item active-url="/admin/bookings">
+            <a slot="item-title" href="#">
+              <i class="icon-fa icon-fa-book"/>Bookings
+              <span class="icon-fa arrow icon-fa-fw"/>
+            </a>
+            <router-link to="/admin/bookings/list">
+              Booking
             </router-link>
           </v-collapse-item>
           

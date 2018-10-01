@@ -75,7 +75,8 @@ import EditUser from "./views/admin/users/EditUser.vue";
 // Settings
 import Settings from "./views/admin/Settings.vue";
 // Roles
-import Roles from "./views/admin/roles/Roles.vue";
+import Bookings from "./views/admin/bookings/Bookings.vue";
+import BookingDetail from "./views/admin/bookings/BookingDetail.vue";
 
 /*
  |--------------------------------------------------------------------------
@@ -334,11 +335,16 @@ const routes = [
         component: Admin
       },
 
-      //Roles
+      //Bookings
       {
-        path: "roles",
-        name: "role.list",
-        component: Roles
+        path: "bookings/list",
+        name: "booking.list",
+        component: Bookings
+      },
+      {
+        path: "bookings/:id",
+        name: "booking.detail",
+        component: BookingDetail
       },
 
       // Apps
