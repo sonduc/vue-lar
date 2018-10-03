@@ -74,9 +74,9 @@ import Profile from "./views/admin/users/Profile.vue";
 import EditUser from "./views/admin/users/EditUser.vue";
 // Settings
 import Settings from "./views/admin/Settings.vue";
-// Roles
-import Bookings from "./views/admin/bookings/Bookings.vue";
-import BookingDetail from "./views/admin/bookings/BookingDetail.vue";
+// Bookings
+import BookingList from "./views/admin/Bookings/BookingList.vue";
+import BookingForm from "./views/admin/Bookings/Form.vue";
 
 /*
  |--------------------------------------------------------------------------
@@ -339,12 +339,12 @@ const routes = [
       {
         path: "bookings/list",
         name: "booking.list",
-        component: Bookings
+        component: BookingList
       },
       {
-        path: "bookings/:id",
-        name: "booking.detail",
-        component: BookingDetail
+        path: "bookings/create/room/:roomId",
+        name: "booking.create",
+        component: BookingForm
       },
 
       // Apps
