@@ -146,34 +146,33 @@
   </div>
 </template>
 <script type="text/babel">
-
 export default {
-  data () {
+  data() {
     return {
       basic_validation: {
-        name: '',
-        email: ''
+        name: "",
+        email: ""
       },
       form_validation: {
-        name: '',
-        email: '',
-        password: '',
-        cnfpassword: '',
+        name: "",
+        email: "",
+        password: "",
+        cnfpassword: "",
         terms: false
       }
-    }
+    };
   },
   methods: {
-    validateBeforeSubmit () {
-      this.$validator.validateAll().then((result) => {
+    validateBeforeSubmit() {
+      this.$validator.validateAll().then(result => {
         if (result) {
           // eslint-disable-next-line
-          alert('Form Submitted!')
-          return
+          alert("Form Submitted!");
+          return true;
         }
-        alert('Correct them errors!')
-      })
+        alert("Correct them errors!");
+      });
     }
   }
-}
+};
 </script>

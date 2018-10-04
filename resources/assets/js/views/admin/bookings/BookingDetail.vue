@@ -227,9 +227,9 @@
 </template>
 
 <script>
-import numeral from "numeral";
+import { format } from "../../../helpers/mixins";
 export default {
-  components: {},
+  mixins: [format],
   props: {
     isVisible: {
       type: Boolean,
@@ -250,11 +250,6 @@ export default {
       if (this.isVisible) {
         this.$emit("close");
       }
-    }
-  },
-  filters: {
-    formatNumber(value) {
-      return numeral(value).format("0,0") + " Đ";
     }
   }
 };
