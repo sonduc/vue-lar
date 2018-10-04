@@ -178,8 +178,9 @@ import BookingSidebar from "./BookingSidebar";
 import BookingDetail from "./BookingDetail";
 import Auth from "../../../services/auth";
 import Pagination from "../../../components/paginate/ServerPagination";
-import numeral from "numeral";
+import { format } from "../../../helpers/mixins";
 export default {
+  mixins: [format],
   components: {
     BookingSidebar,
     BookingDetail,
@@ -266,8 +267,8 @@ export default {
     this.hideSidebarOnMobile();
   },
   methods: {
-    alertTest( ) {
-      alert('asd')
+    alertTest() {
+      alert("asd");
     },
     async getBookings({ page, filter, sort }) {
       try {
@@ -318,11 +319,6 @@ export default {
           self.isLeftSidebarVisible = false;
         }
       };
-    }
-  },
-  filters: {
-    formatNumber(value) {
-      return numeral(value).format("0,0") + " Đ";
     }
   }
 };
