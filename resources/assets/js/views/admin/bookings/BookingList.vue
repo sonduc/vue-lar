@@ -9,14 +9,9 @@
       </ol>
     </div>
     <div :class="{'is-open': isLeftSidebarVisible}" class="mailbox">
-
-      <booking-sidebar
-        :selected-category="selectedCategory"
-        :categories="categories"
-        :is-left-sidebar-visible="isLeftSidebarVisible"
-        @selected="selectCategory"
-        @toggle="isLeftSidebarVisible = !isLeftSidebarVisible"
-      />
+      <button class="btn btn-theme btn-sm btn-block" @click="openBookingFilter">Filter</button>
+      <booking-sidebar :selected-category="selectedStatus" :categories="categories" :is-left-sidebar-visible="isLeftSidebarVisible"
+        @selected="selectStatus" @toggle="isLeftSidebarVisible = !isLeftSidebarVisible" />
 
       <div class="mailbox-content">
         <div class="mailbox-content-header">
@@ -39,14 +34,8 @@
               <v-dropdown-item>
                 <a href="#" @click.prevent>Yêu cầu đối soát</a>
               </v-dropdown-item>
-              <v-dropdown-item>
-                <a href="#" @click.prevent>Success</a>
-              </v-dropdown-item>
             </v-dropdown>
 
-            <button type="button" class="btn btn-icon btn-light mailbox-action">
-              <i class="icon-fa icon-fa-tag" />
-            </button>
           </div>
 
           <div class="mailbox-filters">
@@ -75,7 +64,7 @@
                   <label :for="index" class="custom-control-label" />
                 </div>
               </td>
-              <td class="cell-content" @click="openMailModal(booking)">
+              <td class="cell-content" @click="openBookingModal(booking)">
                 <div class="content">
                   <div class="content-name">
                     #{{ booking.code }}
@@ -105,7 +94,7 @@
                 <div v-if="booking.price_discount >= 0" class="content-subject">Giảm giá: {{booking.price_discount |
                   formatNumber}}</div>
                 <div class="content-subject">Tổng thu: {{(booking.total_fee - booking.price_discount) | formatNumber}}</div>
-                
+
               </td>
               <td class="cell-content">
                 <div class="content-subject">Tên: {{booking.name}}</div>
@@ -128,7 +117,7 @@
                     {{booking.payment_status_txt}}
                   </button>
                 </div>
-                <hr/>
+                <hr />
                 <div class="content-subject">
                   <button v-if="booking.status == 1" class="btn btn-info btn-sm btn-pressable">
                     {{booking.status_txt}}
@@ -152,7 +141,7 @@
                   <button class="btn btn-primary btn-sm btn-pressable">Giảm giá</button>
                   <button class="btn btn-warning btn-sm btn-pressable">Phụ thu</button>
                 </div>
-                <hr/>
+                <hr />
                 <div class="content-subject">
                   Mã giảm giá
                 </div>
@@ -169,43 +158,140 @@
       <transition name="fade">
         <booking-detail :booking="booking" v-show="isModalVisible" :is-visible="isModalVisible" @close="closeMailModal" />
       </transition>
+
+      <sweet-modal overlay-theme="dark" ref="filter">
+        <div class="card">
+          <div class="card-header">
+            <h6>Bộ lọc booking</h6>
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="form-group">
+                <label for="inputFirstName">Tìm kiếm</label>
+                <input v-model="q" id="inputFirstName" type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="exampleInputEmail">Từ ngày</label>
+                  <datepicker v-model="date_start" :format="format" input-class="form-control" />
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="exampleInputEmail">Đến ngày</label>
+                  <datepicker v-model="date_end" :format="format" input-class="form-control" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputUserName">Chủ nhà</label>
+                <multiselect id="inputUserName" v-model="merchant" label="name" :options="merchants" :searchable="true"
+                  :show-labels="false" />
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputPassword">Thành phố</label>
+                <multiselect id="inputUserName" v-model="city" label="name" :options="cities" :searchable="true"
+                  :show-labels="false" />
+              </div>
+              <div class="form-group" v-if="city !== null">
+                <label for="exampleInputPassword">Quận / Huyện</label>
+                <multiselect :disabled="city == null" id="inputUserName" v-model="district" label="name" :options="filteredDistrict"
+                  :searchable="true" :show-labels="false" />
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <button slot="button" type="button" class="btn btn-default" data-dismiss="modal" @click="closeModal">
+          Reset
+        </button>
+
+        <button slot="button" type="button" class="btn btn-primary" @click="applyFilter(1)">
+          Apply Filter
+        </button>
+      </sweet-modal>
     </div>
   </div>
 </template>
 
 <script>
+import { SweetModal } from "sweet-modal-vue";
+import Datepicker from "vuejs-datepicker";
+import Multiselect from "vue-multiselect";
 import BookingSidebar from "./BookingSidebar";
 import BookingDetail from "./BookingDetail";
 import Auth from "../../../services/auth";
 import Pagination from "../../../components/paginate/ServerPagination";
-import { format } from "../../../helpers/mixins";
+import { format, env } from "../../../helpers/mixins";
 export default {
-  mixins: [format],
+  mixins: [format, env],
   components: {
     BookingSidebar,
     BookingDetail,
-    Pagination
+    Pagination,
+    SweetModal,
+    Multiselect,
+    Datepicker
   },
   data() {
     return {
+      format: "yyyy-MM-dd",
       bookings: [],
       booking: {},
+      q: "",
+      date_start: null,
+      date_end: null,
+      merchant: {
+        id: ""
+      },
+      city: {
+        id: ""
+      },
+      district: {
+        id: ""
+      },
+      merchants: [],
+      cities: [],
+      districts: [],
       categories: [
-        { id: 1, name: "Inbox", slug: "inbox", icon: "icon-fa icon-fa-inbox" },
-        { id: 2, name: "Sent", slug: "sent", icon: "icon-fa icon-fa-send" },
-        { id: 3, name: "Draft", slug: "draft", icon: "icon-fa icon-fa-edit" },
+        {
+          id: 1,
+          query: "",
+          name: "Tất cả",
+          slug: "inbox",
+          icon: "icon-fa icon-fa-inbox"
+        },
+        {
+          id: 2,
+          query: "2",
+          name: "Xác nhận",
+          slug: "sent",
+          icon: "icon-fa icon-fa-send"
+        },
+        {
+          id: 3,
+          query: "4",
+          name: "Checkout",
+          slug: "draft",
+          icon: "icon-fa icon-fa-check"
+        },
         {
           id: 4,
-          name: "Important",
+          query: "1",
+          name: "Đơn mới",
           slug: "important",
           icon: "icon-fa icon-fa-star"
         },
-        { id: 5, name: "Trash", slug: "trash", icon: "icon-fa icon-fa-trash" }
+        {
+          id: 5,
+          query: "5",
+          name: "Đã hủy",
+          slug: "trash",
+          icon: "icon-fa icon-fa-trash"
+        }
       ],
       isModalVisible: false,
       isLeftSidebarVisible: true,
       selectedBookings: [],
-      selectedCategory: "inbox",
+      selectedStatus: "",
       permissions: "role.view",
       searchText: "",
       totalPages: null,
@@ -245,10 +331,16 @@ export default {
 
         return nameValid;
       });
+    },
+    filteredDistrict() {
+      let self = this;
+      return this.districts.filter(function(item) {
+        return item.city_id == self.city.id;
+      });
     }
   },
   watch: {
-    selectedCategory() {
+    selectedStatus() {
       this.isModalVisible = false;
     }
   },
@@ -260,6 +352,9 @@ export default {
             this.$router.push("permission-denied-403");
           } else {
             this.getBookings({});
+            this.getMerchants();
+            this.getCities();
+            this.getDistricts();
           }
         });
       }
@@ -267,19 +362,66 @@ export default {
     this.hideSidebarOnMobile();
   },
   methods: {
-    alertTest() {
-      alert("asd");
-    },
-    async getBookings({ page, filter, sort }) {
+    async getMerchants() {
       try {
         const response = await axios.get(
-          `http://ws-api.lc/api/bookings?include=room.details&page=${page}&limit=5`
+          this.baseApiUrl + `users?&is_owner=1&limit=9999999`
+        );
+        this.merchants = response.data.data;
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
+    async getCities() {
+      try {
+        const response = await axios.get(
+          this.baseApiUrl + `cities?limit=9999999`
+        );
+        this.cities = response.data.data;
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
+    async getDistricts() {
+      try {
+        const response = await axios.get(
+          this.baseApiUrl + `districts?limit=9999999`
+        );
+        this.districts = response.data.data;
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
+    async getBookings({ page, filter, sort }) {
+      let date_start =
+        this.date_start !== null
+          ? this.date_start.toISOString().substr(0, 10)
+          : "";
+      let date_end =
+        this.date_end !== null ? this.date_end.toISOString().substr(0, 10) : "";
+      try {
+        const response = await axios.get(
+          this.baseApiUrl +
+            `bookings?include=room.details&q=${this.q}&merchants=${
+              this.merchant.id
+            }&customers=${this.q}&city=${this.city.id}&district=${
+              this.district.id
+            }&date_start=${date_start}&status=${
+              this.selectedStatus
+            }&date_end=${date_end}&page=${page}&limit=5`
         );
         let paginate = response.data.meta.pagination;
         this.currentPage = paginate.current_page;
         this.totalPages = paginate.total_pages;
         this.count = paginate.count;
         this.bookings = response.data.data;
+        console.log(response.data.data);
         return {
           data: response.data.data,
           pagination: {
@@ -299,18 +441,30 @@ export default {
         page
       });
     },
-    openMailModal(booking) {
+    openBookingModal(booking) {
       this.booking = booking;
       this.isModalVisible = true;
     },
     closeMailModal() {
       this.isModalVisible = false;
     },
-    openComposeModal() {
-      this.$refs.compose.openModal();
+    openBookingFilter() {
+      this.$refs.filter.open();
     },
-    selectCategory(category) {
-      this.selectedCategory = category;
+    closeModal() {
+      this.$refs.filter.close();
+    },
+    applyFilter(page) {
+      this.getBookings({
+        page
+      });
+    },
+    selectStatus(status, page) {
+      this.selectedStatus = status;
+      console.log(status);
+      this.getBookings({
+        page
+      });
     },
     hideSidebarOnMobile() {
       let self = this;

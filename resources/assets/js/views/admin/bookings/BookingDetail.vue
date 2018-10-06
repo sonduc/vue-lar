@@ -227,9 +227,9 @@
 </template>
 
 <script>
-import { format } from "../../../helpers/mixins";
+import { format, env } from "../../../helpers/mixins";
 export default {
-  mixins: [format],
+  mixins: [format, env],
   props: {
     isVisible: {
       type: Boolean,

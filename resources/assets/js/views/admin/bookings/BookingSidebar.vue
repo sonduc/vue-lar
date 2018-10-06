@@ -1,6 +1,6 @@
 <template>
   <div class="mailbox-sidebar">
-    <button class="btn btn-theme btn-sm btn-block" @click="openComposeModal">Compose</button>
+
 
     <ul class="sidebar-menu mt-4">
       <li
@@ -48,10 +48,10 @@ export default {
   },
   methods: {
     selectCategory(category) {
-      this.$emit("selected", category.slug);
+      this.$emit("selected", category.query);
     },
-    openComposeModal() {
-      this.$parent.openComposeModal();
+    openBookingFilter() {
+      this.$parent.openBookingFilter();
     }
   }
 };

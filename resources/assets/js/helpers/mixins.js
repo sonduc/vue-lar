@@ -1,4 +1,5 @@
 import numeral from "numeral";
+const API_URL = "http://ws-api.lc/api/";
 export const format = {
   filters: {
     formatNumber(value) {
@@ -64,6 +65,62 @@ export const hoursList = {
   computed: {
     hoursData() {
       return this.hours;
+    }
+  }
+};
+
+export const env = {
+  computed: {
+    baseApiUrl() {
+      return "http://ws-api.lc/api/";
+    }
+  }
+};
+
+export const location = {
+  data() {
+    return {
+      citiesList: [],
+      districtsList: []
+    };
+  },
+  methods: {
+    async getCities() {
+      try {
+        const response = await axios.get(
+          API_URL + `cities?limit=9999999`
+        );
+        this.citiesList = response.data.data;
+        // console.log(response.data.data);
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
+    async getDistricts() {
+      try {
+        const response = await axios.get(API_URL + `districts?limit=9999999`);
+        this.districtsList = response.data.data;
+        // console.log(response.data.data);
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    }
+  },
+  mounted() {
+    // console.log("asdasd");
+    this.getCities();
+    this.getDistricts();
+  },
+  computed: {
+    cities() {
+      return this.citiesList;
+    },
+    districts() {
+      return this.districtsList;
     }
   }
 };

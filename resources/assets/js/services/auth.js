@@ -54,6 +54,16 @@ export default {
     }
   },
 
+  async getCurrentUser() {
+    try {
+      let response = await axios.get(BASE_API + "profile");
+      return response.data.data;
+      // console.log(response.data.data);
+    } catch (error) {
+      console.log("Error: ", error.message);
+    }
+  },
+
   //Check phân quyền của user đối với từng hành động
   async canAccess(permissions, per) {
     if (permissions["admin.super-admin"] || permissions[per]) {
