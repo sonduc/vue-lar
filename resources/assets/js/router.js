@@ -76,7 +76,8 @@ import EditUser from "./views/admin/users/EditUser.vue";
 import Settings from "./views/admin/Settings.vue";
 // Bookings
 import BookingList from "./views/admin/Bookings/BookingList.vue";
-import BookingForm from "./views/admin/Bookings/Form.vue";
+import BookingCreate from "./views/admin/Bookings/BookingCreate.vue";
+import BookingUpdate from "./views/admin/Bookings/BookingUpdate.vue";
 
 /*
  |--------------------------------------------------------------------------
@@ -344,7 +345,12 @@ const routes = [
       {
         path: "bookings/create/room/:roomId",
         name: "booking.create",
-        component: BookingForm
+        component: BookingCreate
+      },
+      {
+        path: "bookings/update/:bookingId",
+        name: "booking.update",
+        component: BookingUpdate
       },
 
       // Apps
