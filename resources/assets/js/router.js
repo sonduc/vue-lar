@@ -64,7 +64,7 @@ import VideoGallery from "./views/admin/gallery/VideoGallery.vue";
 
 // Apps
 import TodosApp from "./views/admin/apps/todos/TodosApp.vue";
-import MailboxApp from "./views/admin/apps/mailbox/MailboxApp.vue";
+import MailboxApp from "./views/admin/apps/mailbox/MailBoxApp.vue";
 
 // Users
 import Admin from "./views/admin/users/Admin.vue";
@@ -75,9 +75,9 @@ import EditUser from "./views/admin/users/EditUser.vue";
 // Settings
 import Settings from "./views/admin/Settings.vue";
 // Bookings
-import BookingList from "./views/admin/Bookings/BookingList.vue";
-import BookingCreate from "./views/admin/Bookings/BookingCreate.vue";
-import BookingUpdate from "./views/admin/Bookings/BookingUpdate.vue";
+import BookingList from "./views/admin/bookings/BookingList.vue";
+import BookingCreate from "./views/admin/bookings/BookingCreate.vue";
+import BookingUpdate from "./views/admin/bookings/BookingUpdate.vue";
 
 /*
  |--------------------------------------------------------------------------
