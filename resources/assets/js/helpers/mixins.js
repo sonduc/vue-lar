@@ -87,9 +87,7 @@ export const location = {
   methods: {
     async getCities() {
       try {
-        const response = await axios.get(
-          API_URL + `cities?limit=9999999`
-        );
+        const response = await axios.get(API_URL + `cities?limit=9999999`);
         this.citiesList = response.data.data;
         // console.log(response.data.data);
       } catch (error) {
@@ -121,6 +119,32 @@ export const location = {
     },
     districts() {
       return this.districtsList;
+    }
+  }
+};
+
+export const constant = {
+  data() {
+    return {
+      paymentStatusList: [
+        { value: 3, title: "Đã thanh toán" },
+        { value: 0, title: "Chưa thanh toán" }
+      ],
+      bookingStatusList: [
+        { value: 1, title: "Đơn mới" },
+        { value: 2, title: "Đã xác nhận" },
+        { value: 3, title: "Đang sử dụng" },
+        { value: 4, title: "Đã hoàn thành" },
+        { value: 5, title: "Đã hủy" }
+      ]
+    };
+  },
+  computed: {
+    statusList() {
+      return this.bookingStatusList;
+    },
+    paymentList() {
+      return this.paymentStatusList;
     }
   }
 };

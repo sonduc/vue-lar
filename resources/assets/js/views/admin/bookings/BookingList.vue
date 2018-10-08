@@ -29,10 +29,10 @@
               </a>
 
               <v-dropdown-item>
-                <a href="#" @click.prevent>Tạo hóa đơn</a>
+                <a href="#" @click.prevent="makeInvoice">Tạo hóa đơn</a>
               </v-dropdown-item>
               <v-dropdown-item>
-                <a href="#" @click.prevent>Yêu cầu đối soát</a>
+                <a href="#" @click.prevent="showCrossCheckingModal">Yêu cầu đối soát</a>
               </v-dropdown-item>
             </v-dropdown>
 
@@ -67,7 +67,7 @@
               <td class="cell-content" @click="openBookingModal(booking)">
                 <div class="content">
                   <div class="content-name">
-                    #{{ booking.code }}
+                    #{{ booking.code }} - {{booking.id}}
                   </div>
                   <div class="content-subject">
                     Thời gian book: <br /><i class="icon-fa icon-fa-clock-o attachment-icon" /> {{ booking.created_at
@@ -104,42 +104,21 @@
               </td>
               <td class="cell-content" style="text-align: center">
                 <div class="content-subject">
-                  <button v-if="booking.payment_status == 0" class="btn btn-outline-info btn-sm btn-pressable">
-                    {{booking.payment_status_txt}}
-                  </button>
-                  <button v-if="booking.payment_status == 1" class="btn btn-outline-danger btn-sm btn-pressable">
-                    {{booking.payment_status_txt}}
-                  </button>
-                  <button v-if="booking.payment_status == 2" class="btn btn-outline-warning btn-sm btn-pressable">
-                    {{booking.payment_status_txt}}
-                  </button>
-                  <button v-if="booking.payment_status == 3" class="btn btn-outline-success btn-sm btn-pressable">
+                  <button @click="showModalUpdateStatus(booking)" class="btn btn-outline-info btn-sm btn-pressable">
                     {{booking.payment_status_txt}}
                   </button>
                 </div>
                 <hr />
                 <div class="content-subject">
-                  <button v-if="booking.status == 1" class="btn btn-info btn-sm btn-pressable">
-                    {{booking.status_txt}}
-                  </button>
-                  <button v-if="booking.status == 2" class="btn btn-warning btn-sm btn-pressable">
-                    {{booking.status_txt}}
-                  </button>
-                  <button v-if="booking.status == 3" class="btn btn-primary btn-sm btn-pressable">
-                    {{booking.status_txt}}
-                  </button>
-                  <button v-if="booking.status == 4" class="btn btn-success btn-sm btn-pressable">
-                    {{booking.status_txt}}
-                  </button>
-                  <button v-if="booking.status == 5" class="btn btn-danger btn-sm btn-pressable">
+                  <button @click="showModalUpdatePaymentStatus(booking)" class="btn btn-warning btn-sm btn-pressable">
                     {{booking.status_txt}}
                   </button>
                 </div>
               </td>
               <td class="cell-content" style="text-align:center">
                 <div class="content-subject">
-                  <button class="btn btn-primary btn-sm btn-pressable">Giảm giá</button>
-                  <button class="btn btn-warning btn-sm btn-pressable">Phụ thu</button>
+                  <button @click="showModalDiscount(booking)" class="btn btn-primary btn-sm btn-pressable">Giảm giá</button>
+                  <button @click="showModalSurcharge(booking)" class="btn btn-warning btn-sm btn-pressable">Phụ thu</button>
                 </div>
                 <hr />
                 <div class="content-subject">
@@ -208,6 +187,23 @@
           Apply Filter
         </button>
       </sweet-modal>
+      <sweet-modal ref="update_modal" hide-close-button blocking
+        overlay-theme="dark">
+        <div class="card">
+          <div class="card-header">
+            <h5>#{{update_booking.code}}</h5>
+          </div>
+          <div class="card-body">
+            <multiselect v-if="option == 1" v-model="update_booking_status" label="title" :options="statusList"
+              :searchable="true" :show-labels="false" />
+            <multiselect v-if="option == 2" v-model="update_payment_status" label="title" :options="paymentList"
+              :searchable="true" :show-labels="false" />
+          </div>
+        </div>
+        <button slot="button" type="button" class="btn btn-theme" @click="closeUpdateModal()">
+          Confirm
+        </button>
+      </sweet-modal>
     </div>
   </div>
 </template>
@@ -220,9 +216,9 @@ import BookingSidebar from "./BookingSidebar";
 import BookingDetail from "./BookingDetail";
 import Auth from "../../../services/auth";
 import Pagination from "../../../components/paginate/ServerPagination";
-import { format, env } from "../../../helpers/mixins";
+import { format, env, constant } from "../../../helpers/mixins";
 export default {
-  mixins: [format, env],
+  mixins: [format, env, constant],
   components: {
     BookingSidebar,
     BookingDetail,
@@ -236,6 +232,9 @@ export default {
       format: "yyyy-MM-dd",
       bookings: [],
       booking: {},
+      update_booking: {},
+      update_payment_status: null,
+      update_booking_status: null,
       q: "",
       date_start: null,
       date_end: null,
@@ -288,6 +287,7 @@ export default {
           icon: "icon-fa icon-fa-trash"
         }
       ],
+      option: null,
       isModalVisible: false,
       isLeftSidebarVisible: true,
       selectedBookings: [],
@@ -473,6 +473,49 @@ export default {
           self.isLeftSidebarVisible = false;
         }
       };
+    },
+    showCrossCheckingModal() {
+      this.$swal(
+        "Yêu cầu đối soát",
+        "Yêu cầu đối soát cho các booking " + this.selectedBookings,
+        "warning"
+      );
+    },
+    makeInvoice() {
+      this.$swal(
+        "Yêu cầu xuất hóa đơn đỏ",
+        "Yêu cầu xuất hóa đơn đỏ cho các booking được chọn",
+        "warning"
+      );
+    },
+    showModalUpdateStatus(booking) {
+      this.option = 1;
+      this.update_booking = booking;
+      this.$refs.update_modal.open();
+    },
+    showModalUpdatePaymentStatus(booking) {
+      this.option = 2;
+      this.update_booking = booking;
+      this.$refs.update_modal.open();
+    },
+    showModalDiscount(booking) {
+      this.option = 3;
+      this.update_booking = booking;
+      this.$refs.update_modal.open();
+    },
+    showModalSurcharge(booking) {
+      this.option = 4;
+      this.update_booking = booking;
+      this.$refs.update_modal.open();
+    },
+    async confirmUpdate() {
+      // let response = await axios.put(this.baseApiUrl + `booking/`)
+      this.$refs.update_modal.close();
+    },
+    closeUpdateModal() {
+      this.option = null;
+      this.booking = {};
+      this.$refs.update_modal.close();
     }
   }
 };
