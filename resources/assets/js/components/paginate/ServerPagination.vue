@@ -2,7 +2,7 @@
   <div class="mailbox-content-footer">
     <ul class="pagination">
       <li class="page-item">
-        <button :class="currentPage == 1 ? 'page-link disabled' : 'page-link'" :disabled="currentPage == 1" aria-label="Previous">
+        <button @click="updatePage(1)" :class="currentPage == 1 ? 'page-link disabled' : 'page-link'" :disabled="currentPage == 1" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
           <span class="sr-only">Previous</span>
         </button>
@@ -12,7 +12,7 @@
         <button @click="updatePage(pageNumber)" :disabled="pageNumber == currentPage" class="page-link">{{pageNumber}}</button>
       </li>
       <li class="page-item">
-        <button :class="currentPage == totalPages ? 'page-link disabled' : 'page-link'" :disabled="currentPage == totalPages"
+        <button @click="updatePage(totalPages)" :class="currentPage == totalPages ? 'page-link disabled' : 'page-link'" :disabled="currentPage == totalPages"
           aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
           <span class="sr-only">Next</span>
