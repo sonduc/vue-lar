@@ -292,7 +292,7 @@ export default {
       isLeftSidebarVisible: true,
       selectedBookings: [],
       selectedStatus: "",
-      permissions: "role.view",
+      permissions: "booking.view",
       searchText: "",
       totalPages: null,
       currentPage: null,
