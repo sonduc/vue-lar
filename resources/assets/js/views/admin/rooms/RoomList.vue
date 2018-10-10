@@ -58,78 +58,84 @@
               <td>Ảnh</td>
               <td class="cell-content">
                 <div class="content">
-                  <div class="content-name mb-2">
+                  <div class="content-name mb-3">
                     {{ room.details.data[0].name }}
                   </div>
-                  <div class="content-subject mb-2">
-                    <i class="icon-fa icon-fa-home mb-2" />&ensp;Loại phòng: {{room.room_type_txt}} <br />
+                  <div class="content-subject mb-3">
+                    <i class="icon-fa icon-fa-home mb-3" />&ensp;Loại phòng: {{room.room_type_txt}} <br />
                     <i class="icon-fa icon-fa-clock-o" />&ensp;Cho thuê: {{room.rent_type_txt}}
                   </div>
-                  <div class="content-subject mb-2">
+                  <div class="content-subject mb-3">
                     <i class="icon-fa icon-fa-location-arrow" />&ensp;{{ room.details.data[0].address }}
                   </div>
-                  <div class="content-subject mb-2">
+                  <div class="content-subject mb-3">
                     <i class="icon-fa icon-fa-user" />&ensp; Chủ nhà: {{ room.user.data.name }}
                   </div>
-                  <div class="content-subject mb-2">
+                  <div class="content-subject mb-3">
                     <i class="icon-fa icon-fa-trash" />&ensp; Dọn dẹp: {{ room.cleaning_fee | formatNumber }}
                   </div>
                 </div>
               </td>
               <td>
-                <div class="content-subject mb-2">
+                <div class="content-subject mb-3">
                   Giá theo ngày: {{ room.price_day | formatNumber }}
                 </div>
-                <div class="content-subject mb-2">
+                <div class="content-subject mb-3">
                   Giá theo giờ: {{ room.price_hour | formatNumber }}
                 </div>
-                <div class="content-subject mb-2">
+                <div class="content-subject mb-3">
                   Phụ thu giờ: {{ room.price_after_hour | formatNumber }}
                 </div>
-                <div class="content-subject mb-2">
+                <div class="content-subject mb-3">
                   Phụ thu khách: {{ room.price_charge_guest | formatNumber }} ( từ sau
                   khách thứ {{ room.max_guest }})
                 </div>
-                <div class="content-subject mb-2">
+                <div class="content-subject mb-3">
                   Chi tiết giá
                 </div>
               </td>
               <td width="10%">
-                <div class="mb-2">
+                <div class="mb-3">
                   Phòng mới
                 </div>
-                <div class="mb-2">
+                <div class="mb-3">
                   Phòng hot
                 </div>
-                <div class="mb-2">
+                <div class="mb-3">
                   Phụ nổi bật
                 </div>
-                <div class="mb-2">
+                <div class="mb-3">
+                  Tự quản lý
+                </div>
+                <div class="mb-3">
                   Phòng khóa
                 </div>
               </td>
               <td class="cell-fav">
-                <div class="content-subject mb-2">
-                  <button type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i :class="room.new == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                <div class="content-subject mb-3">
+                  <button @click="updateRoomMinor('new',room)"  type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i :class="room.new == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
                 </div>
-                <div class="content-subject mb-2">
-                  <button type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i :class="room.hot == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                <div class="content-subject mb-3">
+                  <button @click="updateRoomMinor('hot',room)"  type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i :class="room.hot == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
                 </div>
-                <div class="content-subject mb-2">
-                  <button type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i :class="room.lastest_deal == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                <div class="content-subject mb-3">
+                  <button @click="updateRoomMinor('latest_deal',room)" type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i :class="room.latest_deal == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
                 </div>
-                <div class="content-subject mb-2">
-                  <button v-if="room.status == 0" type="button" class="btn btn-xs btn-icon btn-theme mailbox-action"><i
+                <div class="content-subject mb-3">
+                  <button @click="updateRoomMinor('is_manager',room)" type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i :class="room.is_manager == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                </div>
+                <div class="content-subject mb-3">
+                  <button @click="updateRoomMinor('status',room)" v-if="room.status == 0" type="button" class="btn btn-xs btn-icon btn-theme mailbox-action"><i
                       class="icon-fa icon-fa-hourglass-half"></i></button>
-                  <button v-if="room.status == 2" type="button" class="btn btn-xs btn-icon btn-danger mailbox-action"><i
+                  <button @click="updateRoomMinor('status',room)" v-if="room.status == 2" type="button" class="btn btn-xs btn-icon btn-danger mailbox-action"><i
                       class="icon-fa icon-fa-check"></i></button>
-                  <button v-if="room.status == 1" type="button" class="btn btn-xs btn-icon btn-success mailbox-action"><i
+                  <button @click="updateRoomMinor('status',room)" v-if="room.status == 1" type="button" class="btn btn-xs btn-icon btn-success mailbox-action"><i
                       class="icon-fa icon-fa-times"></i></button>
                 </div>
 
               </td>
               <td width="10%" style="text-align:center">
-                <div class="btn-group mb-2" role="group" aria-label="First group">
+                <div class="btn-group mb-3" role="group" aria-label="First group">
                   <button v-tooltip.top-center="'Chi tiết phòng'" type="button" class="btn btn-sm btn-icon btn-outline-info">
                     <i class="icon-fa icon-fa-search" />
                   </button>
@@ -142,7 +148,7 @@
                   </button>
                 </div>
 
-                <button class="btn btn-light btn-xs mb-2">
+                <button class="btn btn-light btn-xs mb-3">
                   Điểm quy chuẩn
                 </button>
                 <button @click="createBooking(room.id)" class="btn btn-theme btn-sm">
@@ -293,7 +299,7 @@ export default {
       try {
         const response = await axios.get(`users`, {
           params: {
-            limit: 99999,
+            limit: -1,
             is_owner: 1
           }
         });
@@ -308,7 +314,7 @@ export default {
       try {
         const response = await axios.get(`cities`, {
           params: {
-            limit: 100
+            limit: -1
           }
         });
         this.cities = response.data.data;
@@ -322,7 +328,7 @@ export default {
       try {
         const response = await axios.get(`districts`, {
           params: {
-            limit: 1000
+            limit: -1
           }
         });
         this.districts = response.data.data;
@@ -353,7 +359,7 @@ export default {
         this.totalPages = paginate.total_pages;
         this.count = paginate.count;
         this.rooms = response.data.data;
-        console.log(response.data.data);
+        // console.log(response.data.data);
         return {
           data: response.data.data,
           pagination: {
@@ -391,16 +397,84 @@ export default {
     },
     openUpdateHostModal(room) {
       this.update_room = room;
+      this.option = "merchant_id";
       this.$refs.updateHost.open();
     },
     closeUpdateHostModal(room) {
       this.update_room = {};
       this.$refs.updateHost.close();
     },
-    updateHostConfirm() {
-      //Axios post update room
-      this.update_room = {};
-      this.$refs.updateHost.close();
+    async updateHostConfirm() {
+      let response = await axios
+        .put(`rooms/prop-update/${this.update_room.id}?option=${this.option}`, {
+          merchant_id: this.merchant.id
+        })
+        .then(result => {
+          if (result) {
+            this.reloadData(1);
+            this.$refs.updateHost.close();
+            window.toastr["success"]("Updated host!", "Success");
+          } else {
+            window.toastr["error"]("Something wrong!", "Error");
+          }
+        });
+    },
+    async updateRoomMinor(option, room) {
+      if (option === "hot") {
+        let response = await axios
+          .put(`rooms/prop-update/${room.id}?option=${option}`, {
+            hot: room.hot == 1 ? 0 : 1
+          })
+          .then(result => {
+            if (result) {
+              this.reloadData(1);
+
+              window.toastr["success"]("Updated Hot Room!", "Success");
+            } else {
+              window.toastr["error"]("Something wrong!", "Error");
+            }
+          });
+      } else if (option === "new") {
+        let response = await axios
+          .put(`rooms/prop-update/${room.id}?option=${option}`, {
+            new: room.new == 1 ? 0 : 1
+          })
+          .then(result => {
+            if (result) {
+              this.reloadData(1);
+
+              window.toastr["success"]("Updated New Room!", "Success");
+            } else {
+              window.toastr["error"]("Something wrong!", "Error");
+            }
+          });
+      } else if (option === "latest_deal") {
+        let response = await axios
+          .put(`rooms/prop-update/${room.id}?option=${option}`, {
+            latest_deal: room.latest_deal == 1 ? 0 : 1
+          })
+          .then(result => {
+            if (result) {
+              this.reloadData(1);
+              window.toastr["success"]("Updated Latest Deal!", "Success");
+            } else {
+              window.toastr["error"]("Something wrong!", "Error");
+            }
+          });
+      } else if (option === "is_manager") {
+        let response = await axios
+          .put(`rooms/prop-update/${room.id}?option=${option}`, {
+            is_manager: room.is_manager == 1 ? 0 : 1
+          })
+          .then(result => {
+            if (result) {
+              this.reloadData(1);
+              window.toastr["success"]("Updated Self Manage!", "Success");
+            } else {
+              window.toastr["error"]("Something wrong!", "Error");
+            }
+          });
+      }
     }
   }
 };
