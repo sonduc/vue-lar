@@ -1,46 +1,69 @@
 <template>
   <div class="main-content">
     <div class="page-header">
-      <h3 class="page-title">Mailbox</h3>
+      <h3 class="page-title">Danh sách phòng</h3>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Apps</a></li>
-        <li class="breadcrumb-item active">Mailbox</li>
+        <li class="breadcrumb-item active">Danh sách phòng</li>
       </ol>
     </div>
     <div class="mailbox">
-
-      <div class="mailbox-content">
-        <div class="mailbox-content-header">
-          <div class="mailbox-actions">
-            <div class="custom-control custom-checkbox mailbox-action" style="display:inline-block">
-              <input id="customCheckAll" v-model="selectAll" type="checkbox" class="custom-control-input">
-              <label class="custom-control-label" for="customCheckAll" />
-            </div>
-
-            <v-dropdown active-url="/admin/dashboard" theme-light class="mailbox-action">
-              <a slot="activator" href="#" @click.prevent>
-                <button class="btn btn-light dropdown-toggle" type="button">
-                  Actions
-                </button>
-              </a>
-
-              <v-dropdown-item>
-                <a href="#" @click.prevent="makeInvoice">Tạo hóa đơn</a>
-              </v-dropdown-item>
-              <v-dropdown-item>
-                <a href="#" @click.prevent="showCrossCheckingModal">Yêu cầu đối soát</a>
-              </v-dropdown-item>
-            </v-dropdown>
-
-          </div>
-
-          <div class="mailbox-filters">
-            <div class="mail-search">
-              <input id="inputEmailTo" v-model="searchText" type="email" placeholder="Search" class="form-control">
-            </div>
-          </div>
+      <div class="card">
+        <div class="card-header">
+          <h6>Horizontal Form</h6>
         </div>
+        <div class="card-body">
+          <form>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label for="firstName" class="col-sm-2 col-form-label">Tên phòng</label>
+                  <div class="col-sm-10">
+                    <input id="firstName" type="text" class="form-control" placeholder="Nhập vào tên phòng">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="email" class="col-sm-2 col-form-label">Thành phố</label>
+                  <div class="col-sm-4">
+                    <multiselect v-model="city" label="name" :options="cities" :searchable="true" :show-labels="false" />
+                  </div>
+                  <label for="email" class="col-sm-2 col-form-label">Quận</label>
+                  <div class="col-sm-4">
+                    <multiselect :disabled="city == null" v-model="district" label="name" :options="filteredDistrict"
+                      :searchable="true" :show-labels="false" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label for="lastName" class="col-sm-2 col-form-label">Host</label>
+                  <div class="col-sm-4">
+                    <multiselect id="inputUserName" v-model="merchant_id" label="name" :options="merchants" :searchable="true"
+                      :show-labels="false" />
+                  </div>
+                  <label for="lastName" class="col-sm-2 col-form-label">Phòng</label>
+                  <div class="col-sm-4">
+                    <multiselect id="inputUserName" v-model="room_type" label="name" :options="room_type_list"
+                      :searchable="true" :show-labels="false" />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="lastName" class="col-sm-1 col-form-label"> Từ </label>
+                  <div class="col-sm-5">
+                    <datepicker v-model="date_start" :format="format" input-class="form-control" />
+                  </div>
+                  <label for="lastName" class="col-sm-1 col-form-label"> Đến </label>
+                  <div class="col-sm-5">
+                    <datepicker v-model="date_end" :format="format" input-class="form-control" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-success">Áp dụng</button>
+          </form>
+        </div>
+      </div>
+      <div class="mailbox-content">
         <table class="table">
           <thead>
             <tr>
@@ -63,7 +86,9 @@
                   </div>
                   <div class="content-subject mb-3">
                     <i class="icon-fa icon-fa-home mb-3" />&ensp;Loại phòng: {{room.room_type_txt}} <br />
-                    <i class="icon-fa icon-fa-clock-o" />&ensp;Cho thuê: {{room.rent_type_txt}}
+                    <i class="icon-fa icon-fa-clock-o" />&ensp;Cho thuê: <button type="button" class="btn btn-xs btn-outline-primary">
+                      {{room.rent_type_txt}}
+                    </button>
                   </div>
                   <div class="content-subject mb-3">
                     <i class="icon-fa icon-fa-location-arrow" />&ensp;{{ room.details.data[0].address }}
@@ -113,20 +138,22 @@
               </td>
               <td class="cell-fav">
                 <div class="content-subject mb-3">
-                  <button @click="updateRoomMinor('new',room)"  type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i :class="room.new == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                  <button @click="updateRoomMinor('new',room)" type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i
+                      :class="room.new == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
                 </div>
                 <div class="content-subject mb-3">
-                  <button @click="updateRoomMinor('hot',room)"  type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i :class="room.hot == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                  <button @click="updateRoomMinor('hot',room)" type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i
+                      :class="room.hot == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
                 </div>
                 <div class="content-subject mb-3">
-                  <button @click="updateRoomMinor('latest_deal',room)" type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i :class="room.latest_deal == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                  <button @click="updateRoomMinor('latest_deal',room)" type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i
+                      :class="room.latest_deal == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
                 </div>
                 <div class="content-subject mb-3">
-                  <button @click="updateRoomMinor('is_manager',room)" type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i :class="room.is_manager == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                  <button @click="updateRoomMinor('is_manager',room)" type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i
+                      :class="room.is_manager == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
                 </div>
                 <div class="content-subject mb-3">
-                  <button @click="updateRoomMinor('status',room)" v-if="room.status == 0" type="button" class="btn btn-xs btn-icon btn-theme mailbox-action"><i
-                      class="icon-fa icon-fa-hourglass-half"></i></button>
                   <button @click="updateRoomMinor('status',room)" v-if="room.status == 2" type="button" class="btn btn-xs btn-icon btn-danger mailbox-action"><i
                       class="icon-fa icon-fa-check"></i></button>
                   <button @click="updateRoomMinor('status',room)" v-if="room.status == 1" type="button" class="btn btn-xs btn-icon btn-success mailbox-action"><i
@@ -160,6 +187,7 @@
         </table>
         <pagination @clicked="reloadData" :total-pages="totalPages" :current-page="currentPage" />
       </div>
+
       <sweet-modal overlay-theme="dark" ref="updateHost">
         <div v-if="update_room != null" class="card">
           <div class="card-header">
@@ -202,6 +230,7 @@ export default {
     return {
       format: "yyyy-MM-dd",
       rooms: [],
+      room_type: null,
       room: {},
       update_room: null,
       update_payment_status: null,
@@ -209,6 +238,7 @@ export default {
       q: "",
       date_start: null,
       date_end: null,
+      merchant_id: null,
       merchant: {
         id: ""
       },
@@ -226,31 +256,34 @@ export default {
       isLeftSidebarVisible: true,
       selectedRooms: [],
       permissions: "room.view",
-      searchText: "",
       totalPages: null,
       currentPage: null,
-      count: null
+      count: null,
+      room_type_list: [
+        {
+          id: 1,
+          value: "Nhà riêng"
+        },
+        {
+          id: 2,
+          value: "Căn hộ/Chung cư"
+        },
+        {
+          id: 3,
+          value: "Biệt thự"
+        },
+        {
+          id: 4,
+          value: "Phòng riêng"
+        },
+        {
+          id: 5,
+          value: "Khách sạn"
+        }
+      ]
     };
   },
   computed: {
-    selectAll: {
-      get: function() {
-        return this.rooms
-          ? this.selectedRooms.length === this.rooms.length
-          : false;
-      },
-      set: function(value) {
-        let selectedRooms = [];
-
-        if (value) {
-          this.rooms.forEach(function(room) {
-            selectedRooms.push(room.id);
-          });
-        }
-
-        this.selectedRooms = selectedRooms;
-      }
-    },
     filteredRooms() {
       return this.rooms.filter(room => {
         let nameValid = true;
@@ -470,6 +503,19 @@ export default {
             if (result) {
               this.reloadData(1);
               window.toastr["success"]("Updated Self Manage!", "Success");
+            } else {
+              window.toastr["error"]("Something wrong!", "Error");
+            }
+          });
+      } else if (option === "status") {
+        let response = await axios
+          .put(`rooms/prop-update/${room.id}?option=${option}`, {
+            status: room.status == 1 ? 2 : 1
+          })
+          .then(result => {
+            if (result) {
+              this.reloadData(1);
+              window.toastr["success"]("Updated Status!", "Success");
             } else {
               window.toastr["error"]("Something wrong!", "Error");
             }
