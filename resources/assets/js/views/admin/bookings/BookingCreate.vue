@@ -269,13 +269,13 @@
 <script>
 import { FormWizard, TabContent } from "vue-form-wizard";
 import Auth from "../../../services/auth";
-import { hoursList, env, format } from "../../../helpers/mixins";
+import { hoursList, format } from "../../../helpers/mixins";
 import { Tabs, Tab } from "vue-tabs-component";
 import Multiselect from "vue-multiselect";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import Datepicker from "vuejs-datepicker";
 export default {
-  mixins: [hoursList, env, format],
+  mixins: [hoursList, format],
   components: {
     FormWizard,
     TabContent,
@@ -432,7 +432,7 @@ export default {
     async getRoom() {
       try {
         const response = await axios.get(
-          this.baseApiUrl + `rooms/${this.$route.params.roomId}?include=details`
+          `rooms/${this.$route.params.roomId}?include=details`
         );
         return (this.room = response.data.data);
       } catch (error) {
@@ -463,31 +463,27 @@ export default {
         if (result) {
           // eslint-disable-next-line
           // Calculate the booking fee
-          const response = await axios.post(
-            this.baseApiUrl + `bookings/price-caculator/`,
-            {
-              additional_fee: 0,
-              price_discount: 0,
-              room_id: this.room.id,
-              checkin:
-                this.booking.booking_type == 2
-                  ? this.booking.checkin.toISOString().substr(0, 10) +
-                    " 14:00:00"
-                  : this.booking.checkin.toISOString().substr(0, 10) +
-                    " " +
-                    this.checkin_hour,
-              checkout:
-                this.booking.booking_type == 2
-                  ? this.booking.checkout.toISOString().substr(0, 10) +
-                    " 12:00:00"
-                  : this.booking.checkin.toISOString().substr(0, 10) +
-                    " " +
-                    this.checkout_hour,
-              coupon: this.booking.coupon,
-              number_of_guests: this.booking.number_of_guests,
-              booking_type: this.booking.booking_type
-            }
-          );
+          const response = await axios.post(`bookings/price-caculator/`, {
+            additional_fee: 0,
+            price_discount: 0,
+            room_id: this.room.id,
+            checkin:
+              this.booking.booking_type == 2
+                ? this.booking.checkin.toISOString().substr(0, 10) + " 14:00:00"
+                : this.booking.checkin.toISOString().substr(0, 10) +
+                  " " +
+                  this.checkin_hour,
+            checkout:
+              this.booking.booking_type == 2
+                ? this.booking.checkout.toISOString().substr(0, 10) +
+                  " 12:00:00"
+                : this.booking.checkin.toISOString().substr(0, 10) +
+                  " " +
+                  this.checkout_hour,
+            coupon: this.booking.coupon,
+            number_of_guests: this.booking.number_of_guests,
+            booking_type: this.booking.booking_type
+          });
           // console.log(response.data.data.total_fee);
           if (response.data.data) {
             if ("days" in response.data.data) {
@@ -515,7 +511,7 @@ export default {
       const result = this.$validator.validateAll();
       if (result) {
         let response = await axios
-          .post(this.baseApiUrl + `bookings`, {
+          .post(`bookings`, {
             name: this.booking.name,
             phone: this.booking.phone,
             sex: this.booking.sex,
@@ -579,7 +575,7 @@ export default {
           this.booking.price_discount = 120000;
           // Get discount base on coupon ( must return by number )
           // const response = await axios.get(
-          // this.baseApiUrl + `rooms/${this.$route.params.roomId}?include=details`
+          // `rooms/${this.$route.params.roomId}?include=details`
           // );
           // return;
         } catch (error) {
@@ -598,7 +594,7 @@ export default {
         this.booking.price_discount = 0;
         // Recalculate the discount
         // const response = await axios.get(
-        // this.baseApiUrl + `rooms/${this.$route.params.roomId}?include=details`
+        // `rooms/${this.$route.params.roomId}?include=details`
         // );
         // return;
       } catch (error) {

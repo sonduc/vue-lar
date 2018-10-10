@@ -216,9 +216,9 @@ import BookingSidebar from "./BookingSidebar";
 import BookingDetail from "./BookingDetail";
 import Auth from "../../../services/auth";
 import Pagination from "../../../components/paginate/ServerPagination";
-import { format, env, constant } from "../../../helpers/mixins";
+import { format, constant } from "../../../helpers/mixins";
 export default {
-  mixins: [format, env, constant],
+  mixins: [format, constant],
   components: {
     BookingSidebar,
     BookingDetail,
@@ -364,9 +364,12 @@ export default {
   methods: {
     async getMerchants() {
       try {
-        const response = await axios.get(
-          this.baseApiUrl + `users?&is_owner=1&limit=9999999`
-        );
+        const response = await axios.get(`users`, {
+          params: {
+            limit: 99999,
+            is_owner: 1
+          }
+        });
         this.merchants = response.data.data;
       } catch (error) {
         if (error) {
@@ -376,9 +379,11 @@ export default {
     },
     async getCities() {
       try {
-        const response = await axios.get(
-          this.baseApiUrl + `cities?limit=9999999`
-        );
+        const response = await axios.get(`cities`, {
+          params: {
+            limit: 100
+          }
+        });
         this.cities = response.data.data;
       } catch (error) {
         if (error) {
@@ -388,9 +393,11 @@ export default {
     },
     async getDistricts() {
       try {
-        const response = await axios.get(
-          this.baseApiUrl + `districts?limit=9999999`
-        );
+        const response = await axios.get(`districts`, {
+          params: {
+            limit: 1000
+          }
+        });
         this.districts = response.data.data;
       } catch (error) {
         if (error) {
@@ -406,16 +413,20 @@ export default {
       let date_end =
         this.date_end !== null ? this.date_end.toISOString().substr(0, 10) : "";
       try {
-        const response = await axios.get(
-          this.baseApiUrl +
-            `bookings?include=room.details&q=${this.q}&merchants=${
-              this.merchant.id
-            }&customers=${this.q}&city=${this.city.id}&district=${
-              this.district.id
-            }&date_start=${date_start}&status=${
-              this.selectedStatus
-            }&date_end=${date_end}&page=${page}&limit=5`
-        );
+        const response = await axios.get(`bookings`, {
+          params: {
+            include: "room.details",
+            merchants: this.merchant.id,
+            city: this.city.id,
+            district: this.district.id,
+            date_start: date_start,
+            date_end: date_end,
+            status: this.selectedStatus,
+            page: page,
+            limit: 5
+          }
+        });
+
         let paginate = response.data.meta.pagination;
         this.currentPage = paginate.current_page;
         this.totalPages = paginate.total_pages;
@@ -509,7 +520,7 @@ export default {
       this.$refs.update_modal.open();
     },
     async confirmUpdate() {
-      // let response = await axios.put(this.baseApiUrl + `booking/`)
+      // let response = await axios.put(`booking/`)
       this.$refs.update_modal.close();
     },
     closeUpdateModal() {

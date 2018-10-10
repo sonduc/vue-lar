@@ -112,7 +112,7 @@ export default {
     async getUsers({ page, filter, sort }) {
       try {
         const response = await axios.get(
-          `http://ws-api.lc/api/users?type=1&page=${page}`
+          `users?type=1&page=${page}`
         );
         let paginate = response.data.meta.pagination;
         console.log(paginate);
@@ -159,7 +159,7 @@ export default {
     createUser() {
       this.$validator.validateAll().then(result => {
         if (result) {
-          axios.post("http://ws-api.lc/api/users", this.user).then(response => {
+          axios.post("users", this.user).then(response => {
             if (response) {
               this.$swal("Success", "Success", "success");
             } else {

@@ -235,7 +235,7 @@ export default {
     async getUsers() {
       try {
         const response = await axios.get(
-          `http://ws-api.lc/api/users/${this.$route.params.userId}`
+          `users/${this.$route.params.userId}`
         );
         return (this.user = response.data.data);
       } catch (error) {

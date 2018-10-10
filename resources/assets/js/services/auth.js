@@ -1,10 +1,9 @@
 import Ls from "./ls";
 import { forEach } from "lodash";
-const BASE_API = "http://ws-api.lc/api/";
 export default {
   async login(loginData) {
     try {
-      let response = await axios.post(BASE_API + "login", {
+      let response = await axios.post("login", {
         username: loginData.email,
         password: loginData.password
       });
@@ -23,7 +22,7 @@ export default {
 
   async logout() {
     try {
-      await axios.get(BASE_API + "logout");
+      await axios.get("logout");
 
       Ls.remove("auth.token");
       toastr["success"]("Logged out!", "Success");
@@ -41,7 +40,7 @@ export default {
   //Lấy danh sách các permissions của người đăng nhập hiện tại
   async getProfile() {
     try {
-      let response = await axios.get(BASE_API + "profile?include=roles");
+      let response = await axios.get("profile?include=roles");
       if (response.data.data.roles) {
         let permissions = {};
         forEach(response.data.data.roles.data, role => {
@@ -56,7 +55,7 @@ export default {
 
   async getCurrentUser() {
     try {
-      let response = await axios.get(BASE_API + "profile");
+      let response = await axios.get("profile");
       return response.data.data;
       // console.log(response.data.data);
     } catch (error) {
