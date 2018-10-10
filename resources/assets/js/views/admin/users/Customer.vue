@@ -115,7 +115,7 @@ export default {
     async getUsers({ page, filter, sort }) {
       try {
         const response = await axios.get(
-          `http://ws-api.lc/api/users?type=0&page=${page}`
+          `users?type=0&page=${page}`
         );
         let paginate = response.data.meta.pagination;
         return {
@@ -162,7 +162,7 @@ export default {
       this.$validator.validateAll().then(result => {
         if (result) {
           axios
-            .post("http://ws-api.lc/api/users", {
+            .post("users", {
               name: this.user.name,
               email: this.user.email,
               password: this.user.password,

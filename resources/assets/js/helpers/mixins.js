@@ -1,5 +1,4 @@
 import numeral from "numeral";
-const API_URL = "http://ws-api.lc/api/";
 export const format = {
   filters: {
     formatNumber(value) {
@@ -69,14 +68,6 @@ export const hoursList = {
   }
 };
 
-export const env = {
-  computed: {
-    baseApiUrl() {
-      return "http://ws-api.lc/api/";
-    }
-  }
-};
-
 export const location = {
   data() {
     return {
@@ -87,7 +78,7 @@ export const location = {
   methods: {
     async getCities() {
       try {
-        const response = await axios.get(API_URL + `cities?limit=9999999`);
+        const response = await axios.get(`cities?limit=100`);
         this.citiesList = response.data.data;
         // console.log(response.data.data);
       } catch (error) {
@@ -98,7 +89,7 @@ export const location = {
     },
     async getDistricts() {
       try {
-        const response = await axios.get(API_URL + `districts?limit=9999999`);
+        const response = await axios.get(`districts?limit=1000`);
         this.districtsList = response.data.data;
         // console.log(response.data.data);
       } catch (error) {

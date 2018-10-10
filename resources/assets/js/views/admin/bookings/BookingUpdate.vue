@@ -131,12 +131,12 @@
 </template>
 
 <script>
-import { format, env, location } from "../../../helpers/mixins";
+import { format, location } from "../../../helpers/mixins";
 import Auth from "../../../services/auth";
 import Multiselect from "vue-multiselect";
 import Datepicker from "vuejs-datepicker";
 export default {
-  mixins: [format, env, location],
+  mixins: [format, location],
   components: {
     Multiselect,
     Datepicker
@@ -236,8 +236,12 @@ export default {
     async getBooking() {
       try {
         const response = await axios.get(
-          this.baseApiUrl +
-            `bookings/${this.$route.params.bookingId}?include=room.details`
+          `bookings/${this.$route.params.bookingId}`,
+          {
+            params: {
+              include: "room.details"
+            }
+          }
         );
         this.booking = response.data.data;
       } catch (error) {
