@@ -19,7 +19,7 @@
                 <div class="form-group row">
                   <label for="firstName" class="col-sm-2 col-form-label">Tên phòng</label>
                   <div class="col-sm-10">
-                    <input id="firstName" type="text" class="form-control" placeholder="Nhập vào tên phòng">
+                    <input v-model="q" id="firstName" type="text" class="form-control" placeholder="Nhập vào tên phòng">
                   </div>
                 </div>
                 <div class="form-group row">
@@ -43,7 +43,7 @@
                   </div>
                   <label for="lastName" class="col-sm-2 col-form-label">Phòng</label>
                   <div class="col-sm-4">
-                    <multiselect id="inputUserName" v-model="room_type" label="name" :options="room_type_list"
+                    <multiselect id="inputUserName" v-model="room_type" label="value" :options="room_type_list"
                       :searchable="true" :show-labels="false" />
                   </div>
                 </div>
@@ -54,12 +54,13 @@
                   </div>
                   <label for="lastName" class="col-sm-1 col-form-label"> Đến </label>
                   <div class="col-sm-5">
-                    <datepicker v-model="date_end" :format="format" input-class="form-control" />
+                    <datepicker :disabled-dates="disabledCheckout" v-model="date_end" :format="format" input-class="form-control" />
                   </div>
                 </div>
               </div>
             </div>
-            <button class="btn btn-success">Áp dụng</button>
+            <button @click="applyFilter(1)" class="btn btn-success">Áp dụng</button>
+            <button class="btn btn-success">Reset</button>
           </form>
         </div>
       </div>
@@ -116,7 +117,9 @@
                   khách thứ {{ room.max_guest }})
                 </div>
                 <div class="content-subject mb-3">
-                  Chi tiết giá
+                  <button @click="openModalOptionalPrices" class="btn btn-sm btn-secondary btn-pressable">
+                    <i class="icon-fa icon-fa-calendar"></i> Chi tiết giá
+                  </button>
                 </div>
               </td>
               <td width="10%">
@@ -207,6 +210,8 @@
           Confirm
         </button>
       </sweet-modal>
+      <sweet-modal ref="optionalPrices" overlay-theme="dark">
+      </sweet-modal>
     </div>
   </div>
 </template>
@@ -228,9 +233,28 @@ export default {
   },
   data() {
     return {
+      events: [
+        {
+          title: "event1",
+          start: "2018-10-01"
+        },
+        {
+          title: "event2",
+          start: "2018-10-05",
+          end: "2018-10-07",
+          color: "red"
+        },
+        {
+          title: "event3",
+          start: "2018-10-09T12:30:00",
+          allDay: false
+        }
+      ],
       format: "yyyy-MM-dd",
       rooms: [],
-      room_type: null,
+      room_type: {
+        id: ""
+      },
       room: {},
       update_room: null,
       update_payment_status: null,
@@ -280,9 +304,13 @@ export default {
           id: 5,
           value: "Khách sạn"
         }
-      ]
+      ],
+      disabledCheckout: {
+        to: ""
+      }
     };
   },
+
   computed: {
     filteredRooms() {
       return this.rooms.filter(room => {
@@ -308,6 +336,12 @@ export default {
   watch: {
     selectedStatus() {
       this.isModalVisible = false;
+    },
+    date_start: {
+      handler(val) {
+        this.disabledCheckout.to = val;
+      },
+      deep: true
     }
   },
   mounted() {
@@ -383,7 +417,13 @@ export default {
           params: {
             include: "details,user",
             page: page,
-            limit: 5
+            limit: 5,
+            name: this.q,
+            city: this.city.id,
+            district: this.district.id,
+            status: this.status,
+            merchant: this.merchant_id,
+            manager: this.is_manager
           }
         });
 
@@ -437,6 +477,12 @@ export default {
       this.update_room = {};
       this.$refs.updateHost.close();
     },
+    openModalOptionalPrices() {
+      this.$refs.optionalPrices.open();
+    },
+    closeOptionalPricesModal() {
+      this.$refs.optionalPrices.close();
+    },
     async updateHostConfirm() {
       let response = await axios
         .put(`rooms/prop-update/${this.update_room.id}?option=${this.option}`, {
@@ -444,7 +490,7 @@ export default {
         })
         .then(result => {
           if (result) {
-            this.reloadData(1);
+            this.reloadData(this.currentPage);
             this.$refs.updateHost.close();
             window.toastr["success"]("Updated host!", "Success");
           } else {
@@ -460,7 +506,7 @@ export default {
           })
           .then(result => {
             if (result) {
-              this.reloadData(1);
+              this.reloadData(this.currentPage);
 
               window.toastr["success"]("Updated Hot Room!", "Success");
             } else {
@@ -474,7 +520,7 @@ export default {
           })
           .then(result => {
             if (result) {
-              this.reloadData(1);
+              this.reloadData(this.currentPage);
 
               window.toastr["success"]("Updated New Room!", "Success");
             } else {
@@ -488,7 +534,7 @@ export default {
           })
           .then(result => {
             if (result) {
-              this.reloadData(1);
+              this.reloadData(this.currentPage);
               window.toastr["success"]("Updated Latest Deal!", "Success");
             } else {
               window.toastr["error"]("Something wrong!", "Error");
@@ -501,7 +547,7 @@ export default {
           })
           .then(result => {
             if (result) {
-              this.reloadData(1);
+              this.reloadData(this.currentPage);
               window.toastr["success"]("Updated Self Manage!", "Success");
             } else {
               window.toastr["error"]("Something wrong!", "Error");
@@ -514,13 +560,18 @@ export default {
           })
           .then(result => {
             if (result) {
-              this.reloadData(1);
+              this.reloadData(this.currentPage);
               window.toastr["success"]("Updated Status!", "Success");
             } else {
               window.toastr["error"]("Something wrong!", "Error");
             }
           });
       }
+    },
+    applyFilter(page) {
+      this.getRooms({
+        page
+      });
     }
   }
 };

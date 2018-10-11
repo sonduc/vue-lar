@@ -78,7 +78,7 @@ export const location = {
   methods: {
     async getCities() {
       try {
-        const response = await axios.get(`cities?limit=100`);
+        const response = await axios.get(`cities?limit=-1`);
         this.citiesList = response.data.data;
         // console.log(response.data.data);
       } catch (error) {
@@ -89,7 +89,7 @@ export const location = {
     },
     async getDistricts() {
       try {
-        const response = await axios.get(`districts?limit=1000`);
+        const response = await axios.get(`districts?limit=-1`);
         this.districtsList = response.data.data;
         // console.log(response.data.data);
       } catch (error) {
