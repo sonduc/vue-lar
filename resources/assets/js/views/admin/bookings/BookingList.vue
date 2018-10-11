@@ -89,7 +89,7 @@
               <td class="cell-content">
                 <div class="content-subject">Hình thức: <label class="label label-primary">{{booking.payment_method_txt}}</label></div>
                 <div class="content-subject">Tiền phòng: {{booking.price_original | formatNumber}}</div>
-                <div v-if="booking.price_discount < 0" class="content-subject">Phụ thu: {{(booking.price_discount *
+                <div v-if="booking.additional_fee < 0" class="content-subject">Phụ thu: {{(booking.additional_fee *
                   (-1)) | formatNumber}}</div>
                 <div v-if="booking.price_discount >= 0" class="content-subject">Giảm giá: {{booking.price_discount |
                   formatNumber}}</div>
@@ -213,12 +213,23 @@
           slot="button"
           type="button"
           class="btn btn-theme"
+          @click="submitUpdateBookingStatus()">
+          Cập nhập
+        </button>
+        <button
+          v-if="option == 3"
+          slot="button"
+          type="button"
+          class="btn btn-theme"
           @click="closeUpdateModal()">
           Cập nhập
         </button>
       </sweet-modal>
 
-      <sweet-modal ref="money_update" hide-close-button blocking
+      <sweet-modal
+        ref="money_update"
+        hide-close-button
+        blocking
         overlay-theme="dark">
         <div class="card">
           <div class="card-header">
@@ -226,7 +237,7 @@
           </div>
           <div class="card-body">
             <form>
-              <div class="form-group">
+              <div class="form-group" v-if="option == 3">
                 <label for="">Giá giảm</label>
                 <input
                   @keydown.enter.prevent="submitUpdatePrice"
@@ -235,10 +246,33 @@
                   class="form-control"
                   placeholder="Nhập giá">
               </div>
+
+              <div class="form-group" v-if="option == 4">
+                <label for="">Phụ giá</label>
+                <input
+                  @keydown.enter.prevent="submitUpdateSurcharge"
+                  v-model="update_booking.additional_fee"
+                  type="number"
+                  class="form-control"
+                  placeholder="Nhập giá">
+              </div>
             </form>
           </div>
         </div>
-        <button slot="button" type="button" class="btn btn-theme" @click="submitUpdatePrice">
+        <button
+          v-if="option == 3"
+          slot="button"
+          type="button"
+          class="btn btn-theme"
+          @click="submitUpdatePrice">
+          Cập nhật
+        </button>
+        <button
+          v-if="option == 4"
+          slot="button"
+          type="button"
+          class="btn btn-theme"
+          @click="submitUpdateSurcharge">
           Cập nhật
         </button>
       </sweet-modal>
@@ -559,7 +593,7 @@ export default {
     showModalSurcharge(booking) {
       this.option = 4;
       this.update_booking = booking;
-      this.$refs.update_modal.open();
+      this.$refs.money_update.open();
     },
     async confirmUpdate() {
       // let response = await axios.put(`booking/`)
@@ -579,6 +613,23 @@ export default {
         });
         this.update_booking = {};
         this.$refs.money_update.close();
+        this.reloadData(this.currentPage)
+        window.toastr["success"]("Cập nhật thành công", "Success");
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
+    async submitUpdateSurcharge() {
+      try {
+        let additional_fee = this.update_booking.additional_fee
+        const response = await axios.put(`bookings/money-update/${this.update_booking.id}`, {
+          additional_fee : additional_fee
+        });
+        this.update_booking = {};
+        this.$refs.money_update.close();
+        this.reloadData(this.currentPage)
         window.toastr["success"]("Cập nhật thành công", "Success");
       } catch (error) {
         if (error) {
@@ -594,6 +645,23 @@ export default {
           payment_status : payment_status
         });
         this.update_payment_status = null;
+        this.$refs.update_modal.close();
+        this.reloadData(this.currentPage)
+        window.toastr["success"]("Cập nhật thành công", "Success");
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
+    async submitUpdateBookingStatus() {
+      // console.log(this.update_payment_status.value)
+      try {
+        let status = this.update_booking_status.value
+        const response = await axios.put(`bookings/status-update/${this.update_booking.id}?option=status`, {
+            status : status
+        });
+        this.update_booking_status = null;
         this.$refs.update_modal.close();
         this.reloadData(this.currentPage)
         window.toastr["success"]("Cập nhật thành công", "Success");

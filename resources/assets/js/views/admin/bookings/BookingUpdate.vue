@@ -15,7 +15,7 @@
             <h6>{{booking.room.data.details.data[0].name}}</h6>
           </div>
           <div class="card-body">
-            <form>
+            <form @submit.prevent="submitUpdate">
               <div class="form-row">
                 <div class="form-group col-md-3">
                   <label>Ngày nhận phòng</label>
@@ -37,8 +37,10 @@
               <hr />
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label :style="errors.has('name') ? 'color:red;' : ''">{{errors.has('name')
-                    ? errors.first('name') : 'Họ và tên *'}}</label>
+                  <label
+                    :style="errors.has('name') ? 'color:red;' : ''">
+                      {{errors.has('name') ? errors.first('name') : 'Họ và tên *'}}
+                  </label>
                   <input name="name" v-validate="'required'" data-vv-as="Họ và tên" type="text" v-model="booking.name"
                     class="form-control">
                 </div>
@@ -121,7 +123,11 @@
                       <multiselect :disabled="city.id == ''" id="inputUserName" v-model="district" label="name" :options="filteredDistrict" :searchable="true" :show-labels="false" />
                   </div>
               </div>
-              <button class="btn btn-primary">Submit</button>
+              <button
+                class="btn btn-primary"
+                type="submit">
+                  Cập nhật
+              </button>
             </form>
           </div>
         </div>
@@ -249,6 +255,9 @@ export default {
           window.toastr["error"]("There was an error", "Error");
         }
       }
+    },
+    submitUpdate(){
+      console.log(this.booking)
     }
   },
   computed: {

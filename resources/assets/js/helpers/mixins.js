@@ -119,15 +119,22 @@ export const constant = {
     return {
       paymentStatusList: [
         { value: 3, title: "Đã thanh toán" },
-        { value: 0, title: "Chưa thanh toán" }
+        { value: 0, title: "Chưa thanh toán" },
+      ],
+      paymentMethodList: [
+        { value: 1, title: "Tiền mặt"},
+        { value: 2, title: "Chuyển khoản"},
+        { value: 3, title: "Bảo kim"},
+        { value: 4, title: "Internet Banking"},
+        { value: 5, title: "Thẻ Visa\/MasterCard"},
       ],
       bookingStatusList: [
         { value: 1, title: "Đơn mới" },
         { value: 2, title: "Đã xác nhận" },
         { value: 3, title: "Đang sử dụng" },
         { value: 4, title: "Đã hoàn thành" },
-        { value: 5, title: "Đã hủy" }
-      ]
+        { value: 5, title: "Đã hủy" },
+      ],
     };
   },
   computed: {
@@ -136,6 +143,9 @@ export const constant = {
     },
     paymentList() {
       return this.paymentStatusList;
+    },
+    paymentMethods(){
+      return this.paymentMethodList;
     }
   }
 };
