@@ -328,7 +328,7 @@ export default {
       try {
         const response = await axios.get(`users`, {
           params: {
-            limit: -1,
+            limit: 100,
             is_owner: 1
           }
         });
