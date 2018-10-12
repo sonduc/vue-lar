@@ -149,6 +149,7 @@ export default {
   },
   data() {
     return {
+      permissions: "booking.update",
       booking: null,
       paymentStatusList: [
         {

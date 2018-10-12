@@ -89,11 +89,10 @@
               <td class="cell-content">
                 <div class="content-subject">Hình thức: <label class="label label-primary">{{booking.payment_method_txt}}</label></div>
                 <div class="content-subject">Tiền phòng: {{booking.price_original | formatNumber}}</div>
-                <div v-if="booking.additional_fee < 0" class="content-subject">Phụ thu: {{(booking.additional_fee *
-                  (-1)) | formatNumber}}</div>
-                <div v-if="booking.price_discount >= 0" class="content-subject">Giảm giá: {{booking.price_discount |
+                <div v-if="booking.additional_fee > 0" class="content-subject">Phụ thu: {{booking.additional_fee | formatNumber}}</div>
+                <div v-if="booking.price_discount > 0" class="content-subject">Giảm giá: {{booking.price_discount |
                   formatNumber}}</div>
-                <div class="content-subject">Tổng thu: {{(booking.total_fee - booking.price_discount) | formatNumber}}</div>
+                <div class="content-subject">Tổng thu: {{(booking.total_fee) | formatNumber}}</div>
 
               </td>
               <td class="cell-content">
@@ -410,7 +409,7 @@ export default {
         return item.city_id == self.city.id;
       });
     },
-    bookingStatus(){}
+    bookingStatus() {}
   },
   watch: {
     selectedStatus() {
@@ -434,7 +433,7 @@ export default {
     });
     this.hideSidebarOnMobile();
   },
-  created(){
+  created() {
     // console.log(this.statusList)
   },
   methods: {
@@ -607,13 +606,16 @@ export default {
     },
     async submitUpdatePrice() {
       try {
-        let price_discount = this.update_booking.price_discount
-        const response = await axios.put(`bookings/money-update/${this.update_booking.id}`, {
-          price_discount : price_discount
-        });
+        let price_discount = this.update_booking.price_discount;
+        const response = await axios.put(
+          `bookings/money-update/${this.update_booking.id}`,
+          {
+            price_discount: price_discount
+          }
+        );
         this.update_booking = {};
         this.$refs.money_update.close();
-        this.reloadData(this.currentPage)
+        this.reloadData(this.currentPage);
         window.toastr["success"]("Cập nhật thành công", "Success");
       } catch (error) {
         if (error) {
@@ -623,13 +625,16 @@ export default {
     },
     async submitUpdateSurcharge() {
       try {
-        let additional_fee = this.update_booking.additional_fee
-        const response = await axios.put(`bookings/money-update/${this.update_booking.id}`, {
-          additional_fee : additional_fee
-        });
+        let additional_fee = this.update_booking.additional_fee;
+        const response = await axios.put(
+          `bookings/money-update/${this.update_booking.id}`,
+          {
+            additional_fee: additional_fee
+          }
+        );
         this.update_booking = {};
         this.$refs.money_update.close();
-        this.reloadData(this.currentPage)
+        this.reloadData(this.currentPage);
         window.toastr["success"]("Cập nhật thành công", "Success");
       } catch (error) {
         if (error) {
@@ -640,13 +645,18 @@ export default {
     async submitUpdatePaymentStatus() {
       // console.log(this.update_payment_status.value)
       try {
-        let payment_status = this.update_payment_status.value
-        const response = await axios.put(`bookings/status-update/${this.update_booking.id}?option=payment_status`, {
-          payment_status : payment_status
-        });
+        let payment_status = this.update_payment_status.value;
+        const response = await axios.put(
+          `bookings/status-update/${
+            this.update_booking.id
+          }?option=payment_status`,
+          {
+            payment_status: payment_status
+          }
+        );
         this.update_payment_status = null;
         this.$refs.update_modal.close();
-        this.reloadData(this.currentPage)
+        this.reloadData(this.currentPage);
         window.toastr["success"]("Cập nhật thành công", "Success");
       } catch (error) {
         if (error) {
@@ -657,20 +667,23 @@ export default {
     async submitUpdateBookingStatus() {
       // console.log(this.update_payment_status.value)
       try {
-        let status = this.update_booking_status.value
-        const response = await axios.put(`bookings/status-update/${this.update_booking.id}?option=status`, {
-            status : status
-        });
+        let status = this.update_booking_status.value;
+        const response = await axios.put(
+          `bookings/status-update/${this.update_booking.id}?option=status`,
+          {
+            status: status
+          }
+        );
         this.update_booking_status = null;
         this.$refs.update_modal.close();
-        this.reloadData(this.currentPage)
+        this.reloadData(this.currentPage);
         window.toastr["success"]("Cập nhật thành công", "Success");
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
         }
       }
-    },
+    }
   }
 };
 </script>
