@@ -72,7 +72,10 @@
                     <div class="form-group">
                       <label :style="errors.has('booking_source') ? 'color:red;' : ''">{{errors.has('booking_source')
                         ? errors.first('booking_source') : 'Nguồn đặt phòng *'}}</label>
-                      <multiselect :allow-empty="false" name="booking_source" v-model="source" v-validate="'required'"
+                      <multiselect
+                        :allow-empty="false" name="booking_source"
+                        v-model="source"
+                        v-validate="'required'"
                         data-vv-as="Nguồn đặt phòng" label="title" :options="sourceList" :searchable="true"
                         :show-labels="false" />
                     </div>
@@ -111,8 +114,8 @@
 
                     <div class="form-group">
                       <label :style="errors.has('number_guest') ? 'color:red;' : ''">{{errors.has('number_guest')
-                        ? errors.first('number_guest') : 'Khách *'}}</label>
-                      <input name="number_guest" v-validate="'required|numeric'" data-vv-as="Khách" type="text" v-model="booking.number_of_guests"
+                        ? errors.first('number_guest') : 'Số khách *'}}</label>
+                      <input name="number_guest" v-validate="'required|numeric'" data-vv-as="Số khách" type="text" v-model="booking.number_of_guests"
                         class="form-control">
                     </div>
                     <div class="form-group">
@@ -290,38 +293,6 @@ export default {
   data() {
     return {
       current_user: null,
-      paymentStatusList: [
-        {
-          value: 3,
-          title: "Đã thanh toán"
-        },
-        {
-          value: 0,
-          title: "Chưa thanh toán"
-        }
-      ],
-      paymentMethodList: [
-        {
-          value: 1,
-          title: "Tiền mặt"
-        },
-        {
-          value: 2,
-          title: "Chuyển khoản"
-        },
-        {
-          value: 3,
-          title: "Bảo kim"
-        },
-        {
-          value: 4,
-          title: "Internet Banking"
-        },
-        {
-          value: 5,
-          title: "Thẻ Visa/MasterCard"
-        }
-      ],
       sourceList: [
         {
           value: 1,
@@ -420,7 +391,8 @@ export default {
     status: {
       handler(val) {
         this.booking.status = val.value;
-      }
+      },
+      deep: true
     },
     source: {
       handler(val) {
@@ -629,7 +601,7 @@ export default {
           if (!response) {
             this.$router.push("permission-denied-403"); // push về page 403
           } else {
-            this.getRoom(); //fetch data sau khi check permissions của người đang đăng nhập
+            this.getRoom();
           }
         });
       }

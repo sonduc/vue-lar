@@ -135,6 +135,32 @@ export const constant = {
         { value: 4, title: "Đã hoàn thành" },
         { value: 5, title: "Đã hủy" },
       ],
+      sourceList: [
+        {
+          value: 1,
+          title: "Trang fanpage"
+        },
+        {
+          value: 2,
+          title: "Tổng đài"
+        },
+        {
+          value: 3,
+          title: "Qua Team Sale"
+        },
+        {
+          value: 4,
+          title: "Qua Website"
+        },
+        {
+          value: 5,
+          title: "Qua AirBnb"
+        },
+        {
+          value: 5,
+          title: "Qua Booking.com"
+        }
+      ],
     };
   },
   computed: {
@@ -146,6 +172,9 @@ export const constant = {
     },
     paymentMethods(){
       return this.paymentMethodList;
-    }
+    },
+    bookingSource(){
+      return this.sourceList;
+    },
   }
 };
