@@ -58,21 +58,27 @@
         <div class="col-sm-12">
           <form @submit.prevent="createUser">
             <div class="form-group row">
-              <label for="firstName" class="col-sm-3 col-form-label">Name</label>
+              <label for="firstName" class="col-sm-3 col-form-label">Name *</label>
               <div class="col-sm-9">
-                <input id="firstName" type="text" class="form-control" placeholder="Full name">
+                <input v-model="user.name" id="firstName" v-validate="'required'" type="text" name="name" data-vv-as="Tên" class="form-control" placeholder="Full name">
               </div>
             </div>
             <div class="form-group row">
-              <label for="email" class="col-sm-3 col-form-label">Email</label>
+              <label for="email" class="col-sm-3 col-form-label">Email *</label>
               <div class="col-sm-9">
-                <input id="email" type="email" class="form-control" placeholder="Email">
+                <input v-model="user.email" v-validate="'required|email'" id="email" type="email" class="form-control" name="email" data-vv-as="Email" placeholder="Email">
               </div>
             </div>
             <div class="form-group row">
               <label for="lastName" class="col-sm-3 col-form-label">Password</label>
               <div class="col-sm-9">
-                <input id="lastName" type="text" class="form-control" placeholder="Last Name">
+                <input v-validate="'required'" data-vv-as="Mật khẩu" name="password"  v-model="user.password" id="lastName" type="text" class="form-control" placeholder="Mật khẩu">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="lastName" class="col-sm-3 col-form-label">Password Confirm</label>
+              <div class="col-sm-9">
+                <input v-validate="'required|confirmed:password'" name="password_confirm" data-vv-as="Nhập lại mật khẩu" v-model="user.password_confirm" id="lastName" type="text" class="form-control" placeholder="Nhập lại mật khẩu">
               </div>
             </div>
             <div class="form-group row">
