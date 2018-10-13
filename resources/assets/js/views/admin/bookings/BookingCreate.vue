@@ -72,7 +72,10 @@
                     <div class="form-group">
                       <label :style="errors.has('booking_source') ? 'color:red;' : ''">{{errors.has('booking_source')
                         ? errors.first('booking_source') : 'Nguồn đặt phòng *'}}</label>
-                      <multiselect :allow-empty="false" name="booking_source" v-model="source" v-validate="'required'"
+                      <multiselect
+                        :allow-empty="false" name="booking_source"
+                        v-model="source"
+                        v-validate="'required'"
                         data-vv-as="Nguồn đặt phòng" label="title" :options="sourceList" :searchable="true"
                         :show-labels="false" />
                     </div>
@@ -111,8 +114,8 @@
 
                     <div class="form-group">
                       <label :style="errors.has('number_guest') ? 'color:red;' : ''">{{errors.has('number_guest')
-                        ? errors.first('number_guest') : 'Khách *'}}</label>
-                      <input name="number_guest" v-validate="'required|numeric'" data-vv-as="Khách" type="text" v-model="booking.number_of_guests"
+                        ? errors.first('number_guest') : 'Số khách *'}}</label>
+                      <input name="number_guest" v-validate="'required|numeric'" data-vv-as="Số khách" type="text" v-model="booking.number_of_guests"
                         class="form-control">
                     </div>
                     <div class="form-group">
@@ -195,10 +198,9 @@
                       </div>
                     </div>
                     <div class="col-lg-6">
-
                       <div class="form-group">
                         <label>Trạng thái thanh toán</label>
-                        <multiselect :allow-empty="false" v-model="payment_status" value="value" label="title" :options="paymentStatusList"
+                        <multiselect :allow-empty="false" v-model="payment_status" value="value" label="title" :options="paymentList"
                           :searchable="true" :show-labels="false" />
                       </div>
                       <div class="form-group">
@@ -207,7 +209,11 @@
                         <input name="additional_fee" data-vv-as="Phụ thu" v-model.number="booking.additional_fee"
                           v-validate="'numeric'" type="number" class="form-control">
                       </div>
-                      
+                      <div class="form-group">
+                        <label>Trạng thái booking</label>
+                        <multiselect :allow-empty="false" v-model="status" value="value" label="title" :options="statusList"
+                          :searchable="true" :show-labels="false" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -269,13 +275,13 @@
 <script>
 import { FormWizard, TabContent } from "vue-form-wizard";
 import Auth from "../../../services/auth";
-import { hoursList, format } from "../../../helpers/mixins";
+import { hoursList, format, constant } from "../../../helpers/mixins";
 import { Tabs, Tab } from "vue-tabs-component";
 import Multiselect from "vue-multiselect";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import Datepicker from "vuejs-datepicker";
 export default {
-  mixins: [hoursList, format],
+  mixins: [hoursList, format, constant],
   components: {
     FormWizard,
     TabContent,
@@ -287,38 +293,6 @@ export default {
   data() {
     return {
       current_user: null,
-      paymentStatusList: [
-        {
-          value: 3,
-          title: "Đã thanh toán"
-        },
-        {
-          value: 0,
-          title: "Chưa thanh toán"
-        }
-      ],
-      paymentMethodList: [
-        {
-          value: 1,
-          title: "Tiền mặt"
-        },
-        {
-          value: 2,
-          title: "Chuyển khoản"
-        },
-        {
-          value: 3,
-          title: "Bảo kim"
-        },
-        {
-          value: 4,
-          title: "Internet Banking"
-        },
-        {
-          value: 5,
-          title: "Thẻ Visa/MasterCard"
-        }
-      ],
       sourceList: [
         {
           value: 1,
@@ -347,6 +321,7 @@ export default {
       ],
       payment_method: null,
       payment_status: null,
+      status:null,
       source: null,
       checkout_hour: null,
       checkin_hour: null,
@@ -361,7 +336,8 @@ export default {
         service_fee: 0,
         price_original: 0,
         coupon_discount: 0,
-        total_fee: 0
+        total_fee: 0,
+        status:1,
       },
       disabledCheckout: {
         to: ""
@@ -412,12 +388,18 @@ export default {
       },
       deep: true
     },
+    status: {
+      handler(val) {
+        this.booking.status = val.value;
+      },
+      deep: true
+    },
     source: {
       handler(val) {
         this.booking.source = val.value;
       },
       deep: true
-    }
+    },
   },
   computed: {
     totalFeeCalculated() {
@@ -508,6 +490,7 @@ export default {
       }
     },
     async onSubmit() {
+      // console.log(this.booking)
       const result = this.$validator.validateAll();
       if (result) {
         let response = await axios
@@ -618,7 +601,7 @@ export default {
           if (!response) {
             this.$router.push("permission-denied-403"); // push về page 403
           } else {
-            this.getRoom(); //fetch data sau khi check permissions của người đang đăng nhập
+            this.getRoom();
           }
         });
       }
