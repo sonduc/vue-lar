@@ -10,6 +10,7 @@ app/storage/
 public/storage
 public/assets/js/app.js
 public/assets/js/app.js.map
+public/assets/css/laraspace.css
 resources/assets/js/bootstrap.js
 public/hot
 storage/*.key
