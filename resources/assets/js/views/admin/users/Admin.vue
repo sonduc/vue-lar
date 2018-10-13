@@ -8,7 +8,7 @@
         <li class="breadcrumb-item active">Users</li>
       </ol>
       <div class="page-actions">
-        <a @click="$refs.dark_html_modal.open()" style="color:white" class="btn btn-primary">
+        <a @click="$refs.create_user.open()" style="color:white" class="btn btn-primary">
           <i class="icon-fa icon-fa-plus" /> New User
         </a>
       </div>
@@ -21,7 +21,7 @@
             <div class="card-actions" />
           </div>
           <div class="card-body">
-            <table-component :data="getUsers" sort-by="row.name" sort-order="desc" table-class="table">
+            <table-component :data="getUsers" sort-by="row.name" ref="table" sort-order="desc" table-class="table">
               <table-column show="id" label="ID" />
               <table-column show="name" label="Name" />
               <table-column show="email" label="Email" />
@@ -54,7 +54,7 @@
     <!-- All Modal Here -->
     <div class="row">
       <!-- Modal New User -->
-      <sweet-modal ref="dark_html_modal" modal-theme="light" title="Create User" overlay-theme="dark">
+      <sweet-modal ref="create_user" modal-theme="light" title="Create User" overlay-theme="dark">
         <div class="col-sm-12">
           <form @submit.prevent="createUser">
             <div class="form-group row">
@@ -142,6 +142,7 @@ export default {
         type: 2,
         roles: []
       },
+      current_page: 1,
       role_list: [],
       roles: [],
       permissions: "user.view"
@@ -164,7 +165,7 @@ export default {
       try {
         const response = await axios.get(`users?type=2&page=${page}`);
         let paginate = response.data.meta.pagination;
-        console.log(paginate);
+        this.current_page = page;
         return {
           data: response.data.data,
           pagination: {
@@ -220,7 +221,21 @@ export default {
         if (result) {
           axios.post("users", this.user).then(response => {
             if (response) {
-              this.$swal("Success", "Success", "success");
+              this.$swal({
+                title: "Thành công",
+                text: "Đã tạo người dùng mới",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+                cancelButtonText: "Quay lại",
+                showCloseButton: false,
+                showLoaderOnConfirm: true
+              }).then(result => {
+                let page = this.current_page;
+                this.getUsers({ page });
+                this.$refs.create_user.close();
+                this.$refs.table.refresh();
+              });
             } else {
               this.$swal("Failed", "Some errors", "error");
             }

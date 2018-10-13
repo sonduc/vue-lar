@@ -68,6 +68,7 @@
               <div class="form-group col-md-6">
                 <label for="inputUserName">Quyền</label>
                 <multiselect 
+                  v-model="roles"
                   :allow-empty="true" 
                   name="role" 
                   data-vv-as="Phân quyền" 
@@ -132,6 +133,18 @@ export default {
       roles: []
     };
   },
+  watch: {
+    roles: {
+      handler(val) {
+        this.user.roles = [];
+        console.log(val);
+        val.forEach(element => {
+          this.user.roles.push(element.id);
+        });
+      },
+      deep: true
+    }
+  },
   methods: {
     async getRoles() {
       try {
@@ -150,6 +163,7 @@ export default {
             include: "roles"
           }
         });
+        this.roles = response.data.data.roles.data;
         return (this.user = response.data.data);
       } catch (error) {
         if (error) {
@@ -162,7 +176,7 @@ export default {
         .put(`users/${this.$route.params.userId}`, this.user)
         .then(result => {
           if (result) {
-            this.$swal("success", "success", "success");
+            this.$swal("Thành công", "Thông tin đã được cập nhật", "success");
           }
         });
     }
@@ -175,7 +189,7 @@ export default {
             this.$router.push("permission-denied-403"); // push về page 403
           } else {
             this.getRoles();
-            this.getUsers(); //fetch data sau khi check permissions của người đang đăng nhập
+            this.getUsers();
           }
         });
       }
