@@ -233,6 +233,7 @@ export default {
   },
   data() {
     return {
+      permissions: "booking.update",
       booking: null,
       checkout_hour: null,
       checkin_hour: null,

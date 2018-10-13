@@ -37,6 +37,11 @@
                 <h5><b>{{booking.room.data.details.data[0].name}}</b></h5>
                 <p>{{booking.room.data.details.data[0].address}}</p>
               </div>
+              <div class="actions">
+                <router-link :to="'/admin/bookings/update/'+booking.id" class="btn btn-primary btn-sm">
+                  <i class="icon-fa icon-fa-pencil" /> Sửa booking
+                </router-link>
+              </div>
             </div>
             <div class="card-body">
               <table class="table table-hover">

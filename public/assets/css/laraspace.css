@@ -22599,7 +22599,6 @@ code,
 
 .table th {
   text-transform: uppercase;
-  white-space: nowrap;
   font-size: 0.85em;
   font-weight: 500;
   position: relative;
@@ -27191,7 +27190,6 @@ code,
 .mailbox .mailbox-content .table tr td .content-subject {
   color: #737373;
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
