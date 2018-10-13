@@ -52,38 +52,6 @@
       </div>
     </div>
     <!-- All Modal Here -->
-    <div class="row">
-      <!-- Modal New User -->
-      <sweet-modal ref="dark_html_modal" modal-theme="light" title="Create User" overlay-theme="dark">
-        <div class="col-sm-12">
-          <form @submit.prevent="createUser" id="needs-validation" novalidate="novalidate" class="was-validated">
-            <div class="form-group">
-              <label for="firstName">Name</label>
-              <input name="Name" id="firstName" type="text" required="required" placeholder="First name" v-validate="'required'" class="form-control is-valid">
-              <div v-if="errors.has('Name')" class="invalid-feedback">
-                {{errors.first('Name')}}
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input name="Email" id="email" type="text" required="required" v-validate="'required|email'" class="form-control is-valid">
-              <div v-if="errors.has('Email')" class="invalid-feedback">
-                {{errors.first('Email')}}
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input name="Password" id="password" type="password" required="required" v-validate="'required|min:6'" class="form-control is-valid">
-              <div v-if="errors.has('Password')" class="invalid-feedback">
-                {{errors.first('Password')}}
-              </div>
-            </div>
-            <button type="submit" class="btn btn-success">Save</button>
-          </form>
-        </div>
-      </sweet-modal>
-      <!-- End new user -->
-    </div>
   </div>
 </template>
 

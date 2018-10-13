@@ -65,6 +65,22 @@
                     >
                 </div>
               </div>
+              <div class="form-group col-md-6">
+                <label for="inputUserName">Quyền</label>
+                <multiselect 
+                  v-model="roles"
+                  :allow-empty="true" 
+                  name="role" 
+                  data-vv-as="Phân quyền" 
+                  label="name"
+                  :options="role_list" 
+                  :searchable="true" 
+                  track-by="id" 
+                  :multiple="true" 
+                  :close-on-select="false"
+                  :clear-on-select="false" 
+                />
+              </div>
               <div class="form-group">
                 <label>Gender</label>
                 <div>
@@ -104,19 +120,50 @@
 </template>
 <script>
 import Auth from "../../../services/auth";
+import Multiselect from "vue-multiselect";
 export default {
+  components: {
+    Multiselect
+  },
   data() {
     return {
       user: null,
-      permissions: "user.edit"
+      permissions: "user.edit",
+      role_list: [],
+      roles: []
     };
   },
+  watch: {
+    roles: {
+      handler(val) {
+        this.user.roles = [];
+        console.log(val);
+        val.forEach(element => {
+          this.user.roles.push(element.id);
+        });
+      },
+      deep: true
+    }
+  },
   methods: {
+    async getRoles() {
+      try {
+        const response = await axios.get(`roles`);
+        this.role_list = response.data.data;
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
     async getUsers() {
       try {
-        const response = await axios.get(
-          `users/${this.$route.params.userId}`
-        );
+        const response = await axios.get(`users/${this.$route.params.userId}`, {
+          params: {
+            include: "roles"
+          }
+        });
+        this.roles = response.data.data.roles.data;
         return (this.user = response.data.data);
       } catch (error) {
         if (error) {
@@ -125,16 +172,11 @@ export default {
       }
     },
     editUser() {
-      console.log(this.user);
-      //   this.$swal("OK", "OK", "success");
       axios
-        .put(
-          `users/${this.$route.params.userId}`,
-          this.user
-        )
+        .put(`users/${this.$route.params.userId}`, this.user)
         .then(result => {
           if (result) {
-            this.$swal("success", "success", "success");
+            this.$swal("Thành công", "Thông tin đã được cập nhật", "success");
           }
         });
     }
@@ -146,7 +188,8 @@ export default {
           if (!response) {
             this.$router.push("permission-denied-403"); // push về page 403
           } else {
-            this.getUsers(); //fetch data sau khi check permissions của người đang đăng nhập
+            this.getRoles();
+            this.getUsers();
           }
         });
       }

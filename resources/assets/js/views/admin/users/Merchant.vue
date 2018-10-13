@@ -52,35 +52,6 @@
       </div>
     </div>
     <!-- All Modal Here -->
-    <div class="row">
-      <!-- Modal New User -->
-      <sweet-modal ref="dark_html_modal" modal-theme="light" title="Create User" overlay-theme="dark">
-        <div class="col-sm-12">
-          <form @submit.prevent="createUser">
-            <div class="form-group row">
-              <label for="firstName" class="col-sm-3 col-form-label">Name</label>
-              <div class="col-sm-9">
-                <input id="firstName" autofocus v-model="user.name" v-validate="'required'" type="text" class="form-control" placeholder="Full name">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="email" class="col-sm-3 col-form-label">Email</label>
-              <div class="col-sm-9">
-                <input id="email" v-model="user.email" v-validate="'required'" type="email" class="form-control" placeholder="Email">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="lastName" class="col-sm-3 col-form-label">Password</label>
-              <div class="col-sm-9">
-                <input id="lastName" v-model="user.password" v-validate="'required'" type="text" class="form-control" placeholder="Last Name">
-              </div>
-            </div>
-            <button type="submit" class="btn btn-success">Save</button>
-          </form>
-        </div>
-      </sweet-modal>
-      <!-- End new user -->
-    </div>
   </div>
 </template>
 
