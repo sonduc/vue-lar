@@ -50,7 +50,7 @@
                             <label :style="errors.has('room.number_bed') ? 'color:red;' : ''">{{errors.has('room.number_bed')
                               ? errors.first('room.number_bed') : 'Số giường *'}}</label>
                             <input
-                            type="number"
+                            type="text"
                             name="room.number_bed"
                             v-validate="'required|numeric'"
                             data-vv-as="Số phòng ngủ"
@@ -66,7 +66,8 @@
                             v-model="merchant_id" v-validate="'required'"
                             data-vv-as="Người quản lý phòng" label="name"
                             :options="merchants" :searchable="true"
-                            :show-labels="false" track-by="name"></multiselect>
+                            :show-labels="false" track-by="name">
+                            </multiselect>
                           </div>
                         </div>
                         <div class="col-lg-6">
@@ -75,7 +76,7 @@
                                 ? errors.first('room.number_room') : 'Số phòng ngủ *'}}
                             </label>
                             <input
-                            type="number"
+                            type="text"
                             name="room.number_room"
                             v-validate="'required|numeric'"
                             data-vv-as="Số phòng ngủ"
@@ -87,7 +88,7 @@
                                 ? errors.first('room.max_guest') : 'Số khách tối đa *'}}
                             </label>
                             <input
-                            type="number"
+                            type="text"
                             name="room.max_guest"
                             v-validate="'required|numeric'"
                             data-vv-as="Số khách tối đa"
@@ -213,7 +214,7 @@
                           ? errors.first('room.max_additional_guest') : 'Số khách thêm tối đa *'}}
                         </label>
                         <input
-                        type="number"
+                        type="text"
                         name="room.max_additional_guest"
                         v-validate="'required|numeric'"
                         data-vv-as="Số khách thêm tối đa"
@@ -227,7 +228,7 @@
                         'color:red;' : ''">{{errors.has('room.price_charge_guest')
                           ? errors.first('room.price_charge_guest') : 'Giá tiền tăng cho mỗi khách *'}}</label>
                         <input
-                        type="number"
+                        type="text"
                         name="room.price_charge_guest"
                         v-validate="'required|numeric'"
                         data-vv-as="Giá tiền tăng cho mỗi khách"
@@ -261,7 +262,7 @@
                         <label :style="errors.has('room.price_hour') ? 'color:red;' : ''">{{errors.has('room.price_hour')
                           ? errors.first('room.price_hour') : 'Giá theo giờ *'}}</label>
                         <input
-                        type="number"
+                        type="text"
                         name="room.price_hour"
                         v-validate="'required|numeric'"
                         data-vv-as="Giá theo giờ"
@@ -275,7 +276,7 @@
                         <label :style="errors.has('room.price_day') ? 'color:red;' : ''">{{errors.has('room.price_day')
                           ? errors.first('room.price_day') : 'Giá theo ngày  *'}}</label>
                         <input
-                        type="number"
+                        type="text"
                         name="room.price_day"
                         v-validate="'required|numeric'"
                         data-vv-as="Giá theo ngày"
@@ -301,35 +302,77 @@
                   </div>
                 </div>
                 <div class="card-body">
-                  <div class="row" v-for="(l,index) in list" :key="index">
+                  <div class="row" v-for="(r,index) in room.weekday_price" :key="index">
                     <div class="col-lg-3">
                       <div class="form-group">
-                        <label>Thứ</label>
-                        <input v-model="list[index].name" :ref="`lists[${index}]name`" type="email" class="form-control">
+                        <label :style="errors.has(`weekdays[${index}]weekday`) ? 'color:red;' : ''">{{errors.has(`weekdays[${index}]weekday`)
+                          ? errors.first(`weekdays[${index}]weekday`) : 'Tên *'}}
+                        </label>
+                        <multiselect
+                        v-model="room.weekday_price[index].weekday"
+                        v-validate="'required'" data-vv-as="Thứ"
+                        :name="`weekdays[${index}]weekday`"
+                        label="title" :searchable="true"
+                        :options="weekdays" track-by="title"
+                        :allow-empty="false":show-labels="false" >
+                        </multiselect>
                       </div>
                     </div>
                     <div class="col-lg-2">
                       <div class="form-group">
-                        <label>Giá theo ngày</label>
-                        <input v-model="list[index].value" :ref="`lists[${index}]value`" type="email" class="form-control">
+                        <label :style="errors.has(`weekdays[${index}]price_day`) ? 'color:red;' : ''">{{errors.has(`weekdays[${index}]price_day`)
+                          ? errors.first(`weekdays[${index}]price_day`) : 'Giá theo ngày *'}}
+                        </label>
+                        <input
+                        type="text"
+                        :name="`weekdays[${index}]price_day`"
+                        v-validate="'required|numeric'"
+                        data-vv-as="Giá"
+                        v-model.number="room.weekday_price[index].price_day"
+                        class="form-control">
                       </div>
                     </div>
                     <div class="col-lg-2">
                       <div class="form-group">
-                        <label>Giá theo giờ</label>
-                        <input v-model="list[index].value" :ref="`lists[${index}]value`" type="email" class="form-control">
+                       <label :style="errors.has(`weekdays[${index}]price_hour`) ? 'color:red;' : ''">{{errors.has(`weekdays[${index}]price_hour`)
+                          ? errors.first(`weekdays[${index}]price_hour`) : 'Giá theo giờ *'}}
+                        </label>
+                        <input
+                        type="text"
+                        :name="`weekdays[${index}]price_hour`"
+                        v-validate="'required|numeric'"
+                        data-vv-as="Giá"
+                        v-model.number="room.weekday_price[index].price_hour"
+                        class="form-control">
                       </div>
                     </div>
                     <div class="col-lg-2">
                       <div class="form-group">
-                        <label>Giá giờ tiếp theo</label>
-                        <input v-model="list[index].value" :ref="`lists[${index}]value`" type="email" class="form-control">
+                       <label :style="errors.has(`weekdays[${index}]price_after_hour`) ? 'color:red;' : ''">{{errors.has(`weekdays[${index}]price_after_hour`)
+                          ? errors.first(`weekdays[${index}]price_after_hour`) : 'Giá giờ tiếp theo *'}}
+                        </label>
+                        <input
+                        type="text"
+                        :name="`weekdays[${index}]price_after_hour`"
+                        v-validate="'required|numeric'"
+                        data-vv-as="Giá"
+                        v-model.number="room.weekday_price[index].price_after_hour"
+                        class="form-control">
                       </div>
                     </div>
                     <div class="col-lg-2">
                       <div class="form-group">
-                        <label>Giá tiền tăng cho mỗi khách</label>
-                        <input v-model="list[index].value" :ref="`lists[${index}]value`" type="email" class="form-control">
+                        <label :style="errors.has(`weekdays[${index}]price_charge_guest`) ? 'color:red;' : ''">
+                        {{errors.has(`weekdays[${index}]price_charge_guest`)
+                          ? errors.first(`weekdays[${index}]price_charge_guest`) : 'Giá tiền tăng cho mỗi khách*'}}
+                        </label>
+                        <input
+                        type="text"
+                        :name="`weekdays[${index}]price_charge_guest`"
+                        v-validate="'required|numeric'"
+                        data-vv-as="Giá"
+                        v-model.number="room.weekday_price[index].price_charge_guest"
+                        class="form-control">
                       </div>
                     </div>
 
@@ -338,6 +381,28 @@
                         <label>&ensp;</label>
                         <button v-tooltip="{content: 'Xóa ngày',classes: ['danger'],targetClasses: ['it-has-a-tooltip']}" @click="removeItem(index)" class="form-control btn btn-outline-danger"><i class="icon-fa icon-fa-close"></i>Xóa
                         </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="section-semi-title">Giá ngày đặc biệt</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label>Chọn ngày lễ</label>
+                        <!-- <multiselect :allow-empty="true" name="room.optional_prices"
+                        v-model="room.optional_prices.days" :show-labels="false"
+                        label="name" :multiple="true" :searchable="true"
+                        :internal-search="false" :clear-on-select="false" >
+                        <template slot="tag" slot-scope="{ option, remove }"><span class="custom__tag"><span>{{ option.name }}</span><span class="custom__remove" @click="remove(option)">x</span></span></template>
+                        <datepicker v-model="room.optional_prices.days"
+                         input-class="form-control" />
+                      </multiselect> -->
                       </div>
                     </div>
                   </div>
@@ -376,7 +441,7 @@ export default {
     Tab,
     Multiselect,
     quillEditor,
-    Datepicker
+    Datepicker,
   },
   props: {
     type: {
@@ -533,6 +598,33 @@ export default {
   methods: {
     setInitData() {
       let dataRoom = { ...this.dataRoom }
+      if (dataRoom.prices.data.length) {
+          dataRoom.prices.data.forEach(item => {
+          if(item.day === "Không xác định") {
+            let w_day = {
+              weekday: null,
+              price_day: null,
+              price_hour: null,
+              price_after_hour: null,
+              price_charge_guest: null,
+              status:0
+            }
+            w_day.weekday = item.weekday
+            w_day.price_day = item.price_day
+            w_day.price_hour = item.price_hour
+            w_day.price_after_hour = item.price_after_hour
+            w_day.price_charge_guest = item.price_charge_guest
+            this.room.weekday_price.push(w_day)
+          }
+          else {
+          this.room.optional_prices.days.push(item.day)
+          this.room.optional_prices.price_day === null && (this.room.optional_prices.price_day = item.price_day)
+          this.room.optional_prices.price_hour === null && (this.room.optional_prices.price_hour = item.price_hour)
+          this.room.optional_prices.price_after_hour === null && (this.room.optional_prices.price_after_hour = item.price_after_hour)
+          this.room.optional_prices.price_charge_guest === null && (this.room.optional_prices.price_charge_guest = item.price_charge_guest)
+          }
+        });
+      }
       this.room = JSON.parse(JSON.stringify({ ...this.room, ...dataRoom }))
       console.log(this.room)
     },
@@ -560,7 +652,6 @@ export default {
       try {
         const response = await axios.get('rooms/rent-type');
         this.rent_type = response.data
-        console.log(this.rent_type)
       } catch(error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
