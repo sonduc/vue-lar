@@ -29,6 +29,7 @@
                     <p class="detail-row"><i class="icon-fa icon-fa-map-marker"/> {{user.address}}</p>
                     <p class="detail-row"><i class="icon-fa icon-fa-birthday-cake"/> {{user.birthday}}</p>
                     <p class="detail-row"><i class="icon-fa icon-fa-venus-mars"/> {{user.gender_txt}}</p>
+                    <p class="detail-row"><i class="icon-fa icon-fa-bank"/> {{user.account_number}}</p>
                   </div>
                 </div>
                 <div class="row mt-4">

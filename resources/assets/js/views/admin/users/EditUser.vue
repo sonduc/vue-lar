@@ -1,11 +1,11 @@
 <template>
   <div class="main-content">
     <div class="page-header">
-      <h3 class="page-title">Form Layouts</h3>
+      <h3 class="page-title">User Update</h3>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Forms</a></li>
-        <li class="breadcrumb-item active">Form Layouts</li>
+        <li class="breadcrumb-item"><a href="#">Users</a></li>
+        <li class="breadcrumb-item active">User Update</li>
       </ol>
     </div>
     <div class="row" v-if="user">
@@ -153,6 +153,17 @@
                     </div>
                     <div class="form-check form-check-inline">
                       <input
+                        id="checkOther"
+                        class="form-check-input"
+                        type="radio"
+                        v-model="user.gender"
+                        name="gender"
+                        value="3"
+                      >
+                      <label class="form-check-label" for="checkFemale">Female</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
                         id="checkFemale"
                         class="form-check-input"
                         type="radio"
@@ -160,7 +171,7 @@
                         name="gender"
                         value="2"
                       >
-                      <label class="form-check-label" for="checkFemale">Female</label>
+                      <label class="form-check-label" for="checkOther">Other</label>
                     </div>
                   </div>
                 </div>
@@ -214,7 +225,7 @@ export default {
         });
       },
       deep: true
-    },
+    }
   },
   computed: {
     status: {
@@ -242,8 +253,10 @@ export default {
       },
       set(val) {
         this.user.city_id = val.id;
-        this.user.city.data.id = val.id;
-        this.user.city.data.name = val.name;
+        this.user.city.data = {
+          id: val.id,
+          name: val.name
+        };
         return {
           id: val.id,
           name: val.name
@@ -259,8 +272,10 @@ export default {
       },
       set(val) {
         this.user.district_id = val.id;
-        this.user.district.data.id = val.id;
-        this.user.district.data.name = val.name;
+        this.user.district.data = {
+          id: val.id,
+          name: val.name
+        };
         return {
           id: val.id,
           name: val.name
