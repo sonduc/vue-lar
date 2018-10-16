@@ -115,7 +115,7 @@
                     <div class="form-group">
                       <label :style="errors.has('number_guest') ? 'color:red;' : ''">{{errors.has('number_guest')
                         ? errors.first('number_guest') : 'Số khách *'}}</label>
-                      <input name="number_guest" v-validate="'required|numeric'" data-vv-as="Số khách" type="text" v-model="booking.number_of_guests"
+                      <input name="number_guest" v-validate="'required|numeric'" data-vv-as="Số khách" type="text" v-model.number="booking.number_of_guests"
                         class="form-control">
                     </div>
                     <div class="form-group">
@@ -445,7 +445,7 @@ export default {
         if (result) {
           // eslint-disable-next-line
           // Calculate the booking fee
-          const response = await axios.post(`bookings/price-caculator/`, {
+          const response = await axios.post(`bookings/price-caculator`, {
             additional_fee: 0,
             price_discount: 0,
             room_id: this.room.id,
