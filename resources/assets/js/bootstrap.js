@@ -92,7 +92,13 @@ Vue.component('v-dropdown-item', VDropdownItem)
 Vue.component('v-dropdown-divider', VDropdownDivider)
 Vue.component('v-collapse', VCollapse)
 Vue.component('v-collapse-item', VCollapseItem)
-
+import * as VueGoogleMaps from "vue2-google-maps";
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: "AIzaSyDatNJsMOi1l5erQTO-NLPvMkVHv15NiOs",
+    libraries: "places"
+  }
+});
 Vue.use(VueSweetalert2)
 Vue.use(VueRouter)
 Vue.use(VuePrism)

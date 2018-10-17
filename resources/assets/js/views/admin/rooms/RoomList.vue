@@ -52,51 +52,57 @@
                   <div class="col-sm-4 mt-2">
                     <vue-slider 
                       v-model="price_range" 
-                      formatter="{value} Đ"
+                      formatter="{value} Đ" 
                       :min="0" 
                       :max="90000000"
                     ></vue-slider>
                   </div>
                   <label for="email" class="col-sm-2 col-form-label">Thuê theo</label>
                   <div class="col-sm-4">
-                    <multiselect v-model="rent_type" label="value" :options="rent_type_list" :searchable="true" :show-labels="false" />
+                    <multiselect 
+                      v-model="rent_type" 
+                      label="value" 
+                      :options="rent_type_list" 
+                      :searchable="true"
+                      :show-labels="false" 
+                    />
                   </div>
-                </div>    
+                </div>
               </div>
               <div class="col-md-6">
-                
+
                 <div class="form-group row">
                   <label for="email" class="col-sm-2 col-form-label">Hiển thị</label>
                   <div class="col-sm-4 mt-2">
                     <div class="form-check form-check-inline">
-                      <input
-                        id="inlineCheckbox1"
-                        class="form-check-input"
-                        type="checkbox"
+                      <input 
+                        id="inlineCheckbox1" 
+                        class="form-check-input" 
+                        type="checkbox" 
                         v-model.number="hot_room"
-                        true-value="1"
+                        true-value="1" 
                         false-value="0"
-                      >
+                        >
                       <label class="form-check-label" for="inlineCheckbox1">Hot</label>
                     </div>
                     <div class="form-check form-check-inline">
-                      <input
-                        id="inlineCheckbox2"
-                        class="form-check-input"
-                        type="checkbox"
+                      <input 
+                        id="inlineCheckbox2" 
+                        class="form-check-input" 
+                        type="checkbox" 
                         v-model.number="new_room"
-                        true-value="1"
+                        true-value="1" 
                         false-value="0"
-                      >
+                        >
                       <label class="form-check-label" for="inlineCheckbox2">New</label>
                     </div>
                     <div class="form-check form-check-inline">
-                      <input
-                        id="inlineCheckbox3"
-                        class="form-check-input"
-                        type="checkbox"
+                      <input 
+                        id="inlineCheckbox3" 
+                        class="form-check-input" 
+                        type="checkbox" 
                         v-model.number="latest_deal"
-                        true-value="1"
+                        true-value="1" 
                         false-value="0"
                       >
                       <label class="form-check-label" for="inlineCheckbox3">Deal</label>
@@ -146,7 +152,9 @@
               <td class="cell-content">
                 <div class="content">
                   <div class="content-name mb-3">
-                    {{ room.details.data[0].name }}
+                    <router-link :to="{ name: 'room.detail', params: { roomId: room.id }}">
+                      {{ room.details.data[0].name }}
+                    </router-link>
                   </div>
                   <div class="content-subject mb-3">
                     <i class="icon-fa icon-fa-home mb-3" />&ensp;Loại phòng: {{room.room_type_txt}} <br />
