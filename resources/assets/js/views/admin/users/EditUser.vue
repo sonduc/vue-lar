@@ -12,7 +12,7 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-header">
-            <h6>Basic Form</h6>
+            <h6>Chỉnh sửa thông tin người dùng</h6>
           </div>
           <div class="card-body">
             <form @submit.prevent="editUser">

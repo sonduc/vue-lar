@@ -26,7 +26,13 @@
               <table-column show="name" label="Name" />
               <table-column show="email" label="Email" />
               <table-column show="type_txt" label="Role" />
-              <table-column show="status_txt" label="Status" />
+              <table-column label="Status" :sortable="false" :filterable="false">
+                  <template slot-scope="row">
+                      <button :class="row.status == 0 ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'">
+                        {{row.status_txt}}
+                      </button>
+                  </template>
+              </table-column>
               <table-column :sortable="true" :filterable="true" label="Actions">
                 <template slot-scope="row">
                   <div class="table__actions">
@@ -82,9 +88,7 @@ export default {
   methods: {
     async getUsers({ page, filter, sort }) {
       try {
-        const response = await axios.get(
-          `users?type=1&page=${page}`
-        );
+        const response = await axios.get(`users?type=1&page=${page}`);
         let paginate = response.data.meta.pagination;
         console.log(paginate);
         return {
@@ -162,6 +166,6 @@ export default {
   z-index: 10000;
 }
 .sweet-modal-overlay {
-  z-index: 1000
+  z-index: 1000;
 }
 </style>
