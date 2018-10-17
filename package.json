@@ -56,6 +56,7 @@
     "vue-prism": "^1.0.5",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.1",
+    "vue-slider-component": "^2.7.11",
     "vue-sweetalert2": "^1.5.3",
     "vue-table-component": "^1.9.2",
     "vue-tabs-component": "^1.4.0",

@@ -48,6 +48,69 @@
                   </div>
                 </div>
                 <div class="form-group row">
+                  <label for="firstName" class="col-sm-2 col-form-label">Khoảng giá</label>
+                  <div class="col-sm-4 mt-2">
+                    <vue-slider 
+                      v-model="price_range" 
+                      formatter="{value} Đ"
+                      :min="0" 
+                      :max="90000000"
+                    ></vue-slider>
+                  </div>
+                  <label for="email" class="col-sm-2 col-form-label">Thuê theo</label>
+                  <div class="col-sm-4">
+                    <multiselect v-model="rent_type" label="value" :options="rent_type_list" :searchable="true" :show-labels="false" />
+                  </div>
+                </div>    
+              </div>
+              <div class="col-md-6">
+                
+                <div class="form-group row">
+                  <label for="email" class="col-sm-2 col-form-label">Hiển thị</label>
+                  <div class="col-sm-4 mt-2">
+                    <div class="form-check form-check-inline">
+                      <input
+                        id="inlineCheckbox1"
+                        class="form-check-input"
+                        type="checkbox"
+                        v-model.number="hot_room"
+                        true-value="1"
+                        false-value="0"
+                      >
+                      <label class="form-check-label" for="inlineCheckbox1">Hot</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        id="inlineCheckbox2"
+                        class="form-check-input"
+                        type="checkbox"
+                        v-model.number="new_room"
+                        true-value="1"
+                        false-value="0"
+                      >
+                      <label class="form-check-label" for="inlineCheckbox2">New</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        id="inlineCheckbox3"
+                        class="form-check-input"
+                        type="checkbox"
+                        v-model.number="latest_deal"
+                        true-value="1"
+                        false-value="0"
+                      >
+                      <label class="form-check-label" for="inlineCheckbox3">Deal</label>
+                    </div>
+                  </div>
+                  <label for="email" class="col-sm-2 col-form-label">Trạng thái</label>
+                  <div class="col-sm-4">
+                    <multiselect :disabled="city == null" v-model="status" label="value" :options="room_status_list"
+                      :searchable="true" :show-labels="false" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
                   <label for="lastName" class="col-sm-1 col-form-label"> Từ </label>
                   <div class="col-sm-5">
                     <datepicker v-model="date_start" :format="format" input-class="form-control" />
@@ -87,7 +150,7 @@
                   </div>
                   <div class="content-subject mb-3">
                     <i class="icon-fa icon-fa-home mb-3" />&ensp;Loại phòng: {{room.room_type_txt}} <br />
-                    <i class="icon-fa icon-fa-clock-o" />&ensp;Cho thuê: <button type="button" class="btn btn-xs btn-outline-primary">
+                    <i class="icon-fa icon-fa-clock-o" />&ensp;Cho thuê: <button type="button" class="btn btn-xs btn-primary">
                       {{room.rent_type_txt}}
                     </button>
                   </div>
@@ -221,40 +284,32 @@ import { SweetModal } from "sweet-modal-vue";
 import Datepicker from "vuejs-datepicker";
 import Multiselect from "vue-multiselect";
 import Auth from "../../../services/auth";
+import VueSlider from "vue-slider-component";
 import Pagination from "../../../components/paginate/ServerPagination";
-import { format, constant } from "../../../helpers/mixins";
+import { format, constant, location } from "../../../helpers/mixins";
 export default {
-  mixins: [format, constant],
+  mixins: [format, constant, location],
   components: {
     Pagination,
     Multiselect,
     Datepicker,
-    SweetModal
+    SweetModal,
+    VueSlider
   },
   data() {
     return {
-      events: [
-        {
-          title: "event1",
-          start: "2018-10-01"
-        },
-        {
-          title: "event2",
-          start: "2018-10-05",
-          end: "2018-10-07",
-          color: "red"
-        },
-        {
-          title: "event3",
-          start: "2018-10-09T12:30:00",
-          allDay: false
-        }
-      ],
       format: "yyyy-MM-dd",
       rooms: [],
       room_type: {
         id: ""
       },
+      rent_type: {
+        id: ""
+      },
+      status: {
+        id: ""
+      },
+      price_range: [0, 90000000],
       room: {},
       update_room: null,
       update_payment_status: null,
@@ -272,9 +327,10 @@ export default {
       district: {
         id: ""
       },
+      hot_room: null,
+      new_room: null,
+      latest_deal: null,
       merchants: [],
-      cities: [],
-      districts: [],
       option: null,
       isModalVisible: false,
       isLeftSidebarVisible: true,
@@ -283,28 +339,6 @@ export default {
       totalPages: null,
       currentPage: null,
       count: null,
-      room_type_list: [
-        {
-          id: 1,
-          value: "Nhà riêng"
-        },
-        {
-          id: 2,
-          value: "Căn hộ/Chung cư"
-        },
-        {
-          id: 3,
-          value: "Biệt thự"
-        },
-        {
-          id: 4,
-          value: "Phòng riêng"
-        },
-        {
-          id: 5,
-          value: "Khách sạn"
-        }
-      ],
       disabledCheckout: {
         to: ""
       }
@@ -353,8 +387,6 @@ export default {
           } else {
             this.getRooms({});
             this.getMerchants();
-            this.getCities();
-            this.getDistricts();
           }
         });
       }
@@ -377,34 +409,6 @@ export default {
         }
       }
     },
-    async getCities() {
-      try {
-        const response = await axios.get(`cities`, {
-          params: {
-            limit: -1
-          }
-        });
-        this.cities = response.data.data;
-      } catch (error) {
-        if (error) {
-          window.toastr["error"]("There was an error", "Error");
-        }
-      }
-    },
-    async getDistricts() {
-      try {
-        const response = await axios.get(`districts`, {
-          params: {
-            limit: -1
-          }
-        });
-        this.districts = response.data.data;
-      } catch (error) {
-        if (error) {
-          window.toastr["error"]("There was an error", "Error");
-        }
-      }
-    },
     async getRooms({ page, filter, sort }) {
       let date_start =
         this.date_start !== null
@@ -419,9 +423,16 @@ export default {
             page: page,
             limit: 5,
             name: this.q,
+            type_room: this.room_type.id,
+            rent_type: this.rent_type.id,
             city: this.city.id,
+            status: this.status.id,
+            price_range_start: this.price_range[0],
+            price_range_end: this.price_range[1],
             district: this.district.id,
-            status: this.status,
+            hot: this.hot_room,
+            new: this.new_room,
+            latest_deal: this.latest_deal,
             merchant: this.merchant_id,
             manager: this.is_manager
           }
@@ -432,15 +443,6 @@ export default {
         this.totalPages = paginate.total_pages;
         this.count = paginate.count;
         this.rooms = response.data.data;
-        // console.log(response.data.data);
-        return {
-          data: response.data.data,
-          pagination: {
-            totalPages: paginate.total_pages,
-            currentPage: page,
-            count: paginate.count
-          }
-        };
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
