@@ -441,7 +441,7 @@ export default {
       try {
         const response = await axios.get(`users`, {
           params: {
-            limit: 99999,
+            limit: -1,
             is_owner: 1
           }
         });
@@ -456,7 +456,7 @@ export default {
       try {
         const response = await axios.get(`cities`, {
           params: {
-            limit: 100
+            limit: -1
           }
         });
         this.cities = response.data.data;
@@ -470,7 +470,7 @@ export default {
       try {
         const response = await axios.get(`districts`, {
           params: {
-            limit: 1000
+            limit: -1
           }
         });
         this.districts = response.data.data;

@@ -127,7 +127,7 @@
                   class="form-group col-md-6">
                   <label>Mã giảm giá</label>
                   <div class="input-group">
-                    <input :disabled="booking.price_discount > 0" type="text" v-model="booking.coupon" class="form-control">
+                    <input :disabled="true" type="text" v-model="booking.coupon" class="form-control">
                     <div class="input-group-append">
                       <button v-if="booking.price_discount > 0" @click="removeCoupon" class="btn btn-sm btn-primary"><i
                         class="icon-fa icon-fa-times"></i></button>
@@ -347,47 +347,52 @@ export default {
       }
     },
     async applyCoupon() {
-      if (this.booking.coupon.trim() !== "") {
-        this.$swal(
-          "Chúc mừng",
-          "Mã giảm giá được áp dụng thành công",
-          "success"
+      this.$swal(
+          "Xin lỗi",
+          "Chức năng này đang trong quá trình phát triển",
+          "warning"
         );
-        try {
-          this.booking.price_discount = 120000;
-          // Get discount base on coupon ( must return by number )
-          // const response = await axios.get(
-          // `rooms/${this.$route.params.roomId}?include=details`
-          // );
-          // return;
-        } catch (error) {
-          if (error) {
-            this.$swal("Xin lỗi", "Mã giảm giá không hợp lệ", "error");
-          }
-        }
-      } else {
-        this.$swal("Xin lỗi", "Mã giảm giá không được bỏ trống", "warning");
-      }
+      // if (this.booking.coupon.trim() !== "") {
+      //   this.$swal(
+      //     "Chúc mừng",
+      //     "Mã giảm giá được áp dụng thành công",
+      //     "success"
+      //   );
+      //   try {
+      //     // this.booking.price_discount = 120000;
+      //     // Get discount base on coupon ( must return by number )
+      //     // const response = await axios.get(
+      //     // `rooms/${this.$route.params.roomId}?include=details`
+      //     // );
+      //     // return;
+      //   } catch (error) {
+      //     if (error) {
+      //       this.$swal("Xin lỗi", "Mã giảm giá không hợp lệ", "error");
+      //     }
+      //   }
+      // } else {
+      //   this.$swal("Xin lỗi", "Mã giảm giá không được bỏ trống", "warning");
+      // }
     },
     async removeCoupon() {
-      this.$swal("Thành công", "Mã giảm giá đã được loại bỏ", "success");
-      try {
-        this.booking.coupon = "";
-        this.booking.price_discount = 0;
-        // Recalculate the discount
-        // const response = await axios.get(
-        // `rooms/${this.$route.params.roomId}?include=details`
-        // );
-        // return;
-      } catch (error) {
-        if (error) {
-          this.$swal(
-            "Xin lỗi",
-            "Có lỗi xảy ra, vui lòng kiểm tra lại",
-            "error"
-          );
-        }
-      }
+      // this.$swal("Thành công", "Mã giảm giá đã được loại bỏ", "success");
+      // try {
+      //   this.booking.coupon = "";
+      //   this.booking.price_discount = 0;
+      //   // Recalculate the discount
+      //   // const response = await axios.get(
+      //   // `rooms/${this.$route.params.roomId}?include=details`
+      //   // );
+      //   // return;
+      // } catch (error) {
+      //   if (error) {
+      //     this.$swal(
+      //       "Xin lỗi",
+      //       "Có lỗi xảy ra, vui lòng kiểm tra lại",
+      //       "error"
+      //     );
+      //   }
+      // }
     },
     validateBeforeSubmit() {
       this.$validator.validateAll().then(result => {
