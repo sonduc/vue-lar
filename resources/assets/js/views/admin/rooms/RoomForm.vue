@@ -289,12 +289,107 @@
               </div>
               <div class="card">
                 <div class="card-header">
+                  <h5 class="section-semi-title">Giá ngày đặc biệt</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label>Chọn ngày lễ</label>
+                        <v-date-picker
+                        mode='multiple'
+                        v-model='specialDays'
+                        show-caps
+                        :input-props='{ class: "form-control", placeholder: "Please choose days", readonly: false }'>
+                        </v-date-picker>
+                        <p
+                          class='control'
+                          v-if='specialDays'>
+                          <a
+                            :class='["button"]'
+                            @click='specialDays = null'>
+                            Clear
+                          </a>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" v-if="checkSpecialDays">
+                    <div class="col-lg-3">
+                      <div class="form-group">
+                        <label :style="errors.has('room.optional_prices.price_day') ?
+                        'color:red;' : ''">
+                        {{errors.has('room.optional_prices.price_day')
+                        ? errors.first('room.optional_prices.price_day') : 'Giá phòng theo ngày *'}}
+                        </label>
+                        <input
+                        type="text"
+                        name="room.max_guest"
+                        v-validate="'required|numeric'"
+                        data-vv-as="Giá phòng"
+                        v-model.number="room.optional_prices.price_day"
+                        class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-lg-3">
+                      <div class="form-group">
+                        <label :style="errors.has('room.optional_prices.price_hour') ?
+                        'color:red;' : ''">
+                        {{errors.has('room.optional_prices.price_hour')
+                        ? errors.first('room.optional_prices.price_hour') : 'Giá phòng theo giờ *'}}
+                        </label>
+                        <input
+                        type="text"
+                        name="room.max_guest"
+                        v-validate="'required|numeric'"
+                        data-vv-as="Giá phòng"
+                        v-model.number="room.optional_prices.price_hour"
+                        class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-lg-3">
+                      <div class="form-group">
+                        <label :style="errors.has('room.optional_prices.price_after_hour') ?
+                        'color:red;' : ''">
+                        {{errors.has('room.optional_prices.price_after_hour')
+                        ? errors.first('room.optional_prices.price_after_hour') : 'Giá phòng khi ở thêm giờ *'}}
+                        </label>
+                        <input
+                        type="text"
+                        name="room.max_guest"
+                        v-validate="'required|numeric'"
+                        data-vv-as="Giá phòng"
+                        v-model.number="room.optional_prices.price_after_hour"
+                        class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-lg-3">
+                      <div class="form-group">
+                        <label :style="errors.has('room.optional_prices.price_charge_guest') ?
+                        'color:red;' : ''">
+                        {{errors.has('room.optional_prices.price_charge_guest')
+                        ? errors.first('room.optional_prices.price_charge_guest') : 'Giá phòng khi ở thêm khách *'}}
+                        </label>
+                        <input
+                        type="text"
+                        name="room.max_guest"
+                        v-validate="'required|numeric'"
+                        data-vv-as="Giá phòng"
+                        v-model.number="room.optional_prices.price_charge_guest"
+                        class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header">
                   <div class="row">
                     <div class="col-lg-6">
                       <h5 class="section-semi-title">Giá ngày trong tuần</h5>
                     </div>
                     <div class="col-lg-6">
-                      <button @click="addItem" style="color:white; float:right;"
+                      <button @click="addWeekday" style="color:white; float:right;"
                       class="btn btn-success btn-sm">
                       <i class="icon-fa icon-fa-plus"></i> Thêm ngày
                       </button>
@@ -308,14 +403,13 @@
                         <label :style="errors.has(`weekdays[${index}]weekday`) ? 'color:red;' : ''">{{errors.has(`weekdays[${index}]weekday`)
                           ? errors.first(`weekdays[${index}]weekday`) : 'Tên *'}}
                         </label>
-                        <multiselect
+                        <select-week-day
+                        :id = "index" :weekday_price = "room.weekday_price"
                         v-model="room.weekday_price[index].weekday"
                         v-validate="'required'" data-vv-as="Thứ"
-                        :name="`weekdays[${index}]weekday`"
-                        label="title" :searchable="true"
-                        :options="weekdays" track-by="title"
-                        :allow-empty="false":show-labels="false" >
-                        </multiselect>
+                        :name="`weekdays[${index}]weekday`" label="title"
+                        :options="weekdays" track-by="title">
+                        </select-week-day>
                       </div>
                     </div>
                     <div class="col-lg-2">
@@ -327,7 +421,7 @@
                         type="text"
                         :name="`weekdays[${index}]price_day`"
                         v-validate="'required|numeric'"
-                        data-vv-as="Giá"
+                        data-vv-as="Giá tiền"
                         v-model.number="room.weekday_price[index].price_day"
                         class="form-control">
                       </div>
@@ -341,7 +435,7 @@
                         type="text"
                         :name="`weekdays[${index}]price_hour`"
                         v-validate="'required|numeric'"
-                        data-vv-as="Giá"
+                        data-vv-as="Giá tiền"
                         v-model.number="room.weekday_price[index].price_hour"
                         class="form-control">
                       </div>
@@ -355,7 +449,7 @@
                         type="text"
                         :name="`weekdays[${index}]price_after_hour`"
                         v-validate="'required|numeric'"
-                        data-vv-as="Giá"
+                        data-vv-as="Giá tiền"
                         v-model.number="room.weekday_price[index].price_after_hour"
                         class="form-control">
                       </div>
@@ -370,7 +464,7 @@
                         type="text"
                         :name="`weekdays[${index}]price_charge_guest`"
                         v-validate="'required|numeric'"
-                        data-vv-as="Giá"
+                        data-vv-as="Giá tiền"
                         v-model.number="room.weekday_price[index].price_charge_guest"
                         class="form-control">
                       </div>
@@ -379,14 +473,15 @@
                     <div class="col-lg-1">
                       <div class="form-group">
                         <label>&ensp;</label>
-                        <button v-tooltip="{content: 'Xóa ngày',classes: ['danger'],targetClasses: ['it-has-a-tooltip']}" @click="removeItem(index)" class="form-control btn btn-outline-danger"><i class="icon-fa icon-fa-close"></i>Xóa
+                        <button v-tooltip="{content: 'Xóa ngày',classes: ['danger'],targetClasses: ['it-has-a-tooltip']}"
+                        @click.prevent="deleteWeekday(index)" class="form-control btn btn-outline-danger"><i class="icon-fa icon-fa-close"></i>Xóa
                         </button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="card">
+              <!-- <div class="card">
                 <div class="card-header">
                   <h5 class="section-semi-title">Giá ngày đặc biệt</h5>
                 </div>
@@ -395,19 +490,12 @@
                     <div class="col-lg-12">
                       <div class="form-group">
                         <label>Chọn ngày lễ</label>
-                        <!-- <multiselect :allow-empty="true" name="room.optional_prices"
-                        v-model="room.optional_prices.days" :show-labels="false"
-                        label="name" :multiple="true" :searchable="true"
-                        :internal-search="false" :clear-on-select="false" >
-                        <template slot="tag" slot-scope="{ option, remove }"><span class="custom__tag"><span>{{ option.name }}</span><span class="custom__remove" @click="remove(option)">x</span></span></template>
-                        <datepicker v-model="room.optional_prices.days"
-                         input-class="form-control" />
-                      </multiselect> -->
+                        <v-date-picker v-model='myDate' mode = "multiple"></v-date-picker>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </tab-content>
             <tab-content title="Tiện ích phòng ">
               Yuhuuu! This seems pretty damn simple
@@ -426,7 +514,9 @@ import { hoursList, format } from "../../../helpers/mixins";
 import { Tabs, Tab } from "vue-tabs-component";
 import { quillEditor } from "vue-quill-editor";
 import Multiselect from "vue-multiselect";
+import SelectWeekDay from './SelectWeekDay'
 import Datepicker from "vuejs-datepicker";
+import { map } from 'lodash'
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
@@ -442,6 +532,7 @@ export default {
     Multiselect,
     quillEditor,
     Datepicker,
+    SelectWeekDay,
   },
   props: {
     type: {
@@ -473,17 +564,53 @@ export default {
         return !!(length == 1)
       }
     },
+    checkSpecialDays(){
+      if (this.room.optional_prices.days.length) {
+        let length = this.room.optional_prices.days.length
+        return !!(length > 0)
+      }
+    },
+    specialDays: {
+      get: function() {
+        let days = []
+        if(this.room.optional_prices.days.length) {
+          this.room.optional_prices.days.forEach(element => {
+            days.push(new Date(element));
+          });
+        }
+        return days;
+      },
+      set: function(val) {
+        //sconsole.log(val)
+        // this.room.optional_prices.days = []
+        if(val !== null) {
+          this.room.optional_prices.days = [];
+          val.forEach((element,index) => {
+            element.setTime(element.getTime() + (7 * 60 * 60 * 1000))
+            element.toISOString().substring(0, 10)
+            // if(!this.room.optional_prices.days.includes(element)){
+            this.room.optional_prices.days.push(element)
+            // }
+            // else {
+            //   //this.room.optional_prices.days.splice(index,1)
+            // }
+          });
+          // val = map(val,item => {
+          //   item.setTime(item.getTime() + (7 * 60 * 60 * 1000))
+          //   item.toISOString().substring(0, 10)
+          // })
+          // console.log(val)
+          // this.room.optional_prices.days = val
+        }
+        console.log(this.room.optional_prices.days)
+      }
+    }
   },
   data() {
     return {
-      list: [
-        {
-          name: null,
-          value: null
-        }
-      ],
       titleRoom: "Chào mừng bạn đến với chức năng chỉnh sửa phòng",
       subTitleRoom: "Vui lòng hoàn thành chính xác các thông tin trước khi lưu",
+      valueDate:null,
       room: {
         comforts: [],
         details:{
@@ -517,10 +644,9 @@ export default {
         price_hour: null,
         price_after_hour: null,
 
-        checkin: null, // Bind giá trị thời gian
-        checkout: null, // Bind giá trị thời gian
+        checkin: null,
+        checkout: null,
         room_type: '',
-        // merchant_id: null,
         number_bed: null,
         number_room: null,
         max_guest: null,
@@ -584,7 +710,7 @@ export default {
           status:0
         },
         {
-          title: 'Chủ Nhật',
+          title: 'Chủ nhật',
           weekday: 1,
           price_day: null,
           price_hour: null,
@@ -628,15 +754,18 @@ export default {
       this.room = JSON.parse(JSON.stringify({ ...this.room, ...dataRoom }))
       console.log(this.room)
     },
-    addItem() {
-      this.list.push({
-        name: null,
-        value: null
+    addWeekday () {
+      this.room.weekday_price.push({
+        weekday: this.room.weekday_price.length + 1,
+        status: 0,
+        price_day: null,
+        price_hour: null,
+        price_after_hour: null,
+        price_charge_guest: null,
       });
-      let index = this.list.length - 1;
     },
-    removeItem(index) {
-      this.list.splice(index, 1);
+    deleteWeekday (index) {
+      this.room.weekday_price.splice(index, 1)
     },
     async getRoomType() {
       try {

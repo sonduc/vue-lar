@@ -2,7 +2,7 @@
 <room-form v-if="roomDetail" type="edit" :data-room="roomDetail" />
 </template>
 <script>
-import RoomForm from './RoomForm'
+import RoomForm from './RoomForm';
 import Auth from "../../../services/auth";
 
 export default {

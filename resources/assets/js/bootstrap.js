@@ -6,6 +6,7 @@ import Vuelidate from 'vuelidate'
 import VuePrism from 'vue-prism'
 import VTooltip from 'v-tooltip'
 import VueSweetalert2 from 'vue-sweetalert2'
+import VCalendar from 'v-calendar'
 
 import Ls from './services/ls'
 import VDropdown from './components/dropdown/VDropdown'
@@ -20,6 +21,7 @@ import VCollapseItem from './components/collapse/VCollapseItem'
 import 'vue-tabs-component/docs/resources/tabs-component.css'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 import 'vue2-dropzone/dist/vue2Dropzone.css'
+import 'v-calendar/lib/v-calendar.min.css'
 
 /**
  * Global plugins
@@ -102,3 +104,13 @@ Vue.use(VeeValidate, {
   dictionary: { vi, en }
 })
 Vue.use(Vuelidate);
+Vue.use(VCalendar,{
+  formats: {
+    title: 'MMMM YYYY',
+    weekdays: 'W',
+    navMonths: 'MMM',
+    input: ['L', 'YYYY-MM-DD'],
+    dayPopover: 'L',
+    data: ['L', 'YYYY-MM-DD', 'YYYY-MM-DD']
+  }
+});
