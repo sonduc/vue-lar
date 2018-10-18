@@ -147,11 +147,6 @@ import BarGraph from "../../../components/chartjs/BarChart.vue";
 import PieGraph from "../../../components/chartjs/PieChart.vue";
 import Auth from "../../../services/auth";
 export default {
-  props: {
-    permissions: {
-      type: String
-    }
-  },
   components: {
     LineGraph,
     BarGraph,
@@ -159,7 +154,8 @@ export default {
   },
   data() {
     return {
-      header: "header"
+      header: "header",
+      permissions: "statistics.view"
     };
   },
   mounted() {

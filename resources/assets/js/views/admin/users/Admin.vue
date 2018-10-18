@@ -223,27 +223,42 @@ export default {
       this.$router.push("/admin/users/profile/" + id);
     },
     createUser() {
+      let per = "user.create";
       this.$validator.validateAll().then(result => {
         if (result) {
-          axios.post("users", this.user).then(response => {
-            if (response) {
-              this.$swal({
-                title: "Thành công",
-                text: "Đã tạo người dùng mới",
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "OK",
-                cancelButtonText: "Quay lại",
-                showCloseButton: false,
-                showLoaderOnConfirm: true
-              }).then(result => {
-                let page = this.current_page;
-                this.getUsers({ page });
-                this.$refs.create_user.close();
-                this.$refs.table.refresh();
+          Auth.getProfile().then(res => {
+            if (res) {
+              Auth.canAccess(res, per).then(response => {
+                if (!response) {
+                  this.$swal(
+                    "Xin lỗi",
+                    "Bạn không có quyền thực hiện tác vụ này",
+                    "error"
+                  );
+                } else {
+                  axios.post("users", this.user).then(response => {
+                    if (response) {
+                      this.$swal({
+                        title: "Thành công",
+                        text: "Đã tạo người dùng mới",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonText: "OK",
+                        cancelButtonText: "Quay lại",
+                        showCloseButton: false,
+                        showLoaderOnConfirm: true
+                      }).then(result => {
+                        let page = this.current_page;
+                        this.getUsers({ page });
+                        this.$refs.create_user.close();
+                        this.$refs.table.refresh();
+                      });
+                    } else {
+                      this.$swal("Failed", "Some errors", "error");
+                    }
+                  });
+                }
               });
-            } else {
-              this.$swal("Failed", "Some errors", "error");
             }
           });
           return;

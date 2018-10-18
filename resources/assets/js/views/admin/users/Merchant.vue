@@ -7,11 +7,6 @@
         <li class="breadcrumb-item"><a href="#">Users</a></li>
         <li class="breadcrumb-item active">Users</li>
       </ol>
-      <div class="page-actions">
-        <a @click="$refs.dark_html_modal.open()" style="color:white" class="btn btn-primary">
-          <i class="icon-fa icon-fa-plus" /> New User
-        </a>
-      </div>
     </div>
     <div class="row">
       <div class="col-sm-12">
@@ -79,7 +74,8 @@ export default {
         name: null,
         email: null,
         password: null
-      }
+      },
+      permissions: "user.view"
     };
   },
   install(Vue, options) {
@@ -130,21 +126,6 @@ export default {
     },
     redirectUserDetail(id) {
       this.$router.push("/admin/users/profile/" + id);
-    },
-    createUser() {
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          axios.post("users", this.user).then(response => {
-            if (response) {
-              this.$swal("Success", "Success", "success");
-            } else {
-              this.$swal("Failed", "Some errors", "error");
-            }
-          });
-          return;
-        }
-        this.$swal("Failed", "Some errors", "error");
-      });
     }
   },
   mounted() {
