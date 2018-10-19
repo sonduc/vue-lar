@@ -262,7 +262,7 @@ export default {
       permission: "booking.edit"
     };
   },
-  watch:{
+  watch: {
     booking: {
       handler(val) {
         this.disabledCheckout.to = val.checkin;
@@ -270,7 +270,7 @@ export default {
         if (val.booking_type == 2) {
           this.checkin = val.checkin + " " + this.checkin_hour;
           this.checkout = val.checkin + " " + this.checkout_hour;
-        };
+        }
       },
       deep: true
     },
@@ -289,7 +289,7 @@ export default {
           `bookings/${this.$route.params.bookingId}`,
           {
             params: {
-              include: "booking_status.user,room.details",
+              include: "booking_status.user,room.details"
             }
           }
         );
@@ -305,40 +305,40 @@ export default {
       const result = this.$validator.validateAll();
       if (result) {
         let response = await axios
-        .put(`bookings/${this.booking.id}`, {
-          name: this.booking.name,
-          phone: this.booking.phone,
-          sex: this.booking.sex,
-          birthday: this.birthday.toISOString().substr(0, 10),
-          email: this.booking.email,
-          email_received: this.booking_for_other
-          ? this.booking.email_received
-          : this.booking.email,
-          name_received: this.booking_for_other
-          ? this.booking.name_received
-          : this.booking.name,
-          phone_received: this.booking_for_other
-          ? this.booking.phone_received
-          : this.booking.phone,
-          checkin: this.booking.checkin,
-          checkout: this.booking.checkout,
-          additional_fee: this.booking.additional_fee,
-          money_received: this.booking.money_received,
-          price_discount: this.booking.price_discount,
-          coupon: this.booking.coupon,
-          note: "Ai wanna săm wai",
-          status: this.booking.status,
-          number_of_guests: this.booking.number_of_guests,
-          booking_type: this.booking.booking_type,
-          payment_method: this.booking.payment_method,
-          payment_status: this.booking.payment_status,
-          source: this.booking.source,
-          confirm: this.booking.confirm,
-          room_id: this.booking.room_id,
-        })
-        .then(response => {
-          this.$swal("Thành công", "Cập nhật booking thành công", "success");
-        });
+          .put(`bookings/${this.booking.id}`, {
+            name: this.booking.name,
+            phone: this.booking.phone,
+            sex: this.booking.sex,
+            birthday: this.birthday.toISOString().substr(0, 10),
+            email: this.booking.email,
+            email_received: this.booking_for_other
+              ? this.booking.email_received
+              : this.booking.email,
+            name_received: this.booking_for_other
+              ? this.booking.name_received
+              : this.booking.name,
+            phone_received: this.booking_for_other
+              ? this.booking.phone_received
+              : this.booking.phone,
+            checkin: this.booking.checkin,
+            checkout: this.booking.checkout,
+            additional_fee: this.booking.additional_fee,
+            money_received: this.booking.money_received,
+            price_discount: this.booking.price_discount,
+            coupon: this.booking.coupon,
+            note: "Ai wanna săm wai",
+            status: this.booking.status,
+            number_of_guests: this.booking.number_of_guests,
+            booking_type: this.booking.booking_type,
+            payment_method: this.booking.payment_method,
+            payment_status: this.booking.payment_status,
+            source: this.booking.source,
+            confirm: this.booking.confirm,
+            room_id: this.booking.room_id
+          })
+          .then(response => {
+            this.$swal("Thành công", "Cập nhật booking thành công", "success");
+          });
       } else {
         return window.scroll({
           top: 80,
@@ -348,10 +348,10 @@ export default {
     },
     async applyCoupon() {
       this.$swal(
-          "Xin lỗi",
-          "Chức năng này đang trong quá trình phát triển",
-          "warning"
-        );
+        "Xin lỗi",
+        "Chức năng này đang trong quá trình phát triển",
+        "warning"
+      );
       // if (this.booking.coupon.trim() !== "") {
       //   this.$swal(
       //     "Chúc mừng",
@@ -393,19 +393,7 @@ export default {
       //     );
       //   }
       // }
-    },
-    validateBeforeSubmit() {
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          this.$emit('submit', this.booking)
-        } else {
-          this.$store.dispatch('showNotify', {
-            text: this.$t('alert.invalid'),
-            color: 'warning'
-          })
-        }
-      })
-    },
+    }
   },
   computed: {
     filteredDistrict() {
@@ -415,74 +403,74 @@ export default {
       });
     },
     birthday() {
-      if(this.booking != null) {
-        return new Date(this.booking.birthday)
+      if (this.booking != null) {
+        return new Date(this.booking.birthday);
       }
     },
     source: {
-      get: function () {
+      get: function() {
         return {
-          value:this.booking.source,
-          title:this.booking.source_txt,
-        }
+          value: this.booking.source,
+          title: this.booking.source_txt
+        };
       },
-      set: function (val) {
+      set: function(val) {
         this.booking.source = val.value;
         this.booking.source_txt = val.title;
-        return{
+        return {
           value: val.value,
-          title: val.title,
-        }
+          title: val.title
+        };
       }
     },
     payment_method: {
-      get: function () {
+      get: function() {
         return {
-          value:this.booking.payment_method,
-          title:this.booking.payment_method_txt,
-        }
+          value: this.booking.payment_method,
+          title: this.booking.payment_method_txt
+        };
       },
-      set: function (val) {
+      set: function(val) {
         this.booking.payment_method = val.value;
         this.booking.payment_method_txt = val.title;
-        return{
+        return {
           value: val.value,
-          title: val.title,
-        }
-      },
+          title: val.title
+        };
+      }
     },
     payment_status: {
-      get: function () {
+      get: function() {
         return {
-          value:this.booking.payment_status,
-          title:this.booking.payment_status_txt,
-        }
+          value: this.booking.payment_status,
+          title: this.booking.payment_status_txt
+        };
       },
-      set: function (val) {
+      set: function(val) {
         this.booking.payment_status = val.value;
         this.booking.payment_status_txt = val.title;
-        return{
+        return {
           value: val.value,
-          title: val.title,
-        }
-      },
+          title: val.title
+        };
+      }
     },
     status: {
-      get: function () {
+      get: function() {
         return {
-          value:this.booking.status,
-          title:this.booking.status_txt,
-        }
+          value: this.booking.status,
+          title: this.booking.status_txt
+        };
       },
-      set: function (val) {
+      set: function(val) {
         this.booking.status = val.value;
         this.booking.status_txt = val.title;
-        return{
+        return {
           value: val.value,
-          title: val.title,
-        }
-      },
-    },
+          title: val.title
+        };
+      }
+    }
   },
   mounted() {
     Auth.getProfile().then(res => {
