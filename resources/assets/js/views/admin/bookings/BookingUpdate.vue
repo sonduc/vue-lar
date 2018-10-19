@@ -259,7 +259,6 @@ export default {
       district: {
         id: ""
       },
-      permission: "booking.edit"
     };
   },
   watch:{

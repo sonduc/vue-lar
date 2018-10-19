@@ -96,7 +96,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
 import { TableComponent, TableColumn } from "vue-table-component";
 import { SweetModal } from "sweet-modal-vue";
 import Auth from "../../../services/auth";

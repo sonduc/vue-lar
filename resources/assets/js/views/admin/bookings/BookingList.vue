@@ -86,7 +86,7 @@
                   </div>
                 </div>
               </td>
-              <td class="cell-content">
+              <td class="cell-content" @click="openBookingPaymentModal(booking)">
                 <div class="content-subject">Hình thức: <label class="label label-primary">{{booking.payment_method_txt}}</label></div>
                 <div class="content-subject">Tiền phòng: {{booking.price_original | formatNumber}}</div>
                 <div v-if="booking.additional_fee > 0" class="content-subject">Phụ thu: {{booking.additional_fee | formatNumber}}</div>
@@ -134,7 +134,21 @@
       </div>
 
       <transition name="fade">
-        <booking-detail :booking="booking" v-show="isModalVisible" :is-visible="isModalVisible" @close="closeMailModal" />
+        <booking-detail
+          :booking="booking"
+          v-show="isModalVisible"
+          :is-visible="isModalVisible"
+          @close="closeMailModal" />
+      </transition>
+
+      <transition name="fade">
+        <booking-payment
+          :booking="booking"
+          :bookingPayment="bookingPayment"
+          v-show="modalPayment"
+          :is-visible="modalPayment"
+          @closePaymentModal="closePaymentModal">
+        </booking-payment>
       </transition>
 
       <sweet-modal overlay-theme="dark" ref="filter">
@@ -285,6 +299,7 @@ import Datepicker from "vuejs-datepicker";
 import Multiselect from "vue-multiselect";
 import BookingSidebar from "./BookingSidebar";
 import BookingDetail from "./BookingDetail";
+import BookingPayment from "./BookingPayment";
 import Auth from "../../../services/auth";
 import Pagination from "../../../components/paginate/ServerPagination";
 import { format, constant } from "../../../helpers/mixins";
@@ -293,6 +308,7 @@ export default {
   components: {
     BookingSidebar,
     BookingDetail,
+    BookingPayment,
     Pagination,
     SweetModal,
     Multiselect,
@@ -302,6 +318,7 @@ export default {
     return {
       format: "yyyy-MM-dd",
       bookings: [],
+      bookingPayment:null,
       booking: {},
       update_booking: {},
       update_payment_status: null,
@@ -360,6 +377,7 @@ export default {
       ],
       option: null,
       isModalVisible: false,
+      modalPayment: false,
       isLeftSidebarVisible: true,
       selectedBookings: [],
       selectedStatus: "",
@@ -507,7 +525,7 @@ export default {
         this.totalPages = paginate.total_pages;
         this.count = paginate.count;
         this.bookings = response.data.data;
-        console.log(response.data.data);
+        // console.log(response.data.data);
         return {
           data: response.data.data,
           pagination: {
@@ -516,6 +534,24 @@ export default {
             count: paginate.count
           }
         };
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
+    async getBookingPayment(id){
+      try {
+        const response = await axios.get(
+          `payments?booking=${this.booking.id}`,
+          {
+            params: {
+              include: "",
+            }
+          }
+        );
+        this.bookingPayment = response.data.data;
+        console.log(response.data.data)
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
@@ -531,8 +567,16 @@ export default {
       this.booking = booking;
       this.isModalVisible = true;
     },
+    openBookingPaymentModal(booking){
+      this.booking = booking;
+      this.getBookingPayment(booking.id);
+      this.modalPayment = true;
+    },
     closeMailModal() {
       this.isModalVisible = false;
+    },
+    closePaymentModal(){
+      this.modalPayment = false;
     },
     openBookingFilter() {
       this.$refs.filter.open();
