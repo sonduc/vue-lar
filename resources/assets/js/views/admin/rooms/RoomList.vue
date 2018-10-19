@@ -3,14 +3,14 @@
     <div class="page-header">
       <h3 class="page-title">Danh sách phòng</h3>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
         <li class="breadcrumb-item active">Danh sách phòng</li>
       </ol>
     </div>
     <div class="mailbox">
       <div class="card">
         <div class="card-header">
-          <h6>Horizontal Form</h6>
+          <h6>Bộ lọc</h6>
         </div>
         <div class="card-body">
 
@@ -130,7 +130,7 @@
             </div>
           </div>
           <button @click="applyFilter(1)" class="btn btn-success btn-sm">Áp dụng</button>
-          <button @click="resetFilter(1)" class="btn btn-info btn-sm">Reset</button>
+          <button @click="resetFilter(1)" class="btn btn-info btn-sm">Làm mới</button>
 
         </div>
       </div>

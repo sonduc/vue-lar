@@ -1,15 +1,14 @@
 <template>
   <div class="main-content">
     <div class="page-header">
-      <h3 class="page-title">Mailbox</h3>
+      <h4 class="page-title">Danh sách Booking</h4>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Apps</a></li>
-        <li class="breadcrumb-item active">Mailbox</li>
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="#">Bookings</a></li>
       </ol>
     </div>
     <div :class="{'is-open': isLeftSidebarVisible}" class="mailbox">
-      <button class="btn btn-theme btn-sm btn-block" @click="openBookingFilter">Filter</button>
+      <button class="btn btn-theme btn-sm btn-block" @click="openBookingFilter">Bộ lọc</button>
       <booking-sidebar :selected-category="selectedStatus" :categories="categories" :is-left-sidebar-visible="isLeftSidebarVisible"
         @selected="selectStatus" @toggle="isLeftSidebarVisible = !isLeftSidebarVisible" />
 
@@ -36,12 +35,6 @@
               </v-dropdown-item>
             </v-dropdown>
 
-          </div>
-
-          <div class="mailbox-filters">
-            <div class="mail-search">
-              <input id="inputEmailTo" v-model="searchText" type="email" placeholder="Search" class="form-control">
-            </div>
           </div>
         </div>
         <table class="table table-hover">
