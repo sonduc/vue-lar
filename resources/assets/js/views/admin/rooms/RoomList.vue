@@ -13,125 +13,125 @@
           <h6>Horizontal Form</h6>
         </div>
         <div class="card-body">
-          <form>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label for="firstName" class="col-sm-2 col-form-label">Tên phòng</label>
-                  <div class="col-sm-10">
-                    <input v-model="q" id="firstName" type="text" class="form-control" placeholder="Nhập vào tên phòng">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="email" class="col-sm-2 col-form-label">Thành phố</label>
-                  <div class="col-sm-4">
-                    <multiselect v-model="city" label="name" :options="cities" :searchable="true" :show-labels="false" />
-                  </div>
-                  <label for="email" class="col-sm-2 col-form-label">Quận</label>
-                  <div class="col-sm-4">
-                    <multiselect :disabled="city == null" v-model="district" label="name" :options="filteredDistrict"
-                      :searchable="true" :show-labels="false" />
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label for="firstName" class="col-sm-2 col-form-label">Khoảng giá</label>
-                  <div class="col-sm-4 mt-2">
-                    <vue-slider 
-                      v-model="price_range" 
-                      formatter="{value} Đ" 
-                      :min="0" 
-                      :max="90000000"
-                    ></vue-slider>
-                  </div>
-                  
-                  <label for="lastName" class="col-sm-2 col-form-label">Phòng</label>
-                  <div class="col-sm-4">
-                    <multiselect id="inputUserName" v-model="room_type" label="value" :options="room_type_list"
-                      :searchable="true" :show-labels="false" />
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="lastName" class="col-sm-2 col-form-label">Host</label>
-                  <div class="col-sm-4">
-                    <multiselect id="inputUserName" v-model="merchant_id" label="name" :options="merchants" :searchable="true"
-                      :show-labels="false" />
-                  </div>
-                  <label for="email" class="col-sm-2 col-form-label">Thuê theo</label>
-                  <div class="col-sm-4">
-                    <multiselect 
-                      v-model="rent_type" 
-                      label="value" 
-                      :options="rent_type_list" 
-                      :searchable="true"
-                      :show-labels="false" 
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
 
-                <div class="form-group row">
-                  <label for="email" class="col-sm-2 col-form-label">Hiển thị</label>
-                  <div class="col-sm-4 mt-2">
-                    <div class="form-check form-check-inline">
-                      <input 
-                        id="inlineCheckbox1" 
-                        class="form-check-input" 
-                        type="checkbox" 
-                        v-model.number="hot_room"
-                        true-value="1"     
-                        false-value="0"
-                        >
-                      <label class="form-check-label" for="inlineCheckbox1">Hot</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input 
-                        id="inlineCheckbox2" 
-                        class="form-check-input" 
-                        type="checkbox" 
-                        v-model.number="new_room"
-                        true-value="1" 
-                        false-value="0"
-                        >
-                      <label class="form-check-label" for="inlineCheckbox2">New</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input 
-                        id="inlineCheckbox3" 
-                        class="form-check-input" 
-                        type="checkbox" 
-                        v-model.number="latest_deal"
-                        true-value="1" 
-                        false-value="0"
-                      >
-                      <label class="form-check-label" for="inlineCheckbox3">Deal</label>
-                    </div>
-                  </div>
-                  <label for="email" class="col-sm-2 col-form-label">Trạng thái</label>
-                  <div class="col-sm-4">
-                    <multiselect :disabled="city == null" v-model="status" label="value" :options="room_status_list"
-                      :searchable="true" :show-labels="false" />
-                  </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label for="firstName" class="col-sm-2 col-form-label">Tên phòng</label>
+                <div class="col-sm-10">
+                  <input v-model="q" id="firstName" type="text" class="form-control" placeholder="Nhập vào tên phòng">
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="form-group row">
-                  <label for="lastName" class="col-sm-1 col-form-label"> Từ </label>
-                  <div class="col-sm-5">
-                    <datepicker v-model="date_start" :format="format" input-class="form-control" />
-                  </div>
-                  <label for="lastName" class="col-sm-1 col-form-label"> Đến </label>
-                  <div class="col-sm-5">
-                    <datepicker :disabled-dates="disabledCheckout" v-model="date_end" :format="format" input-class="form-control" />
-                  </div>
+              <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label">Thành phố</label>
+                <div class="col-sm-4">
+                  <multiselect v-model="city" label="name" :options="cities" :searchable="true" :show-labels="false" />
+                </div>
+                <label for="email" class="col-sm-2 col-form-label">Quận</label>
+                <div class="col-sm-4">
+                  <multiselect :disabled="city == null" v-model="district" label="name" :options="filteredDistrict"
+                    :searchable="true" :show-labels="false" />
                 </div>
               </div>
             </div>
-            <button @click="applyFilter(1)" class="btn btn-success btn-sm">Áp dụng</button>
-            <button @click="resetFilter(1)" class="btn btn-info btn-sm">Reset</button>
-          </form>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label for="firstName" class="col-sm-2 col-form-label">Khoảng giá</label>
+                <div class="col-sm-4 mt-2">
+                  <vue-slider 
+                    v-model="price_range" 
+                    formatter="{value} Đ" 
+                    :min="0" 
+                    :max="90000000"
+                  ></vue-slider>
+                </div>
+                
+                <label for="lastName" class="col-sm-2 col-form-label">Phòng</label>
+                <div class="col-sm-4">
+                  <multiselect id="inputUserName" v-model="room_type" label="value" :options="room_type_list"
+                    :searchable="true" :show-labels="false" />
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="lastName" class="col-sm-2 col-form-label">Host</label>
+                <div class="col-sm-4">
+                  <multiselect id="inputUserName" v-model="merchant_id" label="name" :options="merchants" :searchable="true"
+                    :show-labels="false" />
+                </div>
+                <label for="email" class="col-sm-2 col-form-label">Thuê theo</label>
+                <div class="col-sm-4">
+                  <multiselect 
+                    v-model="rent_type" 
+                    label="value" 
+                    :options="rent_type_list" 
+                    :searchable="true"
+                    :show-labels="false" 
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+
+              <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label">Hiển thị</label>
+                <div class="col-sm-4 mt-2">
+                  <div class="form-check form-check-inline">
+                    <input 
+                      id="inlineCheckbox1" 
+                      class="form-check-input" 
+                      type="checkbox" 
+                      v-model.number="hot_room"
+                      true-value="1"     
+                      false-value="0"
+                      >
+                    <label class="form-check-label" for="inlineCheckbox1">Hot</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input 
+                      id="inlineCheckbox2" 
+                      class="form-check-input" 
+                      type="checkbox" 
+                      v-model.number="new_room"
+                      true-value="1" 
+                      false-value="0"
+                      >
+                    <label class="form-check-label" for="inlineCheckbox2">New</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input 
+                      id="inlineCheckbox3" 
+                      class="form-check-input" 
+                      type="checkbox" 
+                      v-model.number="latest_deal"
+                      true-value="1" 
+                      false-value="0"
+                    >
+                    <label class="form-check-label" for="inlineCheckbox3">Deal</label>
+                  </div>
+                </div>
+                <label for="email" class="col-sm-2 col-form-label">Trạng thái</label>
+                <div class="col-sm-4">
+                  <multiselect :disabled="city == null" v-model="status" label="value" :options="room_status_list"
+                    :searchable="true" :show-labels="false" />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label for="lastName" class="col-sm-1 col-form-label"> Từ </label>
+                <div class="col-sm-5">
+                  <datepicker v-model="date_start" :format="format" input-class="form-control" />
+                </div>
+                <label for="lastName" class="col-sm-1 col-form-label"> Đến </label>
+                <div class="col-sm-5">
+                  <datepicker :disabled-dates="disabledCheckout" v-model="date_end" :format="format" input-class="form-control" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <button @click="applyFilter(1)" class="btn btn-success btn-sm">Áp dụng</button>
+          <button @click="resetFilter(1)" class="btn btn-info btn-sm">Reset</button>
+
         </div>
       </div>
       <div class="mailbox-content">
