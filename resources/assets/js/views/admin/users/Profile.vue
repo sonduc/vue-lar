@@ -28,7 +28,8 @@
                     <h4>{{user.name}}</h4>
                     <p class="detail-row"><i class="icon-fa icon-fa-map-marker"/> {{user.address}}</p>
                     <p class="detail-row"><i class="icon-fa icon-fa-birthday-cake"/> {{user.birthday}}</p>
-                    <p class="detail-row"><i class="icon-fa icon-fa-wrench"/> {{user.gender}}</p>
+                    <p class="detail-row"><i class="icon-fa icon-fa-venus-mars"/> {{user.gender_txt}}</p>
+                    <p class="detail-row"><i class="icon-fa icon-fa-bank"/> {{user.account_number}}</p>
                   </div>
                 </div>
                 <div class="row mt-4">
@@ -74,7 +75,7 @@
                   </div>
                 </div>
               </tab>
-              <tab id="profile-messages" name="Messages">
+              <tab id="profile-messages" name="Tin nhắn">
                 <ul class="media-list activity-list">
                   <li class="media">
                     <div class="media-left">
@@ -116,7 +117,7 @@
                   </li>
                 </ul>
               </tab>
-              <tab id="profile-friends" name="Friends">
+              <tab id="profile-friends" name="Nhân viên">
                 <ul class="media-list friends-list">
                   <li class="media">
                     <div class="media-left">
@@ -131,81 +132,6 @@
                     <div class="media-body">
                       <h4 class="media-heading">Shane White</h4>
                       <small>2000 friends</small>
-                    </div>
-                  </li>
-                  <li class="media">
-                    <div class="media-left">
-                      <a href="#">
-                        <img
-                          class="media-object"
-                          src="/assets/img/avatars/avatar2.png"
-                          alt="Generic placeholder image"
-                        >
-                      </a>
-                    </div>
-                    <div class="media-body">
-                      <h4 class="media-heading">Adam David</h4>
-                      <small>200 friends</small>
-                    </div>
-                  </li>
-                  <li class="media">
-                    <div class="media-left">
-                      <a href="#">
-                        <img
-                          class="media-object"
-                          src="/assets/img/avatars/avatar3.png"
-                          alt="Generic placeholder image"
-                        >
-                      </a>
-                    </div>
-                    <div class="media-body">
-                      <h4 class="media-heading">Shane White</h4>
-                      <small>2000 friends</small>
-                    </div>
-                  </li>
-                  <li class="media">
-                    <div class="media-left">
-                      <a href="#">
-                        <img
-                          class="media-object"
-                          src="/assets/img/avatars/avatar4.png"
-                          alt="Generic placeholder image"
-                        >
-                      </a>
-                    </div>
-                    <div class="media-body">
-                      <h4 class="media-heading">Adam David</h4>
-                      <small>200 friends</small>
-                    </div>
-                  </li>
-                  <li class="media">
-                    <div class="media-left">
-                      <a href="#">
-                        <img
-                          class="media-object"
-                          src="/assets/img/avatars/avatar5.png"
-                          alt="Generic placeholder image"
-                        >
-                      </a>
-                    </div>
-                    <div class="media-body">
-                      <h4 class="media-heading">Shane White</h4>
-                      <small>2000 friends</small>
-                    </div>
-                  </li>
-                  <li class="media">
-                    <div class="media-left">
-                      <a href="#">
-                        <img
-                          class="media-object"
-                          src="/assets/img/avatars/avatar6.png"
-                          alt="Generic placeholder image"
-                        >
-                      </a>
-                    </div>
-                    <div class="media-body">
-                      <h4 class="media-heading">Adam David</h4>
-                      <small>200 friends</small>
                     </div>
                   </li>
                 </ul>

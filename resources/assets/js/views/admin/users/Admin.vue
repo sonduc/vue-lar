@@ -26,7 +26,13 @@
               <table-column show="name" label="Name" />
               <table-column show="email" label="Email" />
               <table-column show="type_txt" label="Role" />
-              <table-column show="status_txt" label="Status" />
+              <table-column label="Status" :sortable="false" :filterable="false">
+                  <template slot-scope="row">
+                      <button :class="row.status == 0 ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'">
+                        {{row.status_txt}}
+                      </button>
+                  </template>
+              </table-column>
               <table-column :sortable="true" :filterable="true" label="Actions">
                 <template slot-scope="row">
                   <div class="table__actions">
@@ -217,27 +223,42 @@ export default {
       this.$router.push("/admin/users/profile/" + id);
     },
     createUser() {
+      let per = "user.create";
       this.$validator.validateAll().then(result => {
         if (result) {
-          axios.post("users", this.user).then(response => {
-            if (response) {
-              this.$swal({
-                title: "Thành công",
-                text: "Đã tạo người dùng mới",
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "OK",
-                cancelButtonText: "Quay lại",
-                showCloseButton: false,
-                showLoaderOnConfirm: true
-              }).then(result => {
-                let page = this.current_page;
-                this.getUsers({ page });
-                this.$refs.create_user.close();
-                this.$refs.table.refresh();
+          Auth.getProfile().then(res => {
+            if (res) {
+              Auth.canAccess(res, per).then(response => {
+                if (!response) {
+                  this.$swal(
+                    "Xin lỗi",
+                    "Bạn không có quyền thực hiện tác vụ này",
+                    "error"
+                  );
+                } else {
+                  axios.post("users", this.user).then(response => {
+                    if (response) {
+                      this.$swal({
+                        title: "Thành công",
+                        text: "Đã tạo người dùng mới",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonText: "OK",
+                        cancelButtonText: "Quay lại",
+                        showCloseButton: false,
+                        showLoaderOnConfirm: true
+                      }).then(result => {
+                        let page = this.current_page;
+                        this.getUsers({ page });
+                        this.$refs.create_user.close();
+                        this.$refs.table.refresh();
+                      });
+                    } else {
+                      this.$swal("Failed", "Some errors", "error");
+                    }
+                  });
+                }
               });
-            } else {
-              this.$swal("Failed", "Some errors", "error");
             }
           });
           return;

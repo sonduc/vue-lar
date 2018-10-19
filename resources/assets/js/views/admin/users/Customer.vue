@@ -7,11 +7,6 @@
         <li class="breadcrumb-item"><a href="#">Users</a></li>
         <li class="breadcrumb-item active">Users</li>
       </ol>
-      <div class="page-actions">
-        <a @click="$refs.dark_html_modal.open()" style="color:white" class="btn btn-primary">
-          <i class="icon-fa icon-fa-plus" /> New User
-        </a>
-      </div>
     </div>
     <div class="row">
       <div class="col-sm-12">
@@ -21,13 +16,20 @@
             <div class="card-actions" />
           </div>
           <div class="card-body">
-            <table-component :data="getUsers" sort-by="row.name" sort-order="desc" table-class="table">
-              <table-column show="id" label="ID" />
-              <table-column show="name" label="Name" />
-              <table-column show="email" label="Email" />
+            <table-component :show-filter="false" :data="getUsers" sort-by="row.name" sort-order="desc" table-class="table">
+              <table-column :filterable="true" show="id" label="ID" />
+              <table-column :filterable="true" show="name" label="Name" />
+              <table-column :filterable="true" show="email" label="Email" />
+              <table-column :filterable="true" show="phone" label="Phone" />
               <table-column show="type_txt" label="Role" />
-              <table-column show="status_txt" label="Status" />
-              <table-column :sortable="true" :filterable="true" label="Actions">
+              <table-column :filterable="false" label="Status" :sortable="false">
+                  <template slot-scope="row">
+                      <button :class="row.status == 0 ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'">
+                        {{row.status_txt}}
+                      </button>
+                  </template>
+              </table-column>
+              <table-column :filterable="true" label="Actions">
                 <template slot-scope="row">
                   <div class="table__actions">
                     <router-link :to="{ name: 'user.profile', params: { userId: row.id }}">
@@ -73,7 +75,8 @@ export default {
         name: null,
         email: null,
         password: null
-      }
+      },
+      permissions: "user.view"
     };
   },
   install(Vue, options) {
@@ -82,9 +85,7 @@ export default {
   methods: {
     async getUsers({ page, filter, sort }) {
       try {
-        const response = await axios.get(
-          `users?type=0&page=${page}`
-        );
+        const response = await axios.get(`users?type=0&page=${page}`);
         let paginate = response.data.meta.pagination;
         return {
           data: response.data.data,
@@ -125,28 +126,6 @@ export default {
     },
     redirectUserDetail(id) {
       this.$router.push("/admin/users/profile/" + id);
-    },
-    createUser() {
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          axios
-            .post("users", {
-              name: this.user.name,
-              email: this.user.email,
-              password: this.user.password,
-              password_confirmation: this.user.password
-            })
-            .then(response => {
-              if (response) {
-                this.$swal("Success", "Success", "success");
-              } else {
-                this.$swal("Failed", "Some errors", "error");
-              }
-            });
-          return;
-        }
-        this.$swal("Failed", "Some errors", "error");
-      });
     }
   },
   mounted() {

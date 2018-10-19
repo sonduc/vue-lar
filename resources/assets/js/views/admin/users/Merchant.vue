@@ -7,11 +7,6 @@
         <li class="breadcrumb-item"><a href="#">Users</a></li>
         <li class="breadcrumb-item active">Users</li>
       </ol>
-      <div class="page-actions">
-        <a @click="$refs.dark_html_modal.open()" style="color:white" class="btn btn-primary">
-          <i class="icon-fa icon-fa-plus" /> New User
-        </a>
-      </div>
     </div>
     <div class="row">
       <div class="col-sm-12">
@@ -26,7 +21,13 @@
               <table-column show="name" label="Name" />
               <table-column show="email" label="Email" />
               <table-column show="type_txt" label="Role" />
-              <table-column show="status_txt" label="Status" />
+              <table-column label="Status" :sortable="false" :filterable="false">
+                  <template slot-scope="row">
+                      <button :class="row.status == 0 ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'">
+                        {{row.status_txt}}
+                      </button>
+                  </template>
+              </table-column>
               <table-column :sortable="true" :filterable="true" label="Actions">
                 <template slot-scope="row">
                   <div class="table__actions">
@@ -73,7 +74,8 @@ export default {
         name: null,
         email: null,
         password: null
-      }
+      },
+      permissions: "user.view"
     };
   },
   install(Vue, options) {
@@ -82,9 +84,7 @@ export default {
   methods: {
     async getUsers({ page, filter, sort }) {
       try {
-        const response = await axios.get(
-          `users?type=1&page=${page}`
-        );
+        const response = await axios.get(`users?type=1&page=${page}`);
         let paginate = response.data.meta.pagination;
         console.log(paginate);
         return {
@@ -126,21 +126,6 @@ export default {
     },
     redirectUserDetail(id) {
       this.$router.push("/admin/users/profile/" + id);
-    },
-    createUser() {
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          axios.post("users", this.user).then(response => {
-            if (response) {
-              this.$swal("Success", "Success", "success");
-            } else {
-              this.$swal("Failed", "Some errors", "error");
-            }
-          });
-          return;
-        }
-        this.$swal("Failed", "Some errors", "error");
-      });
     }
   },
   mounted() {
@@ -162,6 +147,6 @@ export default {
   z-index: 10000;
 }
 .sweet-modal-overlay {
-  z-index: 1000
+  z-index: 1000;
 }
 </style>
