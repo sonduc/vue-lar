@@ -121,7 +121,7 @@
                     <div class="form-group">
                       <label>Mã giảm giá</label>
                       <div class="input-group">
-                        <input :disabled="booking.price_discount > 0" type="text" v-model="booking.coupon" class="form-control">
+                        <input :disabled="true" type="text" v-model="booking.coupon" class="form-control">
                         <div class="input-group-append">
                           <button v-if="booking.price_discount > 0" @click="removeCoupon" class="btn btn-sm btn-primary"><i
                               class="icon-fa icon-fa-times"></i></button>
@@ -182,13 +182,14 @@
                   <div class="row">
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label>Hình thức thanh toán</label>
+                        <label>Hình thức thanh toán *</label>
                         <multiselect :allow-empty="false" v-model="payment_method" value="value" label="title" :options="paymentMethodList"
                           :searchable="true" :show-labels="false" />
                       </div>
                       <div class="form-group">
-                        <label>Số tiền thanh toán</label>
-                        <input type="text" class="form-control">
+                        <label :style="errors.has('money_received') ? 'color:red;' : ''">{{errors.has('money_received')
+                          ? errors.first('money_received') : 'Số tiền thanh toán *'}}</label>
+                        <input name="money_received" v-model.number="booking.money_received" v-validate="'numeric'" type="number" class="form-control" data-vv-as="Số tiền thanh toán" >
                       </div>
                       <div class="form-group">
                         <label :style="errors.has('price_discount') ? 'color:red;' : ''">{{errors.has('price_discount')
@@ -199,7 +200,7 @@
                     </div>
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label>Trạng thái thanh toán</label>
+                        <label>Trạng thái thanh toán *</label>
                         <multiselect :allow-empty="false" v-model="payment_status" value="value" label="title" :options="paymentList"
                           :searchable="true" :show-labels="false" />
                       </div>
@@ -210,7 +211,7 @@
                           v-validate="'numeric'" type="number" class="form-control">
                       </div>
                       <div class="form-group">
-                        <label>Trạng thái booking</label>
+                        <label>Trạng thái booking *</label>
                         <multiselect :allow-empty="false" v-model="status" value="value" label="title" :options="statusList"
                           :searchable="true" :show-labels="false" />
                       </div>
@@ -232,12 +233,14 @@
               <thead>
                 <tr>
                   <th></th>
+                  <th width="100px"></th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>Thời gian</td>
+                  <td></td>
                   <td>
                     <span v-if="('days' in booking)" class="label label-success">{{ booking.days + ' Ngày'}}</span>
                     <span v-if="('hours' in booking)" class="label label-success">{{ booking.hours + ' Giờ'}}</span>
@@ -245,22 +248,27 @@
                 </tr>
                 <tr>
                   <td>Giá gốc</td>
+                  <td></td>
                   <td><span class="label label-danger">{{booking.price_original | formatNumber}}</span></td>
                 </tr>
                 <tr>
                   <td>Khuyến mãi</td>
+                  <td></td>
                   <td><span class="label label-success">{{booking.price_discount | formatNumber}}</span></td>
                 </tr>
                 <tr>
                   <td>Phụ thu</td>
+                  <td></td>
                   <td><span class="label label-danger">{{booking.additional_fee | formatNumber}}</span></td>
                 </tr>
                 <tr>
                   <td>Giảm giá</td>
+                  <td></td>
                   <td><span class="label label-success">{{booking.coupon_discount | formatNumber}}</span></td>
                 </tr>
                 <tr>
                   <td>Tổng tiền</td>
+                  <td></td>
                   <td><span class="label label-danger"><b>{{totalFeeCalculated | formatNumber}}</b></span></td>
                 </tr>
               </tbody>
@@ -321,7 +329,7 @@ export default {
       ],
       payment_method: null,
       payment_status: null,
-      status:null,
+      status: null,
       source: null,
       checkout_hour: null,
       checkin_hour: null,
@@ -329,6 +337,7 @@ export default {
         checkin: null,
         checkout: null,
         booking_type: null,
+        birthday: null,
         payment_status: 3,
         price_discount: 0,
         coupon: "",
@@ -337,7 +346,7 @@ export default {
         price_original: 0,
         coupon_discount: 0,
         total_fee: 0,
-        status:1,
+        status: 1
       },
       disabledCheckout: {
         to: ""
@@ -399,7 +408,7 @@ export default {
         this.booking.source = val.value;
       },
       deep: true
-    },
+    }
   },
   computed: {
     totalFeeCalculated() {
@@ -445,7 +454,7 @@ export default {
         if (result) {
           // eslint-disable-next-line
           // Calculate the booking fee
-          const response = await axios.post(`bookings/price-caculator/`, {
+          const response = await axios.post(`bookings/price-calculator/`, {
             additional_fee: 0,
             price_discount: 0,
             room_id: this.room.id,
@@ -498,7 +507,10 @@ export default {
             name: this.booking.name,
             phone: this.booking.phone,
             sex: this.booking.sex,
-            birthday: this.booking.birthday.toISOString().substr(0, 10),
+            birthday:
+              this.booking.birthday !== null
+                ? this.booking.birthday.toISOString().substr(0, 10)
+                : null,
             email: this.booking.email,
             email_received: this.booking_for_other
               ? this.booking.email_received
@@ -539,56 +551,65 @@ export default {
           })
           .then(response => {
             this.$swal("Thành công", "Booking đã được tạo", "success");
+          })
+          .catch(error => {
+            let err = error.response.data.data.errors;
+            window.toastr["error"]("There was an error", "Error");
           });
       } else {
         return window.scroll({
-          top: 80,
+          top: 0,
           behavior: "smooth"
         });
       }
     },
     async applyCoupon() {
-      if (this.booking.coupon.trim() !== "") {
-        this.$swal(
-          "Chúc mừng",
-          "Mã giảm giá được áp dụng thành công",
-          "success"
-        );
-        try {
-          this.booking.price_discount = 120000;
-          // Get discount base on coupon ( must return by number )
-          // const response = await axios.get(
-          // `rooms/${this.$route.params.roomId}?include=details`
-          // );
-          // return;
-        } catch (error) {
-          if (error) {
-            this.$swal("Xin lỗi", "Mã giảm giá không hợp lệ", "error");
-          }
-        }
-      } else {
-        this.$swal("Xin lỗi", "Mã giảm giá không được bỏ trống", "warning");
-      }
+      this.$swal(
+        "Xin lỗi",
+        "Chức năng này đang trong quá trình phát triển",
+        "warning"
+      );
+      // if (this.booking.coupon.trim() !== "") {
+      //   this.$swal(
+      //     "Chúc mừng",
+      //     "Mã giảm giá được áp dụng thành công",
+      //     "success"
+      //   );
+      //   try {
+      //     // this.booking.price_discount = 120000;
+      //     // Get discount base on coupon ( must return by number )
+      //     // const response = await axios.get(
+      //     // `rooms/${this.$route.params.roomId}?include=details`
+      //     // );
+      //     // return;
+      //   } catch (error) {
+      //     if (error) {
+      //       this.$swal("Xin lỗi", "Mã giảm giá không hợp lệ", "error");
+      //     }
+      //   }
+      // } else {
+      //   this.$swal("Xin lỗi", "Mã giảm giá không được bỏ trống", "warning");
+      // }
     },
     async removeCoupon() {
-      this.$swal("Thành công", "Mã giảm giá đã được loại bỏ", "success");
-      try {
-        this.booking.coupon = "";
-        this.booking.price_discount = 0;
-        // Recalculate the discount
-        // const response = await axios.get(
-        // `rooms/${this.$route.params.roomId}?include=details`
-        // );
-        // return;
-      } catch (error) {
-        if (error) {
-          this.$swal(
-            "Xin lỗi",
-            "Có lỗi xảy ra, vui lòng kiểm tra lại",
-            "error"
-          );
-        }
-      }
+      // this.$swal("Thành công", "Mã giảm giá đã được loại bỏ", "success");
+      // try {
+      //   this.booking.coupon = "";
+      //   this.booking.price_discount = 0;
+      //   // Recalculate the discount
+      //   // const response = await axios.get(
+      //   // `rooms/${this.$route.params.roomId}?include=details`
+      //   // );
+      //   // return;
+      // } catch (error) {
+      //   if (error) {
+      //     this.$swal(
+      //       "Xin lỗi",
+      //       "Có lỗi xảy ra, vui lòng kiểm tra lại",
+      //       "error"
+      //     );
+      //   }
+      // }
     }
   },
   mounted() {
