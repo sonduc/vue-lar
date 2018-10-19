@@ -44,7 +44,7 @@
                     <i class="icon-fa icon-fa-search" /> Edit
                   </a>
                 </router-link>
-                <a class="btn btn-default btn-sm" href="#">
+                <a class="btn btn-default btn-sm" @click="remove(row.id)">
                   Delete
                 </a>
               </div>
@@ -143,6 +143,32 @@ export default {
           window.toastr["error"]("There was an error", "Error");
         }
       }
+    },
+    reloadData(page) {
+      this.getRoles({
+        page
+      });
+    },
+    remove(id) {
+      console.log(id)
+      this.$swal({
+        title: "Bạn có muốn xóa quyền không",
+        type: "info",
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Quay lại",
+        showCloseButton: true,
+        showLoaderOnConfirm: true
+      })
+      .then((result) => {
+        if (result) {
+          axios.delete('roles/'+id).then(response => {
+            window.toastr["success"]("Xóa thành công", "Success");
+            this.reloadData(this.currentPage);
+          })
+        }
+      });
     },
     hideSidebarOnMobile() {
       let self = this;
