@@ -74,6 +74,7 @@
 import Auth from "../../../services/auth";
 import Multiselect from "vue-multiselect";
 import { hoursList, format, constant } from "../../../helpers/mixins";
+import { map, chain } from 'lodash'
 export default{
   data() {
     return{
@@ -126,14 +127,23 @@ export default{
       }
     },
     setInitData(dataRole) {
-      let initData = { ...dataRole};
-      let permissions = initData.permissions;
-      Object.keys(permissions).map(function(key, value){ return key });
-      this.role.permissions = permissions
-      this.role.name = initData.name
-      this.role.slug = initData.slug
-      console.log(this.role)
+      let initData = { ...dataRole }
+      initData.permissions = map(initData.permissions, (value, key) => key)
+      this.role = { ...this.role, ...initData }
     },
+    formatPermissions(){
+      this.role.permissions = chain(this.role.permissions).map(value => {
+        return [value, true]}).fromPairs().value();
+    },
+    // setInitData(dataRole) {
+    //   let initData = { ...dataRole};
+    //   let permissions = initData.permissions;
+    //   Object.keys(permissions).map(function(key, value){ return key });
+    //   this.role.permissions = permissions
+    //   this.role.name = initData.name
+    //   this.role.slug = initData.slug
+    //   console.log(this.role)
+    // },
     async allPermission(){
       try {
         const response = await axios.get(
@@ -152,7 +162,8 @@ export default{
       }
     },
     async submitForm(){
-      console.log(this.role);
+      this.formatPermissions();
+      // console.log(this.role);
       try {
         const response = await axios.put(`roles/${this.$route.params.roleId}`,{
           name:this.role.name,

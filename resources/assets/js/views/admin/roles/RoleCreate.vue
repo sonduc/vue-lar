@@ -72,6 +72,7 @@
 </template>
 <script>
 import Auth from "../../../services/auth";
+import { chain } from 'lodash'
 import Multiselect from "vue-multiselect";
 import { hoursList, format, constant } from "../../../helpers/mixins";
 export default{
@@ -119,8 +120,13 @@ export default{
         }
       }
     },
+    formatPermissions(){
+      this.role.permissions = chain(this.role.permissions).map(value => {
+        return [value, true]}).fromPairs().value();
+    },
     async submitForm(){
-      console.log(this.role);
+      this.formatPermissions();
+      // console.log(this.role);
       try {
         const response = await axios.post(`roles`,{
           name:this.role.name,

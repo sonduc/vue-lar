@@ -90,11 +90,12 @@ export default {
   },
   data() {
     return{
+      permission: "role.view",
       roles:[],
       currentPage: null,
       totalPages: null,
       count: null,
-      permission: "role.view",
+      dialogDelete: false
     };
   },
   install(Vue, options) {
@@ -128,7 +129,7 @@ export default {
         this.totalPages = paginate.total_pages;
         this.count = paginate.count;
         this.roles = response.data.data;
-        console.log(response.data.data)
+        // console.log(response.data.data)
         return {
           data: response.data.data,
           pagination: {
