@@ -36,18 +36,6 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group row">
-                  <label for="lastName" class="col-sm-2 col-form-label">Host</label>
-                  <div class="col-sm-4">
-                    <multiselect id="inputUserName" v-model="merchant_id" label="name" :options="merchants" :searchable="true"
-                      :show-labels="false" />
-                  </div>
-                  <label for="lastName" class="col-sm-2 col-form-label">Phòng</label>
-                  <div class="col-sm-4">
-                    <multiselect id="inputUserName" v-model="room_type" label="value" :options="room_type_list"
-                      :searchable="true" :show-labels="false" />
-                  </div>
-                </div>
-                <div class="form-group row">
                   <label for="firstName" class="col-sm-2 col-form-label">Khoảng giá</label>
                   <div class="col-sm-4 mt-2">
                     <vue-slider 
@@ -56,6 +44,19 @@
                       :min="0" 
                       :max="90000000"
                     ></vue-slider>
+                  </div>
+                  
+                  <label for="lastName" class="col-sm-2 col-form-label">Phòng</label>
+                  <div class="col-sm-4">
+                    <multiselect id="inputUserName" v-model="room_type" label="value" :options="room_type_list"
+                      :searchable="true" :show-labels="false" />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="lastName" class="col-sm-2 col-form-label">Host</label>
+                  <div class="col-sm-4">
+                    <multiselect id="inputUserName" v-model="merchant_id" label="name" :options="merchants" :searchable="true"
+                      :show-labels="false" />
                   </div>
                   <label for="email" class="col-sm-2 col-form-label">Thuê theo</label>
                   <div class="col-sm-4">
@@ -80,7 +81,7 @@
                         class="form-check-input" 
                         type="checkbox" 
                         v-model.number="hot_room"
-                        true-value="1" 
+                        true-value="1"     
                         false-value="0"
                         >
                       <label class="form-check-label" for="inlineCheckbox1">Hot</label>
@@ -128,8 +129,8 @@
                 </div>
               </div>
             </div>
-            <button @click="applyFilter(1)" class="btn btn-success">Áp dụng</button>
-            <button class="btn btn-success">Reset</button>
+            <button @click="applyFilter(1)" class="btn btn-success btn-sm">Áp dụng</button>
+            <button @click="resetFilter(1)" class="btn btn-info btn-sm">Reset</button>
           </form>
         </div>
       </div>
@@ -145,6 +146,7 @@
               <th>Hành động</th>
             </tr>
           </thead>
+          <lottie v-if="loading" :options="defaultOptions" :height="100" :width="100"></lottie>
           <tbody>
             <tr v-for="(room,index) in filteredRooms" :key="index" :class="{'read' : room.status }">
               <td>{{index+1}}</td>
@@ -188,7 +190,7 @@
                   khách thứ {{ room.max_guest }})
                 </div>
                 <div class="content-subject mb-3">
-                  <button @click="openModalOptionalPrices" class="btn btn-sm btn-secondary btn-pressable">
+                  <button @click="openModalOptionalPrices(room)" class="btn btn-sm btn-secondary btn-pressable">
                     <i class="icon-fa icon-fa-calendar"></i> Chi tiết giá
                   </button>
                 </div>
@@ -281,8 +283,26 @@
           Confirm
         </button>
       </sweet-modal>
-      <sweet-modal ref="optionalPrices" overlay-theme="dark">
-      </sweet-modal>
+      <sweet-modal ref="optional_prices" overlay-theme="dark">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Ngày</th>
+            <th>Giá theo ngày</th>
+            <th>Giá theo giờ</th>
+            <th>Giờ tiếp theo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(price, index) in room_prices" :key="index">
+            <td>{{price.weekday == null ? price.day : price.weekday | filterWeekDay}}</td>
+            <td>{{price.price_day | formatNumber}}</td>
+            <td>{{price.price_hour | formatNumber}}</td>
+            <td>{{price.price_after_hour | formatNumber}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </sweet-modal>
     </div>
   </div>
 </template>
@@ -293,6 +313,8 @@ import Datepicker from "vuejs-datepicker";
 import Multiselect from "vue-multiselect";
 import Auth from "../../../services/auth";
 import VueSlider from "vue-slider-component";
+import Lottie from "vue-lottie";
+import * as animationData from "../../loading/material_wave_loading.json";
 import Pagination from "../../../components/paginate/ServerPagination";
 import { format, constant, location } from "../../../helpers/mixins";
 export default {
@@ -302,10 +324,12 @@ export default {
     Multiselect,
     Datepicker,
     SweetModal,
-    VueSlider
+    VueSlider,
+    Lottie
   },
   data() {
     return {
+      defaultOptions: { animationData: animationData },
       format: "yyyy-MM-dd",
       rooms: [],
       room_type: {
@@ -319,6 +343,7 @@ export default {
       },
       price_range: [0, 90000000],
       room: {},
+      room_prices: [],
       update_room: null,
       update_payment_status: null,
       update_room_status: null,
@@ -349,7 +374,8 @@ export default {
       count: null,
       disabledCheckout: {
         to: ""
-      }
+      },
+      loading: true
     };
   },
 
@@ -427,7 +453,7 @@ export default {
       try {
         const response = await axios.get(`rooms`, {
           params: {
-            include: "details,user",
+            include: "details,user,prices",
             page: page,
             limit: 5,
             name: this.q,
@@ -451,6 +477,7 @@ export default {
         this.totalPages = paginate.total_pages;
         this.count = paginate.count;
         this.rooms = response.data.data;
+        this.loading = false;
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
@@ -487,11 +514,14 @@ export default {
       this.update_room = {};
       this.$refs.updateHost.close();
     },
-    openModalOptionalPrices() {
-      this.$refs.optionalPrices.open();
+    openModalOptionalPrices(room) {
+      console.log(room.prices.data);
+      this.room_prices = room.prices.data;
+      this.$refs.optional_prices.open();
     },
     closeOptionalPricesModal() {
-      this.$refs.optionalPrices.close();
+      this.room_prices = [];
+      this.$refs.optional_prices.close();
     },
     async updateHostConfirm() {
       let response = await axios
@@ -579,6 +609,35 @@ export default {
       }
     },
     applyFilter(page) {
+      this.getRooms({
+        page
+      });
+    },
+    resetFilter(page) {
+      this.q = "";
+      this.room_type = {
+        id: ""
+      };
+      this.merchant = {
+        id: ""
+      };
+      this.city = {
+        id: ""
+      };
+      this.district = {
+        id: ""
+      };
+      this.rent_type = {
+        id: ""
+      };
+      this.status = {
+        id: ""
+      };
+      this.price_range = [0, 90000000];
+      this.merchant_id = null;
+      this.hot_room = null;
+      this.new_room = null;
+      this.latest_deal = null;
       this.getRooms({
         page
       });

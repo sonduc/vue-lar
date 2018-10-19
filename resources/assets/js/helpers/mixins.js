@@ -3,6 +3,13 @@ export const format = {
   filters: {
     formatNumber(value) {
       return numeral(value).format("0,0") + " Đ";
+    },
+    filterWeekDay(value) {
+      if (value == 1) {
+        return "Chủ nhật";
+      } else {
+        return "Thứ " + value;
+      }
     }
   }
 };
@@ -160,7 +167,7 @@ export const constant = {
         { id: 2, value: "Không hoạt động" },
         { id: 0, value: "Chưa xác nhận" },
         { id: 3, value: "Dọn dẹp phòng" },
-        { id: 4, value: "Thiết lập dịch vụ" },
+        { id: 4, value: "Thiết lập dịch vụ" }
       ]
     };
   },
@@ -176,6 +183,6 @@ export const constant = {
     },
     bookingSource() {
       return this.sourceList;
-    },
+    }
   }
 };
