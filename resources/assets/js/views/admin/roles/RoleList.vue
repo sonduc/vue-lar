@@ -39,6 +39,9 @@
             label="Action">
             <template slot-scope="row">
               <div class="table__actions">
+                <a class="btn btn-default btn-sm" @click="showDetail(row.id)">
+                    <i class="icon-fa icon-fa-eye" /> Show
+                </a>
                 <router-link :to="{ name: 'role.update', params: { roleId: row.id }}">
                   <a class="btn btn-default btn-sm">
                     <i class="icon-fa icon-fa-search" /> Edit
@@ -56,20 +59,33 @@
 
     <!-- All Modal Here -->
     <div class="row">
-      <!-- Modal New User -->
-      <!-- <sweet-modal ref="dark_html_modal" modal-theme="light" title="Create Role" overlay-theme="dark">
-        <div class="col-sm-12">
-          <form @submit.prevent="">
-            <div class="form-group row">
-              <label for="firstName" class="col-sm-3 col-form-label">Name *</label>
-            </div>
-            <button type="submit" class="btn btn-success">Save</button>
-          </form>
-        </div>
-      </sweet-modal> -->
-      <!-- End new user -->
+      <!-- Modal Detail Role -->
+      <sweet-modal
+        ref="dark_html_modal"
+        modal-theme="light"
+        :title="'Tên quyền: '+this.role.name"
+        overlay-theme="dark">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nhóm</th>
+              <th>Quyền hạn</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              :key="index"
+              v-for="(per,index) in this.role.pers">
+              <td>{{index+1}}</td>
+              <td>{{per.group}}</td>
+              <td>{{per.slug}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </sweet-modal>
+      <!-- End Detail Role -->
     </div>
-    <!-- <dialog-confirm v-model="dialogDelete" @input="remove" /> -->
   </div>
 </template>
 
@@ -78,7 +94,6 @@ import { TableComponent, TableColumn } from 'vue-table-component';
 import { SweetModal } from "sweet-modal-vue";
 import Auth from "../../../services/auth";
 import Pagination from "../../../components/paginate/ServerPagination";
-import DialogConfirm from "../../../components/DialogConfirm";
 import { format, constant } from "../../../helpers/mixins";
 
 export default {
@@ -86,12 +101,12 @@ export default {
     TableComponent,
     TableColumn,
     SweetModal,
-    DialogConfirm,
   },
   data() {
     return{
       permission: "role.view",
       roles:[],
+      role:{},
       currentPage: null,
       totalPages: null,
       count: null,
@@ -108,7 +123,7 @@ export default {
           if (!response) {
             this.$router.push("permission-denied-403");
           } else {
-            this.getRoles({});
+            this.allRole({});
           }
         });
       }
@@ -116,7 +131,7 @@ export default {
     this.hideSidebarOnMobile();
   },
   methods: {
-    async getRoles({ page, filter, sort }) {
+    async allRole({ page, filter, sort }) {
       try {
         const response = await axios.get(`roles`,{
           params:{
@@ -144,8 +159,24 @@ export default {
         }
       }
     },
+    async showDetail(id){
+      this.$refs.dark_html_modal.open();
+      try {
+        const response = await axios.get(`roles/`+id, {
+          params: {
+            include:"pers"
+          }
+        });
+        this.role = response.data.data
+        // console.log(response.data.data)
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
     reloadData(page) {
-      this.getRoles({
+      this.allRole({
         page
       });
     },
@@ -162,7 +193,7 @@ export default {
         showLoaderOnConfirm: true
       })
       .then((result) => {
-        if (result) {
+        if (result.value) {
           axios.delete('roles/'+id).then(response => {
             window.toastr["success"]("Xóa thành công", "Success");
             this.reloadData(this.currentPage);

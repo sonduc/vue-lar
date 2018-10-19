@@ -117,8 +117,6 @@ export default{
           }
         );
         this.setInitData(response.data.data)
-        // this.role = response.data.data;
-        // console.log(this.role)
       } catch (error) {
         if (error) {
           console.log(error)
