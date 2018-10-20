@@ -9,36 +9,22 @@
     </div>
     <div class="row mb-3">
       <div class="col-sm-12">
+        <gallery
+          :images="images"
+          :index="imgIndex"
+          :options="{closeOnEscape: true,
+                     closeOnSlideClick: true,
+                     closeOnSwipeUpOrDown: true,
+                     startSlideshow: true,
+                     fullScreen: false
+          }"
+          @close="imgIndex = null"
+        />
         <carousel :scroll-per-page="true" :per-page-custom="[[320, 2],[768, 3],[992, 4]]">
-          <slide>
-            <img src="/assets/img/demo/gallery/11.jpg" class="img-fluid">
-          </slide>
-          <slide>
-            <img src="/assets/img/demo/gallery/12.jpg" class="img-fluid">
-          </slide>
-          <slide>
-            <img src="/assets/img/demo/gallery/9.jpg" class="img-fluid">
-          </slide>
-          <slide>
-            <img src="/assets/img/demo/gallery/4.jpg" class="img-fluid">
-          </slide>
-          <slide>
-            <img src="/assets/img/demo/gallery/3.jpg" class="img-fluid">
-          </slide>
-          <slide>
-            <img src="/assets/img/demo/gallery/6.jpg" class="img-fluid">
-          </slide>
-          <slide>
-            <img src="/assets/img/demo/gallery/2.jpg" class="img-fluid">
-          </slide>
-          <slide>
-            <img src="/assets/img/demo/gallery/8.jpg" class="img-fluid">
-          </slide>
-          <slide>
-            <img src="/assets/img/demo/gallery/1.jpg" class="img-fluid">
-          </slide>
-          <slide>
-            <img src="/assets/img/demo/gallery/10.jpg" class="img-fluid">
+          <slide v-for="(image, bindex) in images" :key="bindex">
+            <figure>
+              <img :src="image" class="img-fluid" @click="imgIndex = bindex">
+            </figure>
           </slide>
         </carousel>
       </div>
@@ -223,6 +209,7 @@ import Datepicker from "vuejs-datepicker";
 import Multiselect from "vue-multiselect";
 import Auth from "../../../services/auth";
 import Lottie from "vue-lottie";
+import VueGallery from "vue-gallery";
 import * as animationData from "../../loading/material_wave_loading.json";
 import { SweetModal } from "sweet-modal-vue";
 import { format, constant, location } from "../../../helpers/mixins";
@@ -238,14 +225,31 @@ export default {
       room_prices: [],
       room_comforts: [],
       isLeftSidebarVisible: true,
-      loading: true
+      loading: true,
+      imgIndex: null,
+      images: [
+        "/assets/img/demo/gallery/1.jpg",
+        "/assets/img/demo/gallery/2.jpg",
+        "/assets/img/demo/gallery/3.jpg",
+        "/assets/img/demo/gallery/4.jpg",
+        "/assets/img/demo/gallery/5.jpg",
+        "/assets/img/demo/gallery/6.jpg",
+        "/assets/img/demo/gallery/7.jpg",
+        "/assets/img/demo/gallery/8.jpg",
+        "/assets/img/demo/gallery/9.jpg",
+        "/assets/img/demo/gallery/10.jpg",
+        "/assets/img/demo/gallery/11.jpg",
+        "/assets/img/demo/gallery/12.jpg"
+      ],
+      permissions: "room.view"
     };
   },
   components: {
     Carousel,
     Slide,
     SweetModal,
-    Lottie
+    Lottie,
+    gallery: VueGallery
   },
   methods: {
     async getRoom() {
