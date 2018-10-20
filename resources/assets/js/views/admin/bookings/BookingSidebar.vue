@@ -1,7 +1,5 @@
 <template>
   <div class="mailbox-sidebar">
-
-
     <ul class="sidebar-menu mt-4">
       <li
         v-for="category in categories"

@@ -78,6 +78,10 @@ import Settings from "./views/admin/Settings.vue";
 import BookingList from "./views/admin/bookings/BookingList.vue";
 import BookingCreate from "./views/admin/bookings/BookingCreate.vue";
 import BookingUpdate from "./views/admin/bookings/BookingUpdate.vue";
+// Roles
+import RoleList from "./views/admin/roles/RoleList.vue";
+import RoleCreate from "./views/admin/roles/RoleCreate.vue";
+import RoleUpdate from "./views/admin/roles/RoleUpdate.vue";
 //Rooms
 import RoomList from "./views/admin/rooms/RoomList.vue";
 import RoomDetail from "./views/admin/rooms/RoomDetail.vue";
@@ -354,6 +358,23 @@ const routes = [
         path: "bookings/update/:bookingId",
         name: "booking.update",
         component: BookingUpdate
+      },
+
+      //Roles
+      {
+        path: "roles/list",
+        name: "role.list",
+        component: RoleList
+      },
+      {
+        path: "roles/create",
+        name: "role.create",
+        component: RoleCreate
+      },
+      {
+        path: "roles/update/:roleId",
+        name: "role.update",
+        component: RoleUpdate
       },
 
       //Rooms

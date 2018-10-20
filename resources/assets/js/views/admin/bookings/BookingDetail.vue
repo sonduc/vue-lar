@@ -255,7 +255,10 @@ export default {
       if (this.isVisible) {
         this.$emit("close");
       }
-    }
+    },
+  },
+  created(){
+    console.log(this.booking)
   }
 };
 </script>

@@ -167,7 +167,7 @@
             <router-link to="/admin/forms/layouts">
               Form Layouts
             </router-link>
-            
+
 
             <router-link to="/admin/forms/wizard">
               Form Wizard
@@ -256,6 +256,16 @@
             </router-link>
           </v-collapse-item>
 
+          <v-collapse-item active-url="/admin/roles">
+            <a slot="item-title" href="#">
+              <i class="icon-fa icon-fa-key"/>Roles
+              <span class="icon-fa arrow icon-fa-fw"/>
+            </a>
+            <router-link to="/admin/roles/list">
+              Role
+            </router-link>
+          </v-collapse-item>
+
           <v-collapse-item active-url="/admin/rooms">
             <a slot="item-title" href="#">
               <i class="icon-fa icon-fa-home"/>Rooms
@@ -265,7 +275,7 @@
               Room
             </router-link>
           </v-collapse-item>
-          
+
           <v-collapse-item active-url="/admin/apps">
             <a slot="item-title" href="#">
               <i class="icon-fa icon-fa-adn"/>Apps
