@@ -1,15 +1,15 @@
 <template>
   <div class="main-content">
     <div class="page-header">
-      <h3 class="page-title">Users</h3>
+      <h4 class="page-title">Quản lý Admin</h4>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Users</a></li>
-        <li class="breadcrumb-item active">Users</li>
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="#">Người dùng</a></li>
+        <li class="breadcrumb-item active">Admin</li>
       </ol>
       <div class="page-actions">
         <a @click="$refs.create_user.open()" style="color:white" class="btn btn-primary">
-          <i class="icon-fa icon-fa-plus" /> New User
+          <i class="icon-fa icon-fa-plus" /> Tạo mới
         </a>
       </div>
     </div>
@@ -17,15 +17,15 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-header">
-            <h6>All Users</h6>
+            <h6>Danh sách người dùng</h6>
             <div class="card-actions" />
           </div>
           <div class="card-body">
             <table-component :data="getUsers" sort-by="row.name" ref="table" sort-order="desc" table-class="table">
               <table-column show="id" label="ID" />
-              <table-column show="name" label="Name" />
+              <table-column show="name" label="Tên" />
               <table-column show="email" label="Email" />
-              <table-column show="type_txt" label="Role" />
+              <table-column show="type_txt" label="Quyền," />
               <table-column label="Status" :sortable="false" :filterable="false">
                   <template slot-scope="row">
                       <button :class="row.status == 0 ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'">
@@ -38,16 +38,16 @@
                   <div class="table__actions">
                     <router-link :to="{ name: 'user.profile', params: { userId: row.id }}">
                       <a class="btn btn-default btn-sm">
-                        <i class="icon-fa icon-fa-search" /> View
+                        <i class="icon-fa icon-fa-search" /> Chi Tiết
                       </a>
                     </router-link>
                     <router-link :to="{ name: 'user.edit', params: { userId: row.id }}">
                       <a class="btn btn-default btn-sm">
-                        <i class="icon-fa icon-fa-search" /> Edit
+                        <i class="icon-fa icon-fa-search" /> Sửa
                       </a>
                     </router-link>
                     <a class="btn btn-default btn-sm" data-delete data-confirmation="notie" @click="deleteUser(row.id)">
-                      <i class="icon-fa icon-fa-trash" /> Delete
+                      <i class="icon-fa icon-fa-trash" /> Xoá
                     </a>
                   </div>
                 </template>

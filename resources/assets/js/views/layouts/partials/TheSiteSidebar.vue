@@ -231,15 +231,15 @@
 
           <v-collapse-item active-url="/admin/users">
             <a slot="item-title" href="#">
-              <i class="icon-fa icon-fa-user"/>Users
+              <i class="icon-fa icon-fa-user"/>Người dùng
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
             <router-link to="/admin/users/customers">
-              Customer
+              Khách hàng
             </router-link>
             <router-link to="/admin/users/merchants">
-              Merchant
+              Chủ nhà
             </router-link>
             <router-link to="/admin/users/admins">
               Admin
@@ -248,11 +248,11 @@
 
           <v-collapse-item active-url="/admin/bookings">
             <a slot="item-title" href="#">
-              <i class="icon-fa icon-fa-book"/>Bookings
+              <i class="icon-fa icon-fa-book"/>Booking
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
             <router-link to="/admin/bookings/list">
-              Booking
+              Danh sách Booking
             </router-link>
           </v-collapse-item>
 
@@ -268,11 +268,11 @@
 
           <v-collapse-item active-url="/admin/rooms">
             <a slot="item-title" href="#">
-              <i class="icon-fa icon-fa-home"/>Rooms
+              <i class="icon-fa icon-fa-home"/>Phòng
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
             <router-link to="/admin/rooms/list">
-              Room
+              Danh sách phòng
             </router-link>
           </v-collapse-item>
 
