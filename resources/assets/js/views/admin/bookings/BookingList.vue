@@ -150,47 +150,45 @@
             <h6>Bộ lọc booking</h6>
           </div>
           <div class="card-body">
-            <form>
-              <div class="form-group">
-                <label for="inputFirstName">Tìm kiếm</label>
-                <input v-model="q" id="inputFirstName" type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+            <div class="form-group">
+              <label for="inputFirstName">Tìm kiếm</label>
+              <input v-model="q" id="inputFirstName" type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="exampleInputEmail">Từ ngày</label>
+                <datepicker v-model="date_start" :format="format" input-class="form-control" />
               </div>
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="exampleInputEmail">Từ ngày</label>
-                  <datepicker v-model="date_start" :format="format" input-class="form-control" />
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="exampleInputEmail">Đến ngày</label>
-                  <datepicker v-model="date_end" :format="format" input-class="form-control" />
-                </div>
+              <div class="form-group col-md-6">
+                <label for="exampleInputEmail">Đến ngày</label>
+                <datepicker v-model="date_end" :format="format" input-class="form-control" />
               </div>
-              <div class="form-group">
-                <label for="inputUserName">Chủ nhà</label>
-                <multiselect id="inputUserName" v-model="merchant" label="name" :options="merchants" :searchable="true"
-                  :show-labels="false" />
-              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputUserName">Chủ nhà</label>
+              <multiselect id="inputUserName" v-model="merchant" label="name" :options="merchants" :searchable="true"
+                :show-labels="false" />
+            </div>
 
-              <div class="form-group">
-                <label for="exampleInputPassword">Thành phố</label>
-                <multiselect id="inputUserName" v-model="city" label="name" :options="cities" :searchable="true"
-                  :show-labels="false" />
-              </div>
-              <div class="form-group" v-if="city !== null">
-                <label for="exampleInputPassword">Quận / Huyện</label>
-                <multiselect :disabled="city == null" id="inputUserName" v-model="district" label="name" :options="filteredDistrict"
-                  :searchable="true" :show-labels="false" />
-              </div>
-            </form>
+            <div class="form-group">
+              <label for="exampleInputPassword">Thành phố</label>
+              <multiselect id="inputUserName" v-model="city" label="name" :options="cities" :searchable="true"
+                :show-labels="false" />
+            </div>
+            <div class="form-group" v-if="city !== null">
+              <label for="exampleInputPassword">Quận / Huyện</label>
+              <multiselect :disabled="city == null" id="inputUserName" v-model="district" label="name" :options="filteredDistrict"
+                :searchable="true" :show-labels="false" />
+            </div>
           </div>
         </div>
 
-        <button slot="button" type="button" class="btn btn-default" data-dismiss="modal" @click="closeModal">
-          Reset
+        <button slot="button" type="button" class="btn btn-default" data-dismiss="modal" @click="resetFilter(1)">
+          Làm mới
         </button>
 
         <button slot="button" type="button" class="btn btn-primary" @click="applyFilter(1)">
-          Apply Filter
+          Áp dụng
         </button>
       </sweet-modal>
       <sweet-modal ref="update_modal" hide-close-button blocking
@@ -311,7 +309,7 @@ export default {
     return {
       format: "yyyy-MM-dd",
       bookings: [],
-      bookingPayment:null,
+      bookingPayment: null,
       booking: {},
       update_booking: {},
       update_payment_status: null,
@@ -432,7 +430,7 @@ export default {
       if (res) {
         Auth.canAccess(res, this.permissions).then(response => {
           if (!response) {
-            this.$router.push("permission-denied-403");
+            this.$router.push("/permission-denied-403");
           } else {
             this.getBookings({});
             this.getMerchants();
@@ -502,6 +500,7 @@ export default {
         const response = await axios.get(`bookings`, {
           params: {
             include: "room.details",
+            q: this.q,
             merchants: this.merchant.id,
             city: this.city.id,
             district: this.district.id,
@@ -533,18 +532,18 @@ export default {
         }
       }
     },
-    async getBookingPayment(id){
+    async getBookingPayment(id) {
       try {
         const response = await axios.get(
           `payments?booking=${this.booking.id}`,
           {
             params: {
-              include: "",
+              include: ""
             }
           }
         );
         this.bookingPayment = response.data.data;
-        console.log(response.data.data)
+        console.log(response.data.data);
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
@@ -560,7 +559,7 @@ export default {
       this.booking = booking;
       this.isModalVisible = true;
     },
-    openBookingPaymentModal(booking){
+    openBookingPaymentModal(booking) {
       this.booking = booking;
       this.getBookingPayment(booking.id);
       this.modalPayment = true;
@@ -568,19 +567,33 @@ export default {
     closeMailModal() {
       this.isModalVisible = false;
     },
-    closePaymentModal(){
+    closePaymentModal() {
       this.modalPayment = false;
     },
     openBookingFilter() {
       this.$refs.filter.open();
     },
-    closeModal() {
-      this.$refs.filter.close();
-    },
-    applyFilter(page) {
-      this.getBookings({
+    async resetFilter(page) {
+      this.q = "";
+      this.date_start = null;
+      this.date_end = null;
+      this.merchant = {
+        id: ""
+      };
+      this.city = {
+        id: ""
+      };
+      this.district = {
+        id: ""
+      };
+      await this.getBookings({
         page
-      });
+      }).then(this.$refs.filter.close());
+    },
+    async applyFilter(page) {
+      await this.getBookings({
+        page
+      }).then(this.$refs.filter.close());
     },
     selectStatus(status, page) {
       this.selectedStatus = status;

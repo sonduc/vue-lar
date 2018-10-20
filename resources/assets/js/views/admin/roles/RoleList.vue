@@ -121,7 +121,7 @@ export default {
       if (res) {
         Auth.canAccess(res, this.permission).then(response => {
           if (!response) {
-            this.$router.push("permission-denied-403");
+            this.$router.push("/permission-denied-403");
           } else {
             this.allRole({});
           }

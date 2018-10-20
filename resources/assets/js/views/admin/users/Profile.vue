@@ -176,7 +176,7 @@ export default {
       if (res) {
         Auth.canAccess(res, this.permissions).then(response => {
           if (!response) {
-            this.$router.push("permission-denied-403"); // push về page 403
+            this.$router.push("/permission-denied-403"); // push về page 403
           } else {
             this.getUsers(); //fetch data sau khi check permissions của người đang đăng nhập
           }
