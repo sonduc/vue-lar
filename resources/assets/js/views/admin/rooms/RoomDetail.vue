@@ -107,7 +107,7 @@
           </div>
         </div>
         <div class="col-md-7" v-else>
-          <lottie :options="defaultOptions" :height="400" :width="400" v-on:animCreated="handleAnimation"/>
+          <lottie :options="defaultOptions" :height="150" :width="150" v-on:animCreated="handleAnimation"/>
         </div>
         <div class="col-md-5">
           <div class="card">
@@ -199,7 +199,7 @@
     </sweet-modal>
   </div>
   <div class="main-content" v-else>
-    <lottie :options="defaultOptions" :height="400" :width="400" v-on:animCreated="handleAnimation"/>
+    <lottie :options="defaultOptions" :height="150" :width="150" v-on:animCreated="handleAnimation"/>
   </div>
 </template>
 

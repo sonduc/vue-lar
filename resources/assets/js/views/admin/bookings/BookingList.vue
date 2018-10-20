@@ -37,7 +37,9 @@
 
           </div>
         </div>
-        <table class="table table-hover">
+        
+        <lottie v-if="loading" :options="defaultOptions" :height="150" :width="150"></lottie>
+        <table v-else class="table table-hover">
           <thead>
             <tr>
               <td></td>
@@ -291,6 +293,8 @@ import Multiselect from "vue-multiselect";
 import BookingSidebar from "./BookingSidebar";
 import BookingDetail from "./BookingDetail";
 import BookingPayment from "./BookingPayment";
+import Lottie from "vue-lottie";
+import * as animationData from "../../loading/material_wave_loading.json";
 import Auth from "../../../services/auth";
 import Pagination from "../../../components/paginate/ServerPagination";
 import { format, constant } from "../../../helpers/mixins";
@@ -303,10 +307,12 @@ export default {
     Pagination,
     SweetModal,
     Multiselect,
-    Datepicker
+    Datepicker,
+    Lottie
   },
   data() {
     return {
+      defaultOptions: { animationData: animationData },
       format: "yyyy-MM-dd",
       bookings: [],
       bookingPayment: null,
@@ -376,7 +382,8 @@ export default {
       searchText: "",
       totalPages: null,
       currentPage: null,
-      count: null
+      count: null,
+      loading: true
     };
   },
   computed: {
@@ -517,15 +524,7 @@ export default {
         this.totalPages = paginate.total_pages;
         this.count = paginate.count;
         this.bookings = response.data.data;
-        // console.log(response.data.data);
-        return {
-          data: response.data.data,
-          pagination: {
-            totalPages: paginate.total_pages,
-            currentPage: page,
-            count: paginate.count
-          }
-        };
+        this.loading = false;
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");

@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="mail-body">
-      <h3 class="mail-subject">Booking information</h3>
+      <h4 class="mail-subject">Chi Tiết Booking</h4>
 
       <div class="row">
         <div class="col-sm-6">
@@ -255,10 +255,10 @@ export default {
       if (this.isVisible) {
         this.$emit("close");
       }
-    },
+    }
   },
-  created(){
-    console.log(this.booking)
+  created() {
+    console.log(this.booking);
   }
 };
 </script>

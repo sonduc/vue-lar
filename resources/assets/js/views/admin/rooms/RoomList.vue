@@ -135,7 +135,8 @@
         </div>
       </div>
       <div class="mailbox-content">
-        <table class="table">
+        <lottie v-if="loading" :options="defaultOptions" :height="150" :width="150"></lottie>
+        <table class="table" v-else>
           <thead>
             <tr>
               <th>#</th>
@@ -146,7 +147,6 @@
               <th>Hành động</th>
             </tr>
           </thead>
-          <lottie v-if="loading" :options="defaultOptions" :height="100" :width="100"></lottie>
           <tbody>
             <tr v-for="(room,index) in filteredRooms" :key="index" :class="{'read' : room.status }">
               <td>{{index+1}}</td>
