@@ -116,7 +116,7 @@
                               <button type="button" v-if="checkCountLang" @click="addNewLangEnglishForm" style="color:white; float:right;" class="btn btn-success">
                                 <i class="icon-fa icon-fa-plus" /> Thêm tiếng anh
                               </button>
-                              <button type="button" v-else @click="deleteLangEnglishForm"style="color:white; float:right;" class="btn btn-danger">
+                              <button type="button" v-else @click="deleteLangEnglishForm" style="color:white; float:right;" class="btn btn-danger">
                                 <i class="icon-fa icon-fa-trash-o" /> Xóa tiếng anh
                               </button>
                             </div>
@@ -136,7 +136,7 @@
                                   v-model="room.details.data[index].name"
                                   :name="'detail.name' + index"
                                   v-validate="step==0 ? { required:true, min:10, max:255,
-                                  regex:/^([a-zA-Z0-9]+)$/ }:''"
+                                  regex:/^([a-zA-Z0-9ạảắặằẳẵấậầẩẫẹẻẽếệềểễịỉĩọỏõốộồổỗơớợờởỡụủũưứự ừửữỵỳỷỹđ\uooCO-\u017F\s]+)$/ }:''"
                                   data-vv-as="Tên phòng"
                                   class="form-control">
                                 </div>
@@ -157,14 +157,14 @@
                                   v-model="room.details.data[index].description"
                                   style="height:250px"></quill-editor>
                                 </div>
-                                </br></br>
+                                <br/><br/>
                                 <div class="form-group">
                                   <label>Không gian phòng</label>
                                   <quill-editor
                                   v-model="room.details.data[index].space"
                                   style="height:250px"></quill-editor>
                                 </div>
-                                </br></br>
+                                <br/><br/>
                                 <div class="form-group">
                                   <label>Những chú ý khi sử dụng phòng</label>
                                   <quill-editor
@@ -508,6 +508,26 @@
                 </div>
               </div>
             </tab-content>
+            <tab-content title="Upload ảnh">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="section-semi-title">Tiện ích phòng</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class = "col-lg-3" v-for="com in comforts" :key="com.id">
+                      <div class="form-group custom-control custom-checkbox mb-3">
+                        <input type="checkbox" v-model = "room.comforts"
+                        :id="com.id" :value="com.id"
+                        class="custom-control-input">
+                        <label :for="com.id" class="custom-control-label">
+                        {{com.details.data[0].name}}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tab-content>
             <template slot="footer" slot-scope="props">
               <div class="wizard-footer-left">
                 <wizard-button  v-if="props.activeTabIndex > 0" @click.native="previousTabForm(props.prevTab())" :style="props.fillButtonStyle">Previous</wizard-button>
@@ -832,18 +852,16 @@ export default {
           if(this.type == 'Update'){
             let response = await axios.put(`rooms/${this.$route.params.roomId}`,this.room)
             .then(response => {
-              console.log(response)
               this.$swal("Thành công", "Phòng được cập nhật thành công", "success");
             });
           }
           else {
             let response = await axios.post('rooms',this.room)
             .then(response => {
-              console.log(response)
               this.$swal("Thành công", "Phòng được tạo mới thành công", "success");
             });
           }
-        }catch(error) {
+        } catch(error) {
           if (error) {
            this.$swal("Xin lỗi", "Phòng chưa đưọc lưu, làm ơn kiểm tra lại thông tin", "error");
           } {}
