@@ -109,8 +109,8 @@ Vue.use(VCalendar,{
     title: 'MMMM YYYY',
     weekdays: 'W',
     navMonths: 'MMM',
-    input: ['L', 'YYYY-MM-DD'],
+    input: ['DD-MM-YYYY','DD-MM-YYYY'],
     dayPopover: 'L',
-    data: ['L', 'YYYY-MM-DD', 'YYYY-MM-DD']
+    data: ['L', 'Y-m-d', 'Y-m-d']
   }
 });

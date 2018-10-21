@@ -207,7 +207,7 @@
                         <input name="additional_fee" data-vv-as="Phụ thu" v-model.number="booking.additional_fee"
                           v-validate="'numeric'" type="number" class="form-control">
                       </div>
-                      
+
                     </div>
                   </div>
                 </div>

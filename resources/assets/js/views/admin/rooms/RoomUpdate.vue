@@ -1,17 +1,18 @@
 <template>
-<room-form v-if="roomDetail" type="edit" :data-room="roomDetail" />
+<room-form v-if="roomDetail" :titleHeader="titleHeader" type="Update" :data-room="roomDetail" />
 </template>
 <script>
 import RoomForm from './RoomForm';
 import Auth from "../../../services/auth";
 
 export default {
-  name: 'UpdateRoom',
+  name: 'RoomUpdate',
   components: {
     RoomForm
   },
   data(){
     return {
+      titleHeader:"Chào mừng bạn đến với chức năng sửa phòng",
       roomDetail: null,
     };
   },
@@ -22,7 +23,7 @@ export default {
           `rooms/${ this.$route.params.roomId }`,
           {
             params: {
-              include: "details,user,prices"
+              include: "details,user,prices,comforts,blocks,media"
             }
           }
         );

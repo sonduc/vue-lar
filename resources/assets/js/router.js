@@ -81,6 +81,7 @@ import BookingUpdate from "./views/admin/bookings/BookingUpdate.vue";
 //Rooms
 import RoomList from "./views/admin/rooms/RoomList.vue";
 import RoomUpdate from "./views/admin/rooms/RoomUpdate.vue";
+import RoomCreate from "./views/admin/rooms/RoomCreate.vue";
 
 /*
  |--------------------------------------------------------------------------
@@ -366,6 +367,11 @@ const routes = [
         path: "rooms/update/:roomId",
         name: "room.update",
         component: RoomUpdate
+      },
+      {
+        path: "rooms/create",
+        name: "room.create",
+        component: RoomCreate
       },
 
       // Apps
