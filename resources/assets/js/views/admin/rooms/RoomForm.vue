@@ -8,7 +8,7 @@
         <li class="breadcrumb-item active">{{type}}</li>
       </ol>
       <div class="page-actions">
-        <a @click="$refs.dark_html_modal.open()" style="color:white" class="btn btn-primary">
+        <a @click="$router.push({name: 'room.list'})" style="color:white" class="btn btn-primary">
           <i class="icon-fa icon-fa-backward" /> Back
         </a>
       </div>
