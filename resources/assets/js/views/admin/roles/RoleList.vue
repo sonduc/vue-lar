@@ -1,22 +1,22 @@
 <template>
   <div class="main-content">
     <div class="page-header">
-      <h3 class="page-title">Roles</h3>
+      <h3 class="page-title">Danh sách quyền</h3>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item active"><a href="#">Roles</a></li>
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item active"><a href="#">Phân Quyền</a></li>
       </ol>
       <div class="page-actions">
         <router-link :to="{ name: 'role.create'}">
           <a style="color:white" class="btn btn-primary">
-            <i class="icon-fa icon-fa-plus" /> Thêm mới role
+            <i class="icon-fa icon-fa-plus" /> Thêm mới
           </a>
         </router-link>
       </div>
     </div>
     <div class="card">
       <div class="card-header">
-        <h6>Roles</h6>
+        <h6>Danh sách quyền người dùng</h6>
       </div>
       <div class="card-body">
         <table-component

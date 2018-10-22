@@ -42,7 +42,7 @@
                     v-model="price_range" 
                     formatter="{value} Đ" 
                     :min="0" 
-                    :max="90000000"
+                    :max="10000000"
                   ></vue-slider>
                 </div>
                 
@@ -203,7 +203,7 @@
                   Phòng hot
                 </div>
                 <div class="mb-3">
-                  Phụ nổi bật
+                  Phòng nổi bật
                 </div>
                 <div class="mb-3">
                   Tự quản lý
@@ -214,23 +214,23 @@
               </td>
               <td class="cell-fav">
                 <div class="content-subject mb-3">
-                  <button @click="updateRoomMinor('new',room)" type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i
-                      :class="room.new == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                  <button @click="updateRoomMinor('new',room)" type="button" :class="room.new == 1 ? 'btn btn-xs btn-icon btn-success mailbox-action' :'btn btn-xs btn-icon btn-light mailbox-action'"><i
+                      :class="room.new == 1 ? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
                 </div>
                 <div class="content-subject mb-3">
-                  <button @click="updateRoomMinor('hot',room)" type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i
+                  <button @click="updateRoomMinor('hot',room)" type="button" :class="room.hot == 1 ? 'btn btn-xs btn-icon btn-success mailbox-action' :'btn btn-xs btn-icon btn-light mailbox-action'"><i
                       :class="room.hot == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
                 </div>
                 <div class="content-subject mb-3">
-                  <button @click="updateRoomMinor('latest_deal',room)" type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i
-                      :class="room.latest_deal == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                  <button @click="updateRoomMinor('latest_deal',room)" type="button" :class="room.latest_deal == 1 ? 'btn btn-xs btn-icon btn-success mailbox-action' :'btn btn-xs btn-icon btn-light mailbox-action'"><i
+                      :class="room.latest_deal == 1 ? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
                 </div>
                 <div class="content-subject mb-3">
-                  <button @click="updateRoomMinor('is_manager',room)" type="button" class="btn btn-xs btn-icon btn-light mailbox-action"><i
+                  <button @click="updateRoomMinor('is_manager',room)" type="button" :class="room.is_manager == 1 ?'btn btn-xs btn-icon btn-success mailbox-action'  :'btn btn-xs btn-icon btn-light mailbox-action'"><i
                       :class="room.is_manager == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
                 </div>
                 <div class="content-subject mb-3">
-                  <button @click="updateRoomMinor('status',room)" v-if="room.status == 2" type="button" class="btn btn-xs btn-icon btn-danger mailbox-action"><i
+                  <button @click="updateRoomMinor('status',room)" v-if="room.status == 0" type="button" class="btn btn-xs btn-icon btn-danger mailbox-action"><i
                       class="icon-fa icon-fa-check"></i></button>
                   <button @click="updateRoomMinor('status',room)" v-if="room.status == 1" type="button" class="btn btn-xs btn-icon btn-success mailbox-action"><i
                       class="icon-fa icon-fa-times"></i></button>
@@ -341,7 +341,7 @@ export default {
       status: {
         id: ""
       },
-      price_range: [0, 90000000],
+      price_range: [0, 10000000],
       room: {},
       room_prices: [],
       update_room: null,
@@ -596,7 +596,7 @@ export default {
       } else if (option === "status") {
         let response = await axios
           .put(`rooms/prop-update/${room.id}?option=${option}`, {
-            status: room.status == 1 ? 2 : 1
+            status: room.status == 1 ? 0 : 1
           })
           .then(result => {
             if (result) {

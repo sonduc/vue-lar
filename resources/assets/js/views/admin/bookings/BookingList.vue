@@ -193,8 +193,10 @@
           Áp dụng
         </button>
       </sweet-modal>
-      <sweet-modal ref="update_modal" hide-close-button blocking
-        overlay-theme="dark">
+      <sweet-modal 
+        ref="update_modal"
+        overlay-theme="dark"
+      >
         <div class="card">
           <div class="card-header">
             <h5>#{{update_booking.code}}</h5>
@@ -234,8 +236,6 @@
 
       <sweet-modal
         ref="money_update"
-        hide-close-button
-        blocking
         overlay-theme="dark">
         <div class="card">
           <div class="card-header">

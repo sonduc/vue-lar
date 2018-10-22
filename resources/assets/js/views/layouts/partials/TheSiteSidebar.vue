@@ -258,11 +258,11 @@
 
           <v-collapse-item active-url="/admin/roles">
             <a slot="item-title" href="#">
-              <i class="icon-fa icon-fa-key"/>Roles
+              <i class="icon-fa icon-fa-key"/>Phân Quyền
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
             <router-link to="/admin/roles/list">
-              Role
+              Danh sách quyền
             </router-link>
           </v-collapse-item>
 

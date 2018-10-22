@@ -61,12 +61,12 @@
                       <a
                         slot="item-title"
                         class="panel-title"
-                        href="#collapseOne"
+                        href="#description"
                       >
                         Mô tả
                       </a>
 
-                      <div v-html="room_details.description" id="collapseOne" class="panel-collapse panel-content" >
+                      <div v-html="room_details.description" id="description" class="panel-collapse panel-content" >
                       
                       </div>
                     </v-collapse-item>
@@ -76,12 +76,12 @@
                       <a
                         slot="item-title"
                         class="panel-title"
-                        href="#collapseTwo"
+                        href="#space"
                       >
                         Không gian
                       </a>
 
-                      <div v-html="room_details.space" id="collapseTwo" class="panel-collapse" >
+                      <div v-html="room_details.space" id="space" class="panel-collapse" >
                         
                       </div>
                     </v-collapse-item>
@@ -91,12 +91,12 @@
                       <a
                         slot="item-title"
                         class="panel-title"
-                        href="#collapseThree"
+                        href="#note"
                       >
                         Ghi chú
                       </a>
 
-                      <div v-html="room_details.note" id="collapseThree" class="panel-collapse panel-content" >
+                      <div v-html="room_details.note" id="note" class="panel-collapse panel-content" >
                         
                       </div>
                     </v-collapse-item>
@@ -111,7 +111,7 @@
         </div>
         <div class="col-md-5">
           <div class="card">
-            <div class="card-header bg-info">
+            <div class="card-header bg-dark">
               <h6>Giá phòng</h6>
             </div>
             <div class="card-body">
@@ -147,7 +147,7 @@
             </div>
           </div>
           <div class="card">
-            <div class="card-header bg-info">
+            <div class="card-header bg-dark">
               <h6>Tiện nghi</h6>
             </div>
             <div class="card-body">
@@ -160,22 +160,23 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="card">
-          <div class="card-body">
-            <GmapMap 
-              :center="{lat:parseInt(room.latitude), lng:parseInt(room.longitude)}" 
-              :zoom="14" 
-              style="width:1000px; height:500px"
-            >
-              <gmap-marker 
-                :position="{lat:parseInt(room.latitude), lng:parseInt(room.longitude)}"
-              />
-            </GmapMap>
-          </div>
+    </div>
+    
+    <div class="row">
+      <div class="card">
+        <div class="card-body">
+          <GmapMap 
+            :center="{lat:parseInt(room.latitude), lng:parseInt(room.longitude)}" 
+            :zoom="14" 
+            style="width:1000px; height:500px"
+          >
+            <gmap-marker 
+              :position="{lat:parseInt(room.latitude), lng:parseInt(room.longitude)}"
+            />
+          </GmapMap>
         </div>
-
       </div>
+
     </div>
     <sweet-modal ref="optional_prices" overlay-theme="dark">
       <table class="table">
