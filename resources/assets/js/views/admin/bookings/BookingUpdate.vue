@@ -255,7 +255,7 @@ export default {
     filteredDistrict() {
       let self = this;
       return this.districts.filter(function(item) {
-        return item.city_id == self.city.id;
+        return item.city_id == self.city.data.id;
       });
     }
   },
