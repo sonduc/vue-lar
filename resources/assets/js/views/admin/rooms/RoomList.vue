@@ -633,7 +633,7 @@ export default {
       this.status = {
         id: ""
       };
-      this.price_range = [0, 90000000];
+      this.price_range = [0, 10000000];
       this.merchant_id = null;
       this.hot_room = null;
       this.new_room = null;

@@ -163,12 +163,12 @@
     </div>
     
     <div class="row">
-      <div class="card">
+      <div class="card mr-5 ml-5">
         <div class="card-body">
           <GmapMap 
             :center="{lat:parseInt(room.latitude), lng:parseInt(room.longitude)}" 
-            :zoom="14" 
-            style="width:1000px; height:500px"
+            :zoom="12"
+            style="width:1500px; height:500px"
           >
             <gmap-marker 
               :position="{lat:parseInt(room.latitude), lng:parseInt(room.longitude)}"
