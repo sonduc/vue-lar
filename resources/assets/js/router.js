@@ -82,6 +82,11 @@ import BookingUpdate from "./views/admin/bookings/BookingUpdate.vue";
 import RoleList from "./views/admin/roles/RoleList.vue";
 import RoleCreate from "./views/admin/roles/RoleCreate.vue";
 import RoleUpdate from "./views/admin/roles/RoleUpdate.vue";
+// Collection
+import CollectionList from "./views/admin/collections/CollectionList.vue";
+import CollectionCreate from "./views/admin/collections/CollectionCreate.vue";
+import CollectionUpdate from "./views/admin/collections/CollectionUpdate.vue";
+import CollectionDetail from "./views/admin/collections/CollectionDetail.vue";
 //Rooms
 import RoomList from "./views/admin/rooms/RoomList.vue";
 import RoomDetail from "./views/admin/rooms/RoomDetail.vue";
@@ -375,6 +380,27 @@ const routes = [
         path: "roles/update/:roleId",
         name: "role.update",
         component: RoleUpdate
+      },
+      // Collection
+      {
+        path: "collections/list",
+        name: "collections.list",
+        component: CollectionList
+      },
+      {
+        path: "collections/detail/:collectionId",
+        name: "collection.detail",
+        component: CollectionDetail
+      },
+      {
+        path: "collections/create",
+        name: "collection.create",
+        component: CollectionCreate
+      },
+      {
+        path: "collections/update/:collectionId",
+        name: "collection.update",
+        component: CollectionUpdate
       },
 
       //Rooms

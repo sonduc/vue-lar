@@ -189,7 +189,7 @@ export default{
   },
 }
 </script>
-<style>
+<style scoped>
 /* The container */
 .container {
     display: block;

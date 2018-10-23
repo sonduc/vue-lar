@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="main-content">
     <div class="page-header">
       <h3 class="page-title">General Elements</h3>
