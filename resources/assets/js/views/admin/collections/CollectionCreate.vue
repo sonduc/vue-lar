@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <div class="page-header">
-      <h3 class="page-title">Collections</h3>
+      <h3 class="page-title">Tạo mới collections</h3>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="#">Home</a></li>
           <li class="breadcrumb-item">
@@ -39,16 +39,16 @@
                             v-model="collection.hot"
                             class="form-check-input"
                             type="radio"
-                            value="0">
-                          <label class="form-check-label">Có</label>
+                            :value="0">
+                          <label class="form-check-label">Không</label>
                         </div>
                         <div class="form-check form-check-inline">
                           <input
                             v-model="collection.hot"
                             class="form-check-input"
                             type="radio"
-                            value="1">
-                          <label class="form-check-label">Không</label>
+                            :value="1">
+                          <label class="form-check-label">Có</label>
                         </div>
                       </div>
                     </div>
@@ -68,16 +68,16 @@
                             v-model="collection.status"
                             class="form-check-input"
                             type="radio"
-                            value="0"/>
-                          <label class="form-check-label">Đã duyệt</label>
+                            :value="0" />
+                          <label class="form-check-label">Đang chờ duyệt</label>
                         </div>
                         <div class="form-check form-check-inline">
                           <input
                             v-model="collection.status"
                             class="form-check-input"
                             type="radio"
-                            value="1" />
-                          <label class="form-check-label">Đang chờ duyệt</label>
+                            :value="1"/>
+                          <label class="form-check-label">Đã duyệt</label>
                         </div>
                       </div>
                     </div>
@@ -89,28 +89,20 @@
                             v-model="collection.new"
                             class="form-check-input"
                             type="radio"
-                            value="0">
-                          <label class="form-check-label">Mới</label>
+                            :value="0">
+                          <label class="form-check-label">Cũ</label>
                         </div>
                         <div class="form-check form-check-inline">
                           <input
                             v-model="collection.new"
                             class="form-check-input"
                             type="radio"
-                            value="1">
-                          <label class="form-check-label">Cũ</label>
+                            :value="1">
+                          <label class="form-check-label">Mới</label>
                         </div>
                       </div>
                     </div>
-                    <div class="form-group col-md-12">
-                      <label>Mô tả (tiếng việt)</label>
-                      <input
-                        v-model="collection.vi.description"
-                        type="text"
-                        class="form-control"
-                        placeholder="Nhập">
-                    </div>
-                    <!-- <tabs class="tabs-default" style="padding-left:1em;padding-top:1em;">
+                    <tabs class="tabs-default" style="padding-left:1em;padding-top:1em;">
                       <tab id="basic-home" name="Tiếng việt">
                         <div class="form-group custom-margin col-md-12">
                           <label>Mô tả (tiếng việt)</label>
@@ -138,14 +130,14 @@
                           </quill-editor>
                         </div>
                       </tab>
-                    </tabs> -->
+                    </tabs>
                   </div>
                 </div>
                 <button
                   type="submit"
                   class="btn btn-primary"
                   style="margin-top: 2.2em;">
-                  Thêm mới
+                  Cập nhật
                 </button>
               </form>
                </div>

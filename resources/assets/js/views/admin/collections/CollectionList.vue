@@ -38,55 +38,87 @@
               </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-12 mt-5">
               <div class="form-group row">
-                <label for="email" class="col-sm-2 col-form-label">
-                  Trạng thái
-                </label>
-                <div class="col-sm-4">
-                  <multiselect
-                    v-model="params.status"
-                    :options="getNews"
-                    :searchable="false"
-                    :close-on-select="true"
-                    :show-labels="false"
-                    placeholder="Pick a value"/>
+                <div class="col-md-4 row">
+                  <label for="email" class="col-sm-3 col-form-label">Trạng thái:</label>
+                  <div class="col-sm-9 mt-2 ml-0">
+                    <div class="form-check form-check-inline">
+                      <input
+                        id="inlineCheckbox1"
+                        class="form-check-input"
+                        type="radio"
+                        v-model="params.hot"
+                        :value="1"
+                        >
+                      <label class="form-check-label" for="inlineCheckbox1">Đã duyệt</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        id="inlineCheckbox2"
+                        class="form-check-input"
+                        type="radio"
+                        v-model="params.hot"
+                        :value="0">
+                    <label class="form-check-label" for="inlineCheckbox2">Đang chờ duyệt</label>
+                  </div>
+                  </div>
                 </div>
-                <label for="email" class="col-sm-2 col-form-label">
-                  New
-                </label>
-                <div class="col-sm-4">
-                  <multiselect
-                    v-model="params.new"
-                    :options="getStatus"
-                    :searchable="false"
-                    :close-on-select="true"
-                    :show-labels="false"
-                    placeholder="Pick a value"/>
+                <div class="col-md-4 row">
+                  <label for="email" class="col-sm-3 col-form-label">Mới nhất:</label>
+                  <div class="col-sm-9 mt-2 ml-0">
+                    <div class="form-check form-check-inline">
+                      <input
+                        id="inlineCheckbox1"
+                        class="form-check-input"
+                        type="radio"
+                        v-model="params.new"
+                        :value="1"
+                        >
+                      <label class="form-check-label" for="inlineCheckbox1">Mới</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        id="inlineCheckbox2"
+                        class="form-check-input"
+                        type="radio"
+                        v-model="params.new"
+                        :value="0">
+                    <label class="form-check-label" for="inlineCheckbox2">Cũ</label>
+                  </div>
+                  </div>
+                </div>
+                <div class="col-md-4 row">
+                  <label for="email" class="col-sm-3 col-form-label">Nổi bật:</label>
+                  <div class="col-sm-9 mt-2 ml-0">
+                    <div class="form-check form-check-inline">
+                      <input
+                        id="inlineCheckbox1"
+                        class="form-check-input"
+                        type="radio"
+                        v-model="params.hot"
+                        :value="1"
+                        >
+                      <label class="form-check-label" for="inlineCheckbox1">Nổi bật</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        id="inlineCheckbox2"
+                        class="form-check-input"
+                        type="radio"
+                        v-model="params.hot"
+                        :value="0">
+                    <label class="form-check-label" for="inlineCheckbox2">Không nổi bật</label>
+                  </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label for="email" class="col-sm-2 col-form-label">
-                  Hot
-                </label>
-                <div class="col-sm-4">
-                  <multiselect
-                    v-model="params.hot"
-                    :options="getNews"
-                    :searchable="false"
-                    :close-on-select="true"
-                    :show-labels="false"
-                    placeholder="Pick a value"/>
-                </div>
-              </div>
-            </div>
           </div>
 
-          <button @click="" class="btn btn-success btn-sm">Áp dụng</button>
-          <button @click="" class="btn btn-info btn-sm">Làm mới</button>
+          <button @click="applyFilter(1)" class="btn btn-success btn-sm">Áp dụng</button>
+          <button @click="resetFilter(1)" class="btn btn-info btn-sm">Làm mới</button>
         </div>
       </div>
 
@@ -114,10 +146,10 @@
               <td>{{Object.keys(collection.rooms.data).length}}</td>
               <td width="10%">
                 <div class="mb-3">
-                  Collection cũ
+                  Mới nhất
                 </div>
                 <div class="mb-3">
-                  Collection hot
+                  Nổi bật
                 </div>
                 <div class="mb-3">
                   Trạng thái
@@ -125,19 +157,28 @@
               </td>
               <td class="cell-fav">
                 <div class="content-subject mb-3">
-                  <button type="button" class="btn btn-xs btn-icon btn-light mailbox-action">
+                  <button
+                    @click="updateCollectionMinor('new',collection)"
+                    type="button"
+                    class="btn btn-xs btn-icon btn-light mailbox-action">
                     <i :class="collection.new == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'">
                     </i>
                    </button>
                 </div>
                 <div class="content-subject mb-3">
-                  <button type="button" class="btn btn-xs btn-icon btn-light mailbox-action">
+                  <button
+                    @click="updateCollectionMinor('hot',collection)"
+                    type="button"
+                    class="btn btn-xs btn-icon btn-light mailbox-action">
                     <i :class="collection.hot == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'">
                     </i>
                    </button>
                 </div>
                 <div class="content-subject mb-3">
-                  <button type="button" class="btn btn-xs btn-icon btn-light mailbox-action">
+                  <button
+                    @click="updateCollectionMinor('status',collection)"
+                    type="button"
+                    class="btn btn-xs btn-icon btn-light mailbox-action">
                     <i :class="collection.status == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'">
                     </i>
                    </button>
@@ -145,18 +186,22 @@
               </td>
               <td width="10%" style="text-align:center">
                 <div class="btn-group mb-3" role="group" aria-label="First group">
-                  <button
-                    v-tooltip.top-center="'Chi tiết collection'"
-                    type="button"
-                    class="btn btn-sm btn-icon btn-outline-info">
-                    <i class="icon-fa icon-fa-search" />
-                  </button>
-                  <button
-                    v-tooltip.top-center="'Cập nhật collection'"
-                    type="button"
-                    class="btn btn-sm btn-icon btn-outline-info">
-                    <i class="icon-fa icon-fa-pencil" />
-                  </button>
+                  <router-link :to="{ name: 'collection.detail',params: { collectionId: collection.id }}">
+                    <button
+                      v-tooltip.top-center="'Chi tiết collection'"
+                      type="button"
+                      class="btn btn-sm btn-icon btn-outline-info">
+                      <i class="icon-fa icon-fa-search" />
+                    </button>
+                  </router-link>
+                  <router-link :to="{ name: 'collection.update',params: { collectionId: collection.id }}">
+                    <button
+                      v-tooltip.top-center="'Cập nhật collection'"
+                      type="button"
+                      class="btn btn-sm btn-icon btn-outline-info">
+                      <i class="icon-fa icon-fa-pencil" />
+                    </button>
+                  </router-link>
                   <button
                     @click="remove(collection.id)"
                     v-tooltip.top-center="'Xóa collection'"
@@ -203,10 +248,10 @@ export default {
       collection:{},
       loading: true,
       params:{
-        name:'',
-        status:'',
-        new:'',
-        hot:'',
+        name:null,
+        status:null,
+        new:null,
+        hot:null,
       },
       countRoom:null,
       getStatus: ['Select option', 'options', ],
@@ -268,6 +313,64 @@ export default {
       }
     },
     reloadData(page) {
+      this.allCollection({
+        page
+      });
+    },
+    async updateCollectionMinor(option, collection) {
+      if (option === "hot") {
+        let response = await axios
+          .put(`collections/single-update/${collection.id}?option=${option}`, {
+            hot: collection.hot == 1 ? 0 : 1
+          })
+          .then(result => {
+            if (result) {
+              this.reloadData(this.currentPage);
+
+              window.toastr["success"]("Cập nhật thành công!", "Success");
+            } else {
+              window.toastr["error"]("Something wrong!", "Error");
+            }
+          });
+      } else if (option === "new") {
+        let response = await axios
+          .put(`collections/single-update/${collection.id}?option=${option}`, {
+            new: collection.new == 1 ? 0 : 1
+          })
+          .then(result => {
+            if (result) {
+              this.reloadData(this.currentPage);
+
+              window.toastr["success"]("Cập nhật thành công!", "Success");
+            } else {
+              window.toastr["error"]("Something wrong!", "Error");
+            }
+          });
+      } else if (option === "status") {
+        let response = await axios
+          .put(`collections/single-update/${collection.id}?option=${option}`, {
+            status: collection.status == 1 ? 0 : 1
+          })
+          .then(result => {
+            if (result) {
+              this.reloadData(this.currentPage);
+              window.toastr["success"]("Cập nhật thành công!", "Success");
+            } else {
+              window.toastr["error"]("Something wrong!", "Error");
+            }
+          });
+      }
+    },
+    applyFilter(page) {
+      this.allCollection({
+        page
+      });
+    },
+    resetFilter(page){
+      this.params.name = null;
+      this.params.status = null;
+      this.params.new = null;
+      this.params.hot = null;
       this.allCollection({
         page
       });
