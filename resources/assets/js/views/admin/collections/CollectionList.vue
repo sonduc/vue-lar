@@ -161,7 +161,7 @@
                     @click="updateCollectionMinor('new',collection)"
                     type="button"
                     class="btn btn-xs btn-icon btn-light mailbox-action">
-                    <i :class="collection.new == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'">
+                    <i :class="collection.new == 1? 'icon-fa icon-fa-check color-green' : 'icon-fa icon-fa-times color-red'">
                     </i>
                    </button>
                 </div>
@@ -170,7 +170,7 @@
                     @click="updateCollectionMinor('hot',collection)"
                     type="button"
                     class="btn btn-xs btn-icon btn-light mailbox-action">
-                    <i :class="collection.hot == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'">
+                    <i :class="collection.hot == 1? 'icon-fa icon-fa-check color-green' : 'icon-fa icon-fa-times color-red'">
                     </i>
                    </button>
                 </div>
@@ -179,7 +179,7 @@
                     @click="updateCollectionMinor('status',collection)"
                     type="button"
                     class="btn btn-xs btn-icon btn-light mailbox-action">
-                    <i :class="collection.status == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'">
+                    <i :class="collection.status == 1? 'icon-fa icon-fa-check color-green' : 'icon-fa icon-fa-times color-red'">
                     </i>
                    </button>
                 </div>
@@ -407,3 +407,11 @@ export default {
   },
 }
 </script>
+<style scoped>
+.color-green{
+  color: green;
+}
+.color-red{
+  color: red;
+}
+</style>
