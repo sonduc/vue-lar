@@ -54,7 +54,7 @@
                 </div>
                 <div class="col-xl-12 mb-3">
                     <label>Ảnh đại diện</label>
-                    <vue-dropzone id="dropzone" ref="myVueDropzone" multiple="false" :options="dropzoneOptions"
+                    <vue-dropzone @vdropzone-file-added="showFile" id="dropzone" @vdropzone-mounted="initImages" ref="myVueDropzone" :options="dropzoneOptions"
                     @vdropzone-complete="afterComplete" @vdropzone-removed-file="remove" />
                 </div>
               </div>
@@ -95,8 +95,10 @@ export default {
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         maxFilesize: 2,
-        maxFiles: 1,
+        maxFiles: 5,
         addRemoveLinks: true,
+        thumbnailWidth: 150,
+        thumbnailHeight: 150,
         dictCancelUpload: "Remove File"
       },
       tagsArray: [],
@@ -153,22 +155,70 @@ export default {
     }
   },
   methods: {
-    async createBlog() {
-      try {
-        const response = await axios
-          .post("blogs", this.blog)
-          .then(response => {
-            this.$swal("Thành công", "Đã tạo bài viết", "success");
-          })
-          .catch(error => {
-            let err = error.response.data.data.errors;
-            window.toastr["error"]("There was an error", "Error");
-          });
-      } catch (error) {
-        if (error) {
-          window.toastr["error"]("", "Error");
+    initImages() {
+      let files = [
+        {
+          file: {
+            size: 49314,
+            name: "img1",
+            type: "image"
+          },
+          url:
+            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
+        },
+        {
+          file: {
+            size: 49314,
+            name: "img2",
+            type: "image"
+          },
+          url:
+            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
+        },
+        {
+          file: {
+            size: 49314,
+            name: "img3",
+            type: "image"
+          },
+          url:
+            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
+        },
+        {
+          file: {
+            size: 49314,
+            name: "img4",
+            type: "image"
+          },
+          url:
+            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
         }
-      }
+      ];
+      files.forEach(element => {
+        this.$refs.myVueDropzone.manuallyAddFile(element.file, element.url);
+      });
+      console.log(this.$refs.myVueDropzone);
+    },
+    showFile(file) {
+      console.log(file);
+    },
+    async createBlog() {
+      console.log(this.blog);
+      // try {
+      //   const response = await axios
+      //     .post("blogs", this.blog)
+      //     .then(response => {
+      //       this.$swal("Thành công", "Đã tạo bài viết", "success");
+      //     })
+      //     .catch(error => {
+      //       let err = error.response.data.data.errors;
+      //       window.toastr["error"]("There was an error", "Error");
+      //     });
+      // } catch (error) {
+      //   if (error) {
+      //     window.toastr["error"]("", "Error");
+      //   }
+      // }
     },
     async getCategories() {
       try {
