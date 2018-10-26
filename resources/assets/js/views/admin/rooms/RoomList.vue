@@ -150,7 +150,9 @@
           <tbody>
             <tr v-for="(room,index) in filteredRooms" :key="index" :class="{'read' : room.status }">
               <td>{{index+1}}</td>
-              <td>Ảnh</td>
+              <td>
+                <img :src="room.media.data.type == 1 ? room.media.data.image : ''" height="150px" width="150px"/>
+              </td>
               <td class="cell-content">
                 <div class="content">
                   <div class="content-name mb-3">
@@ -453,7 +455,7 @@ export default {
       try {
         const response = await axios.get(`rooms`, {
           params: {
-            include: "details,user,prices",
+            include: "details,user,prices,media",
             page: page,
             limit: 5,
             name: this.q,
