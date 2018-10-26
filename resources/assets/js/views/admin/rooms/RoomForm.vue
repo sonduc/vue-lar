@@ -108,27 +108,67 @@
                         </div>
                         <div class="col-lg-6">
                           <div class="form-group">
-                            <div class="form-check">
-                              <input class="form-check-input" type="checkbox" :id="room.status"
-                              v-model.number="room.status"
-                              :true-value="1" :false-value="0" >
+                            <div class="form-check-label">
+                              <label>Trạng thái phòng</label>
+                            </div>
+                            <div class="form-group">
+
+                              <!-- <input
+                                class="form-check-input"
+                                type="checkbox"
+                                :id="room.status"
+                                v-model.number="room.status"
+                                :true-value="1"
+                                :false-value="0" >
                               <label v-if="room.status == 1" class="form-check-label" for="defaultCheck1">
                                 Đang hoạt động
                               </label>
                               <label v-else class="form-check-label" for="defaultCheck1">
                                 Phòng đã khóa
-                              </label>
+                              </label> -->
+
+                               <!-- <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                                <input
+                                  class="form-check-input"
+                                  type="checkbox"
+                                  :id="room.status"
+                                  :true-value="1"
+                                  :false-value="0"
+                                  v-model.number="room.status">
+                                <label v-if="room.status == 1" class="custom-control-label" for="defaultCheck1">Đang hoạt động</label>
+                                <label v-else class="custom-control-label" for="defaultCheck1">Phòng đã khóa</label>
+                              </div> -->
+
+                              <div class="form-check form-check-inline" style="margin-top: 5px;">
+                                <label
+                                  v-if="room.status == 1"
+                                  class="container"
+                                  style="color:#6c757d">
+                                  Đang hoạt động
+                                <input
+                                  type="checkbox"
+                                  :id="room.status"
+                                  :true-value="1"
+                                  :false-value="0"
+                                  v-model.number="room.status">
+                                <span class="checkmark"></span>
+                                </label>
+                                <label
+                                  v-else
+                                  class="container"
+                                  style="color:#6c757d">
+                                  Phòng đã khóa
+                                <input
+                                  type="checkbox"
+                                  :id="room.status"
+                                  :true-value="1"
+                                  :false-value="0"
+                                  v-model.number="room.status">
+                                <span class="checkmark"></span>
+                                </label>
+                              </div>
+
                             </div>
-                            <!-- <input class="custom-control-input"
-                            type="checkbox"
-                            name="room.status"
-                            :true-value="1" :false-value="0"
-                            v-model.number="room.status"
-                            >
-                            <label v-if="room.status == 1" class="custom-control-label">
-                            Đang hoạt động</label>
-                            <label v-else class="custom-control-label">
-                            Phòng đã khóa</label> -->
                           </div>
                         </div>
                       </div>
@@ -165,13 +205,12 @@
                                   <label :style="errors.has('detail.name' + index) ? 'color:red;' : ''">{{errors.has('detail.name' + index)
                                     ? errors.first('detail.name' + index) : 'Tên phòng *'}}
                                   </label>
-                                  <!-- 'detail.name'${index}:/^[a-zA-Z0-9]+$/} -->
                                   <input
                                   type="text"
                                   v-model="room.details.data[index].name"
                                   :name="'detail.name' + index"
                                   v-validate="step==0 ? { required:true, min:10, max:255,
-                                  regex:/^([a-zA-Z0-9ạảắặằẳẵấậầẩẫẹẻẽếệềểễịỉĩọỏõốộồổỗơớợờởỡụủũưứự ừửữỵỳỷỹđ\uooCO-\u017F\s]+)$/ }:''"
+                                  regex:/^([a-zA-Z0-9ạảắặằẳẵấậầẩẫẹẻẽếệềểễịỉĩọỏõốộồổỗơớợờởỡụủũưứựừửữỵỳỷỹđ\uooCO-\u017F\s]+)$/ }:''"
                                   data-vv-as="Tên phòng"
                                   class="form-control">
                                 </div>
@@ -293,7 +332,8 @@
                     <div class="row">
                       <div class = "col-lg-6">
                         <div class="form-group">
-                          <label :style="errors.has('room.rent_type') ? 'color:red;' : ''">{{errors.has('room.rent_type')
+                          <label :style="errors.has('room.rent_type') ? 'color:red;' : ''">
+                            {{errors.has('room.rent_type')
                             ? errors.first('room.rent_type') : 'Thuê theo *'}}
                           </label>
                           <select
@@ -301,7 +341,7 @@
                           name="room.rent_type"
                           v-validate="step==1 ? 'required':''"
                           data-vv-as="Thuê theo"
-                          class= "form-control ls-select2">
+                          class= "form-control ls-select2 custom-select">
                             <option
                             v-for= "(item, index) in rent_type"
                             :value="item.id" :key= "index">{{item.value}}
@@ -372,7 +412,8 @@
                       </div>
                     </div>
                     <div class="row" v-if="checkSpecialDays">
-                      <div class="col-lg-4">
+                      <div :class = "room.rent_type == 2 ? 'col-lg-12':'col-lg-4'"
+                        v-if="room.rent_type == 2 || room.rent_type == 3">
                         <div class="form-group">
                           <label :style="errors.has('room.optional_prices.price_day') ?
                           'color:red;' : ''">
@@ -388,7 +429,8 @@
                           class="form-control">
                         </div>
                       </div>
-                      <div class="col-lg-4">
+                      <div :class = "room.rent_type == 1 ? 'col-lg-6':'col-lg-4'"
+                        v-if="room.rent_type == 1 || room.rent_type == 3">
                         <div class="form-group">
                           <label :style="errors.has('room.optional_prices.price_hour') ?
                           'color:red;' : ''">
@@ -404,7 +446,8 @@
                           class="form-control">
                         </div>
                       </div>
-                      <div class="col-lg-4">
+                      <div :class = "room.rent_type == 1 ? 'col-lg-6':'col-lg-4'"
+                        v-if="room.rent_type == 1 || room.rent_type == 3">
                         <div class="form-group">
                           <label :style="errors.has('room.optional_prices.price_after_hour') ?
                           'color:red;' : ''">
@@ -418,34 +461,6 @@
                           data-vv-as="Giá phòng khi ở thêm giờ"
                           v-model.number="room.optional_prices.price_after_hour"
                           class="form-control">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <h5 class="section-semi-title">Ngày không cho thuê</h5>
-                  </div>
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-lg-11">
-                        <div class="form-group">
-                          <v-date-picker
-                          mode='multiple'
-                          v-model='blockDays'
-                          show-caps
-                          :input-props='{ class: "form-control", placeholder: "Please choose days", readonly: true }'>
-                          </v-date-picker>
-
-                        </div>
-                      </div>
-                       <div class="col-lg-1">
-                        <div class="form-group">
-                          <button v-tooltip="{content: 'Bạn muốn xóa tất cả ngày ?',classes: ['danger'],targetClasses: ['it-has-a-tooltip']}"
-                          @click.prevent="blockDays = null" class="form-control btn btn-outline-danger"><i class="icon-fa icon-fa-close"></i>Xóa
-                          </button>
                         </div>
                       </div>
                     </div>
@@ -558,26 +573,46 @@
                 </div>
               </div>
             </tab-content>
-            <!-- <tab-content title="Upload ảnh">
+            <tab-content title="Upload ảnh">
               <div class="card">
                 <div class="card-header">
-                  <h5 class="section-semi-title">Tiện ích phòng</h5>
+                  <h5 class="section-semi-title">Upload ảnh đại diện cho phòng</h5>
                 </div>
                 <div class="card-body">
-                  <div class="row">
-                    <div class = "col-lg-3" v-for="com in comforts" :key="com.id">
-                      <div class="form-group custom-control custom-checkbox mb-3">
-                        <input type="checkbox" v-model = "room.comforts"
-                        :id="com.id" :value="com.id"
-                        class="custom-control-input">
-                        <label :for="com.id" class="custom-control-label">
-                        {{com.details.data[0].name}}</label>
-                      </div>
+                  <div class="row mt-4">
+                    <div class="col-sm-12">
+                      <vue-dropzone
+                        id="dropzone1"
+                        ref="myVueDropzone1"
+                        :options="imageAvatar"
+                        @vdropzone-complete="afterCompleteImageAvatar"
+                        @vdropzone-canceled
+                        @vdropzone-removed-file="removedImageInDropzone"
+                      />
                     </div>
                   </div>
                 </div>
               </div>
-            </tab-content> -->
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="section-semi-title">Upload ảnh cho bài viết</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row mt-4">
+                    <div class="col-sm-12">
+                      <vue-dropzone
+                        id="dropzone2"
+                        ref="myVueDropzone2"
+                        :options="imagePost"
+                        @vdropzone-complete="afterCompleteImagePost"
+                        @vdropzone-canceled
+                        @vdropzone-removed-file="removedImageInDropzone"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tab-content>
             <template slot="footer" slot-scope="props">
               <div class="wizard-footer-left">
                 <wizard-button  v-if="props.activeTabIndex > 0" @click.native="previousTabForm(props.prevTab())" :style="props.fillButtonStyle">Previous</wizard-button>
@@ -597,6 +632,7 @@
 <script>
 import Auth from "../../../services/auth";
 import { FormWizard, TabContent, WizardButton } from "vue-form-wizard";
+import vue2Dropzone from 'vue2-dropzone'
 import { hoursList, format, location } from "../../../helpers/mixins";
 import { Tabs, Tab } from "vue-tabs-component";
 import { quillEditor } from "vue-quill-editor";
@@ -608,6 +644,7 @@ import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
+import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 export default {
   name: 'RoomForm',
   mixins: [hoursList, format, location],
@@ -621,6 +658,7 @@ export default {
     quillEditor,
     Datepicker,
     SelectWeekDay,
+    vueDropzone: vue2Dropzone
   },
   props: {
     type: {
@@ -688,6 +726,7 @@ export default {
         this.room.district_id = val.id;
       }
     },
+
     checkCountLang() {
       if (this.room.details.data.length) {
         let length = this.room.details.data.length
@@ -722,61 +761,67 @@ export default {
         }
       }
     },
-    blockDays: {
-      handler(val) {
-        this.room.room_time_blocks = [];
-        if(val != null){
-          val.forEach(element => {
-            let beforeAddDay = new Date(element);
-            let timeDay = 60 * 60 * 24 * 1000;
-            let afterAddDay = new Date(beforeAddDay.getTime() + timeDay);
-            let day = afterAddDay.toISOString().substring(0,10);
-            this.room.room_time_blocks.push(day);
-          })
-        }
-      }
-    },
-    // city: {
-    //   handler(val) {
-    //     if(val != null){
-    //       this.room.city_id = val.id
-    //     }
-    //   }
-    // },
-    // district: {
-    //   handler(val) {
-    //     if(val != null){
-    //       this.room.district_id = val.id
-    //     }
-    //   }
-    // },
   },
   data() {
     return {
       step:0,
       subTitleHeader: "Vui lòng hoàn thành chính xác các thông tin trước khi lưu",
       specialDays:[],
-      blockDays: [],
       comforts: [],
+      latest_deal:0,
+      base64:null,
+      imageAvatar: {
+        url: 'https://httpbin.org/post',
+        maxFilesize: 3,
+        maxFiles:1,
+        acceptedFiles: ".jpeg,.jpg,.png,.gif",
+        addRemoveLinks: true,
+        thumbnailWidth: 250,
+        thumbnailHeight: 250,
+        dictCancelUpload: 'Cancel File',
+        dictDefaultMessage: "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
+        headers: { 'My-Awesome-Header': 'header value' },
+        init:function(){
+          let mockFile = { name: "https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0", size:12345 };
+          this.options.addedfile.call(this, mockFile);
+          this.options.thumbnail.call(this, mockFile, this.base64);
+          this.options.complete.call(this, mockFile);
+        }
+      },
+      imagePost: {
+        url: 'https://httpbin.org/post',
+        maxFilesize: 3,
+        maxFiles:50,
+        acceptedFiles: ".jpeg,.jpg,.png,.gif",
+        addRemoveLinks: true,
+        thumbnailWidth: 250,
+        thumbnailHeight: 250,
+        dictCancelUpload: 'Cancel File',
+        dictDefaultMessage: "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
+        headers: { 'My-Awesome-Header': 'header value' },
+        init:function(){
+          let data = [{ source:'https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0',type:3 },{ source:'https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0',type:3 }]
+          data.forEach(item => {
+            let mockFile = { name: "https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0", size:12345 };
+            this.options.addedfile.call(this, mockFile);
+            this.options.thumbnail.call(this, mockFile, item.source);
+            this.options.complete.call(this, mockFile);
+          })
+        }
+      },
+      count: 1,
       room: {
         comforts: [],
         city: {
-          data: {
-
-          }
+          data: {}
         },
         district: {
-          data: {
-
-          }
+          data: {}
         },
-
-        images:[
-          {
-            source: '2018_10_19_96ead55ecb916b51b5b3',
-            type:1
-          }
-        ],
+        images:[{
+          source:null,
+          type:null
+        }],
         details:{
           data:[
             {
@@ -915,12 +960,34 @@ export default {
           }
         });
       }
-      if(dataRoom.blocks.data.length) {
-        dataRoom.blocks.data.forEach(item => {
-          let date = new Date(item.time_block)
-          date.setTime(date.getTime() - (7 * 60 * 60 * 1000))
-          this.blockDays.push(date);
-        })
+      if(dataRoom.media.data.length){
+        this.room.images = []
+        dataRoom.media.data.forEach(item => {
+          async function getBase64ImageFromUrl(imageUrl) {
+            let res = await fetch(imageUrl);
+            let blob = await res.blob();
+
+            return new Promise((resolve, reject) => {
+              let reader  = new FileReader();
+              reader.addEventListener("load", function () {
+                  resolve(reader.result);
+              }, false);
+
+              reader.onerror = () => {
+                return reject(this);
+              };
+              reader.readAsDataURL(blob);
+            })
+          }
+          getBase64ImageFromUrl(item.image)
+          .then(result => {
+            let img = { source:null, type:null };
+            img.source = result;
+            img.type = item.type;
+            this.room.images.push(img);
+           })
+          .catch(err => console.error(err));
+        });
       }
       this.room = JSON.parse(JSON.stringify({ ...this.room, ...dataRoom }))
       if(this.room.comforts.data.length) {
@@ -949,6 +1016,36 @@ export default {
     previousTabForm(event) {
       this.step--;
       return event;
+    },
+    afterCompleteImageAvatar(file){
+      let picture = {
+        source: null,
+        type: 4
+      }
+      picture.source = file.dataURL
+      this.room.images.push(picture);
+    },
+    afterCompleteImagePost(file){
+      let picture = {
+        source: null,
+        type: 1
+      }
+      picture.source = file.dataURL;
+      this.room.images.push(picture);
+    },
+    removedImageInDropzone(file, error, xhr){
+      let index = this.room.images.findIndex(item => item.dataURL === file.dataURL)
+      this.room.images.splice(index,1)
+    },
+    AddFile () {
+      let file = { size: 123, name: 'Icon' }
+      let url = '/assets/img/demo/gallery/' + this.count + '.jpg'
+      this.$refs.myVueDropzone.manuallyAddFile(file, url)
+      if (this.count !== 12) {
+        this.count = this.count + 1
+      } else {
+        this.count = 12
+      }
     },
     async validateBeforeNext(){
       const result = await this.$validator.validateAll();
@@ -995,6 +1092,7 @@ export default {
               });
             let response = await axios.post('rooms',this.room)
             .then(response => {
+              console.log(response)
               this.$swal("Thành công", "Phòng được tạo mới thành công", "success");
             });
           }
@@ -1108,6 +1206,77 @@ export default {
 </script>
 
 <style>
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+.checkmark {
+  border-radius: 5px;
+  font-size: 15px;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    border: 5px solid gray;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
 </style>
 
 
