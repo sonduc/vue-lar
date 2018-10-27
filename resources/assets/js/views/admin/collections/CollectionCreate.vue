@@ -21,8 +21,8 @@
             <div class="card-body">
               <form @submit.prevent="submitForm">
                 <div class="form-row">
-                  <div class="col-md-12 row">
-                    <div class="form-group col-md-3">
+                  <div class="col-md-6 row">
+                    <div class="form-group col-md-6">
                       <label for="nameCollection">Tên bộ sưu tập</label>
                       <input
                         v-model="collection.vi.name"
@@ -31,7 +31,7 @@
                         class="form-control"
                         placeholder="Nhập...">
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-6">
                       <label>Nổi bật</label>
                       <div>
                         <div class="form-check form-check-inline">
@@ -52,15 +52,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="form-group col-md-6">
-                      <label>Ảnh</label>
-                      <input
-                        v-model="collection.image"
-                        type="text"
-                        class="form-control"
-                        placeholder="Nhập">
-                    </div>
-                    <div class="form-group custom-margin col-md-3">
+                    <div class="form-group custom-margin col-md-6">
                       <label>Trạng thái</label>
                       <div>
                         <div class="form-check form-check-inline">
@@ -81,7 +73,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="form-group custom-margin col-md-3">
+                    <div class="form-group custom-margin col-md-6">
                       <label>Loại bộ sưu tập</label>
                       <div>
                         <div class="form-check form-check-inline">
@@ -102,7 +94,63 @@
                         </div>
                       </div>
                     </div>
-                    <tabs class="tabs-default" style="padding-left:1em;padding-top:1em;">
+                  </div>
+
+                  <div class="col-md-6 row">
+                    <div class="form-group col-md-12">
+                      <label>Ảnh</label>
+                      <!-- <input
+                        v-model="collection.image"
+                        type="text"
+                        class="form-control"
+                        placeholder="Nhập"> -->
+                        <!-- <vue-upload-multiple-image
+                          @upload-success="uploadImageSuccess"
+                          @before-remove="beforeRemove"
+                          @edit-image="editImage"
+                          :data-images="images"
+                          :multiple ='false'>
+                        </vue-upload-multiple-image> -->
+                    </div>
+                  </div>
+
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4 mt-2">
+                      <label class="typo__label">Chọn phòng</label>
+                      <multiselect
+                        @select="selectRoom"
+                        v-model="room"
+                        :options="allRoom"
+                        placeholder="Chọn phòng"
+                        label="name"/>
+                      </multiselect>
+                    </div>
+
+                    <div
+                      class="form-group col-md-11 row container-room ml-3 mt-2"
+                      v-if="rooms.length > 0">
+                      <draggable
+                        v-model="rooms"
+                        :options="{group:'people'}"
+                        @start="drag=true"
+                        @end="drag=false">
+                          <div
+                            class="list-room"
+                            v-for="element in rooms"
+                            :key="element.id">
+                            <p class="btn btn-outline-secondary name-room">
+                              {{element.name}}
+                              <i
+                              class="icon-fa icon-fa-times icon-room"
+                              @click="deleteRoom(element.name,element.id)"></i>
+                            </p>
+                          </div>
+                      </draggable>
+                    </div>
+                  </div>
+
+                  <div class="col-md-12 row">
+                    <tabs class="tabs-default col-md-12" style="padding-left:1em;padding-top:1em;">
                       <tab id="basic-home" name="Tiếng việt">
                         <div class="form-group custom-margin col-md-12">
                           <label>Mô tả (tiếng việt)</label>
@@ -137,7 +185,7 @@
                   type="submit"
                   class="btn btn-primary"
                   style="margin-top: 2.2em;">
-                  Cập nhật
+                  Thêm mới
                 </button>
               </form>
                </div>
@@ -148,6 +196,7 @@
 </template>
 <script>
 import Auth from "../../../services/auth";
+import vue2Dropzone from 'vue2-dropzone'
 import { chain } from 'lodash'
 import Multiselect from "vue-multiselect";
 import { Tabs, Tab } from 'vue-tabs-component'
@@ -155,12 +204,17 @@ import { quillEditor } from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
+import draggable from 'vuedraggable';
+import VueUploadMultipleImage from 'vue-upload-multiple-image'
 export default {
   components: {
     Multiselect,
     quillEditor,
     'tabs': Tabs,
     'tab': Tab,
+    vueDropzone: vue2Dropzone,
+    VueUploadMultipleImage,
+    draggable,
   },
   data(){
     return{
@@ -182,6 +236,18 @@ export default {
         },
       },
       permission:'collection.create',
+      allRoom:[
+        { name: 'Thành Công Hotel - Luxury Apartment', id:'3143' },
+        { name: 'Thành Công Hotel - Excutive Suite Room', id:'3142' },
+        { name: 'Thành Công Hotel - Deluxe Suite Triple Room', id:'3141' },
+        { name: 'Thành Công Hotel - Deluxe Suite Twin Ocean View Room', id:'3140' },
+        { name: 'Thành Công Hotel - Deluxe Twin Ocean View Room', id:'3139' },
+        { name: 'Thành Công Hotel - Superior Twin Room', id:'3138' },
+        { name: 'Thành Công Hotel - Standard Double Room', id:'3137' },
+      ],
+      rooms:[],
+      room:{},
+      images:[{path:''}],
     }
   },
   mounted() {
@@ -199,6 +265,46 @@ export default {
     this.hideSidebarOnMobile();
   },
   methods:{
+    selectRoom(selectedOption, id){
+      console.log(selectedOption)
+      let objectRoom = {
+        id :selectedOption.id,
+        name: selectedOption.name,
+      }
+      this.rooms.push(objectRoom);
+    },
+
+    async uploadImageSuccess(formData, index, fileList) {
+      this.collection.image = fileList[0].path;
+      console.log(fileList[0].path)
+    },
+    beforeRemove (index, done, fileList) {
+      var r = confirm("remove image")
+      if (r == true) {
+        done()
+      } else {
+      }
+    },
+    editImage (formData, index, fileList) {
+      this.collection.image = fileList[0].path;
+      console.log(fileList[0].path)
+    },
+
+
+    completeImage(file){
+      console.log(file.dataURL)
+      this.collection.image = file.dataURL
+    },
+    AddFile () {
+      let file = { size: 123, name: 'Icon' }
+      let url = '/assets/img/demo/gallery/' + this.count + '.jpg'
+      this.$refs.myVueDropzone.manuallyAddFile(file, url)
+      if (this.count !== 12) {
+        this.count = this.count + 1
+      } else {
+        this.count = 12
+      }
+    },
     async getRooms() {
       try {
         const response = await axios.get(`rooms`, {
@@ -225,14 +331,20 @@ export default {
       let details = {data};
       data[0] = this.collection.vi;
       data[1] = this.collection.en;
-      console.log(details);
+      let valueRooms =[]
+      if(this.rooms.length > 0){
+        for(let i =0;this.rooms.length > i;i++){
+          valueRooms.push(this.rooms[i].id)
+        }
+      }
+      // console.log(valueRooms);
       try {
         const response = await axios.post(`collections`,{
           image : this.collection.image,
           hot : this.collection.hot,
           new : this.collection.new,
           status : this.collection.status,
-          rooms : [1],
+          rooms : valueRooms,
           details : details,
         })
         .then(response => {
@@ -260,5 +372,20 @@ export default {
 <style scoped>
 .custom-margin{
   margin-top: 1em;
+}
+.container-room{
+  border: 1px solid lightgray;
+  padding-top: 1rem;
+  border-radius: 15px
+}
+.list-room{
+  display: inline-block;
+  margin-left: 1em;
+}
+.name-room:hover{
+  color: yellowgreen;
+}
+.icon-room:hover {
+  color: red;
 }
 </style>
