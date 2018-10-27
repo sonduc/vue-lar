@@ -273,6 +273,16 @@ export default {
       }
       this.rooms.push(objectRoom);
     },
+    deleteRoom(name,id){
+      console.log(name,id)
+      let valueRooms = this.rooms
+      for( var i = 0; i < valueRooms.length; i++){
+        if ( valueRooms[i].id === id) {
+          valueRooms.splice(i, 1);
+        }
+      }
+      this.rooms = valueRooms;
+    },
 
     async uploadImageSuccess(formData, index, fileList) {
       this.collection.image = fileList[0].path;
