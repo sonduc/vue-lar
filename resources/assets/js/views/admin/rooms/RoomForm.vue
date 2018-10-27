@@ -470,7 +470,8 @@
                           </select-week-day>
                         </div>
                       </div>
-                      <div class="col-lg-3">
+                      <div :class = "room.rent_type == 2 ? 'col-lg-9':'col-lg-3'"
+                        v-if="room.rent_type == 2 || room.rent_type == 3">
                         <div class="form-group">
                           <label :style="errors.has(`weekdays[${index}]price_day`) ? 'color:red;' : ''">{{errors.has(`weekdays[${index}]price_day`)
                             ? errors.first(`weekdays[${index}]price_day`) : 'Giá theo ngày *'}}
@@ -484,7 +485,8 @@
                           class="form-control">
                         </div>
                       </div>
-                      <div class="col-lg-3">
+                      <div :class = "room.rent_type == 1 ? 'col-lg-5':'col-lg-3'"
+                        v-if="room.rent_type == 1 || room.rent_type == 3">
                         <div class="form-group">
                          <label :style="errors.has(`weekdays[${index}]price_hour`) ? 'color:red;' : ''">{{errors.has(`weekdays[${index}]price_hour`)
                             ? errors.first(`weekdays[${index}]price_hour`) : 'Giá theo giờ *'}}
@@ -498,7 +500,8 @@
                           class="form-control">
                         </div>
                       </div>
-                      <div class="col-lg-3">
+                      <div :class = "room.rent_type == 1 ? 'col-lg-4':'col-lg-3'"
+                        v-if="room.rent_type == 1 || room.rent_type == 3">
                         <div class="form-group">
                          <label :style="errors.has(`weekdays[${index}]price_after_hour`) ? 'color:red;' : ''">{{errors.has(`weekdays[${index}]price_after_hour`)
                             ? errors.first(`weekdays[${index}]price_after_hour`) : 'Giá khi ở thêm giờ *'}}
