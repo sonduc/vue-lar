@@ -112,33 +112,6 @@
                               <label>Trạng thái phòng</label>
                             </div>
                             <div class="form-group">
-
-                              <!-- <input
-                                class="form-check-input"
-                                type="checkbox"
-                                :id="room.status"
-                                v-model.number="room.status"
-                                :true-value="1"
-                                :false-value="0" >
-                              <label v-if="room.status == 1" class="form-check-label" for="defaultCheck1">
-                                Đang hoạt động
-                              </label>
-                              <label v-else class="form-check-label" for="defaultCheck1">
-                                Phòng đã khóa
-                              </label> -->
-
-                               <!-- <div class="custom-control custom-checkbox my-1 mr-sm-2">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  :id="room.status"
-                                  :true-value="1"
-                                  :false-value="0"
-                                  v-model.number="room.status">
-                                <label v-if="room.status == 1" class="custom-control-label" for="defaultCheck1">Đang hoạt động</label>
-                                <label v-else class="custom-control-label" for="defaultCheck1">Phòng đã khóa</label>
-                              </div> -->
-
                               <div class="form-check form-check-inline" style="margin-top: 5px;">
                                 <label
                                   v-if="room.status == 1"
@@ -581,10 +554,12 @@
                 <div class="card-body">
                   <div class="row mt-4">
                     <div class="col-sm-12">
+                    <!-- Vì data trong DB trùng nhau nên chưa để :duplicateCheck="true" được -->
                       <vue-dropzone
                         id="dropzone1"
                         ref="myVueDropzone1"
                         :options="imageAvatar"
+                        @vdropzone-mounted="vmountedAvatar"
                         @vdropzone-complete="afterCompleteImageAvatar"
                         @vdropzone-canceled
                         @vdropzone-removed-file="removedImageInDropzone"
@@ -604,9 +579,10 @@
                         id="dropzone2"
                         ref="myVueDropzone2"
                         :options="imagePost"
-                        @vdropzone-complete="afterCompleteImagePost"
                         @vdropzone-canceled
                         @vdropzone-removed-file="removedImageInDropzone"
+                        @vdropzone-mounted="vmountedPost"
+                        @vdropzone-complete="afterCompleteImagePost"
                       />
                     </div>
                   </div>
@@ -769,45 +745,28 @@ export default {
       specialDays:[],
       comforts: [],
       latest_deal:0,
-      base64:null,
       imageAvatar: {
         url: 'https://httpbin.org/post',
         maxFilesize: 3,
         maxFiles:1,
-        acceptedFiles: ".jpeg,.jpg,.png,.gif",
         addRemoveLinks: true,
-        thumbnailWidth: 250,
-        thumbnailHeight: 250,
+        thumbnailWidth: 150,
+        thumbnailHeight: 150,
         dictCancelUpload: 'Cancel File',
         dictDefaultMessage: "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
         headers: { 'My-Awesome-Header': 'header value' },
-        init:function(){
-          let mockFile = { name: "https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0", size:12345 };
-          this.options.addedfile.call(this, mockFile);
-          this.options.thumbnail.call(this, mockFile, this.base64);
-          this.options.complete.call(this, mockFile);
-        }
+
       },
       imagePost: {
         url: 'https://httpbin.org/post',
         maxFilesize: 3,
         maxFiles:50,
-        acceptedFiles: ".jpeg,.jpg,.png,.gif",
         addRemoveLinks: true,
-        thumbnailWidth: 250,
-        thumbnailHeight: 250,
+        thumbnailWidth: 150,
+        thumbnailHeight: 150,
         dictCancelUpload: 'Cancel File',
         dictDefaultMessage: "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
-        headers: { 'My-Awesome-Header': 'header value' },
-        init:function(){
-          let data = [{ source:'https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0',type:3 },{ source:'https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0',type:3 }]
-          data.forEach(item => {
-            let mockFile = { name: "https://www.gravatar.com/avatar/d50c83cc0c6523b4d3f6085295c953e0", size:12345 };
-            this.options.addedfile.call(this, mockFile);
-            this.options.thumbnail.call(this, mockFile, item.source);
-            this.options.complete.call(this, mockFile);
-          })
-        }
+        headers: { 'My-Awesome-Header': 'header value' }
       },
       count: 1,
       room: {
@@ -818,10 +777,7 @@ export default {
         district: {
           data: {}
         },
-        images:[{
-          source:null,
-          type:null
-        }],
+        images:[],
         details:{
           data:[
             {
@@ -960,39 +916,33 @@ export default {
           }
         });
       }
+      this.room = JSON.parse(JSON.stringify({ ...this.room, ...dataRoom }))
       if(dataRoom.media.data.length){
-        this.room.images = []
         dataRoom.media.data.forEach(item => {
-          async function getBase64ImageFromUrl(imageUrl) {
-            let res = await fetch(imageUrl);
-            let blob = await res.blob();
-
-            return new Promise((resolve, reject) => {
-              let reader  = new FileReader();
-              reader.addEventListener("load", function () {
-                  resolve(reader.result);
-              }, false);
-
-              reader.onerror = () => {
-                return reject(this);
-              };
-              reader.readAsDataURL(blob);
-            })
-          }
-          getBase64ImageFromUrl(item.image)
-          .then(result => {
-            let img = { source:null, type:null };
-            img.source = result;
-            img.type = item.type;
-            this.room.images.push(img);
-           })
-          .catch(err => console.error(err));
+          this.room.images.push({source: item.image, type: item.type});
         });
       }
-      this.room = JSON.parse(JSON.stringify({ ...this.room, ...dataRoom }))
       if(this.room.comforts.data.length) {
         this.room.comforts = map(this.room.comforts.data,item => { return item.id })
       }
+    },
+    vmountedPost(){
+      this.room.images.forEach(item => {
+        if(item.type == 1) {
+          let file = { name: item.source, size:12356, type: "image" };
+          let url = item.source;
+          this.$refs.myVueDropzone2.manuallyAddFile(file, url);
+        }
+      });
+    },
+    vmountedAvatar(){
+      this.room.images.forEach(item => {
+        if(item.type == 4) {
+          let file = { name: item.source, size:12356, type: "image" };
+          let url = item.source;
+          this.$refs.myVueDropzone1.manuallyAddFile(file, url);
+        }
+      });
     },
     addWeekday () {
       if(this.room.weekday_price.length < 7 ) {
@@ -1022,30 +972,40 @@ export default {
         source: null,
         type: 4
       }
-      picture.source = file.dataURL
-      this.room.images.push(picture);
+      if(file.dataURL){
+        picture.source = file.dataURL
+        this.room.images.push(picture);
+      }
     },
     afterCompleteImagePost(file){
       let picture = {
         source: null,
         type: 1
       }
-      picture.source = file.dataURL;
-      this.room.images.push(picture);
+      if(file.dataURL){
+        picture.source = file.dataURL;
+        this.room.images.push(picture);
+      }
     },
     removedImageInDropzone(file, error, xhr){
       let index = this.room.images.findIndex(item => item.dataURL === file.dataURL)
       this.room.images.splice(index,1)
     },
-    AddFile () {
-      let file = { size: 123, name: 'Icon' }
-      let url = '/assets/img/demo/gallery/' + this.count + '.jpg'
-      this.$refs.myVueDropzone.manuallyAddFile(file, url)
-      if (this.count !== 12) {
-        this.count = this.count + 1
-      } else {
-        this.count = 12
-      }
+    async getBase64ImageFromUrl(imageUrl) {
+      let res = await fetch(imageUrl);
+      let blob = await res.blob();
+
+      return new Promise((resolve, reject) => {
+        let reader  = new FileReader();
+        reader.addEventListener("load", function () {
+            resolve(reader.result);
+        }, false);
+
+        reader.onerror = () => {
+          return reject(this);
+        };
+        reader.readAsDataURL(blob);
+      })
     },
     async validateBeforeNext(){
       const result = await this.$validator.validateAll();
