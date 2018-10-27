@@ -265,6 +265,24 @@ export default {
     this.hideSidebarOnMobile();
   },
   methods:{
+    selectRoom(selectedOption, id){
+      console.log(selectedOption)
+      let objectRoom = {
+        id :selectedOption.id,
+        name: selectedOption.name,
+      }
+      this.rooms.push(objectRoom);
+    },
+    deleteRoom(name,id){
+      console.log(name,id)
+      let valueRooms = this.rooms
+      for( var i = 0; i < valueRooms.length; i++){
+        if ( valueRooms[i].id === id) {
+          valueRooms.splice(i, 1);
+        }
+      }
+      this.rooms = valueRooms;
+    },
     // async getRooms() {
     //   try {
     //     const response = await axios.get(`rooms`, {
@@ -390,5 +408,23 @@ export default {
 <style scoped>
 .custom-margin{
   margin-top: 1em;
+}
+.custom-margin{
+  margin-top: 1em;
+}
+.container-room{
+  border: 1px solid lightgray;
+  padding-top: 1rem;
+  border-radius: 15px
+}
+.list-room{
+  display: inline-block;
+  margin-left: 1em;
+}
+.name-room:hover{
+  color: yellowgreen;
+}
+.icon-room:hover {
+  color: red;
 }
 </style>
