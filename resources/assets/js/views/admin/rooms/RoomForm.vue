@@ -31,22 +31,21 @@
                       <div class="row">
                         <div class="col-lg-6">
                           <div class="form-group">
-                            <label :style="errors.has('room.room_type') ? 'color:red;' : ''">{{errors.has('room.room_type')
+                            <label :style="errors.has('room.room_type') ? 'color:red;' : ''">
+                              {{errors.has('room.room_type')
                               ? errors.first('room.room_type') : 'Loại phòng *'}}
                             </label>
-                            <select
-                            v-model= "room.room_type"
-                            name="room.room_type"
+                            <multiselect
+                            :allow-empty="false" name="room.room_type"
                             v-validate="step==0 ? 'required':''"
                             data-vv-as="Loại phòng"
-                            class= "form-control ls-select2 custom-select">
-                              <option
-                              v-for= "(item, index) in room_type"
-                              :value="item.id" :key= "index">{{item.value}}
-                              </option>
-                            </select>
+                            v-model="roomType" label="value"
+                            :options="room_type" :searchable="true"
+                            :show-labels="false" track-by="value">
+                            </multiselect>
                           </div>
                         </div>
+
                         <div class="col-lg-6">
                           <div class="form-group">
                             <label :style="errors.has('room.number_bed') ? 'color:red;' : ''">{{errors.has('room.number_bed')
@@ -109,40 +108,13 @@
                         </div>
                         <div class="col-lg-6">
                           <div class="form-group">
-                            <div class="form-check-label">
-                              <label>Trạng thái phòng</label>
-                            </div>
-                            <div class="form-group">
-                              <div class="form-check form-check-inline" style="margin-top: 5px;">
-                                <label
-                                  v-if="room.status == 1"
-                                  class="container"
-                                  style="color:#6c757d">
-                                  Đang hoạt động
-                                <input
-                                  type="checkbox"
-                                  :id="room.status"
-                                  :true-value="1"
-                                  :false-value="0"
-                                  v-model.number="room.status">
-                                <span class="checkmark"></span>
-                                </label>
-                                <label
-                                  v-else
-                                  class="container"
-                                  style="color:#6c757d">
-                                  Phòng đã khóa
-                                <input
-                                  type="checkbox"
-                                  :id="room.status"
-                                  :true-value="1"
-                                  :false-value="0"
-                                  v-model.number="room.status">
-                                <span class="checkmark"></span>
-                                </label>
-                              </div>
-
-                            </div>
+                            <label>Trạng thái phòng</label>
+                            <multiselect
+                            :allow-empty="false" name="room.status"
+                            v-model="statusRoom" label="value"
+                            :options="status" :searchable="true"
+                            :show-labels="false" track-by="value">
+                            </multiselect>
                           </div>
                         </div>
                       </div>
@@ -317,7 +289,23 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class = "col-lg-6">
+                      <div class="col-lg-6">
+                          <div class="form-group">
+                            <label :style="errors.has('room.rent_type') ? 'color:red;' : ''">
+                              {{errors.has('room.rent_type')
+                              ? errors.first('room.rent_type') : 'Thuê theo *'}}
+                            </label>
+                            <multiselect
+                            :allow-empty="false" name="room.rent_type"
+                            v-validate="step==0 ? 'required':''"
+                            data-vv-as="Thuê theo"
+                            v-model="rentType" label="value"
+                            :options="rent_type" :searchable="true"
+                            :show-labels="false" track-by="value">
+                            </multiselect>
+                          </div>
+                        </div>
+                      <!-- <div class = "col-lg-6">
                         <div class="form-group">
                           <label :style="errors.has('room.rent_type') ? 'color:red;' : ''">
                             {{errors.has('room.rent_type')
@@ -335,7 +323,7 @@
                             </option>
                           </select>
                         </div>
-                      </div>
+                      </div> -->
                       <div :class = "room.rent_type == 1 ? 'col-lg-6':'col-lg-3'"
                       v-if="room.rent_type == 1 || room.rent_type == 3">
                         <div class="form-group">
@@ -672,9 +660,10 @@ export default {
     return {
       step:0,
       subTitleHeader: "Vui lòng hoàn thành chính xác các thông tin trước khi lưu",
+      latest_deal:0,
       specialDays:[],
       comforts: [],
-      latest_deal:0,
+      status: [],
       imageAvatar: {
         url: 'https://httpbin.org/post',
         maxFilesize: 3,
@@ -698,7 +687,6 @@ export default {
         dictDefaultMessage: "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
         headers: { 'My-Awesome-Header': 'header value' }
       },
-      count: 1,
       room: {
         comforts: [],
         city: {
@@ -710,6 +698,12 @@ export default {
           data: {
             name: null
           }
+        },
+        statusRoom: {
+          value: null
+        },
+        roomType: {
+          value: null
         },
         images:[],
         details:{
@@ -742,7 +736,6 @@ export default {
         max_additional_guest: null,
         price_charge_guest: null,
 
-        rent_type: null,
         price_day: 0,
         price_hour: 0,
         price_after_hour: 0,
@@ -750,15 +743,19 @@ export default {
         checkin: null,
         checkout: null,
         room_type: 1,
+        room_type_txt:'Nhà riêng',
+        rent_type: 2,
+        rent_type_txt: 'Theo ngày',
         number_bed: null,
         number_room: null,
         max_guest: null,
-        status:0,
+        status:1,
+        status_txt: 'Đang hoạt động',
         city_id:null,
         district_id:null,
       },
-      room_type: null,
-      rent_type: null,
+      room_type: [],
+      rent_type: [],
       merchants:[],
       weekdays: [
         {
@@ -835,6 +832,42 @@ export default {
       set: function (val) {
         this.room.user.data = val;
         this.room.merchant_id = val.id;
+      }
+    },
+    statusRoom: {
+      get: function () {
+        return {
+          value: this.room.status_txt
+        }
+      },
+      set: function (val) {
+        this.room.statusRoom = val;
+        this.room.status = val.id;
+        this.room.status_txt = val.value;
+      }
+    },
+    roomType: {
+      get: function () {
+        return {
+          value: this.room.room_type_txt
+        }
+      },
+      set: function (val) {
+        this.room.roomType = val;
+        this.room.room_type = val.id;
+        this.room.room_type_txt = val.value;
+      }
+    },
+    rentType: {
+      get: function () {
+        return {
+          value: this.room.rent_type_txt
+        }
+      },
+      set: function (val) {
+        this.room.rentType = val;
+        this.room.rent_type = val.id;
+        this.room.rent_type_txt = val.value;
       }
     },
     city: {
@@ -1136,6 +1169,16 @@ export default {
         }
       }
     },
+    async getStatus() {
+      try {
+        const response = await axios.get('rooms/room-status');
+        this.status = response.data;
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
     hideSidebarOnMobile() {
       let self = this;
       window.onresize = function() {
@@ -1173,6 +1216,7 @@ export default {
             this.getMerchants();
             this.getRentType();
             this.getComforts();
+            this.getStatus();
           }
         });
       }
