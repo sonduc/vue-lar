@@ -94,7 +94,8 @@
                       <div class="row">
                         <div class="col-lg-6">
                           <div class="form-group">
-                            <label :style="errors.has('room.merchant') ? 'color:red;' : ''">{{errors.has('room.merchant')
+                            <label :style="errors.has('room.merchant') ? 'color:red;' : ''">
+                              {{errors.has('room.merchant')
                               ? errors.first('room.merchant') : 'Quản lý phòng *'}}
                             </label>
                             <multiselect
@@ -201,15 +202,28 @@
                                 <div class="row">
                                   <div class="col-lg-6">
                                     <div class="form-group">
-                                      <label>Tỉnh thành</label>
+                                       <label :style="errors.has('room.city') ? 'color:red;' : ''">{{errors.has('room.city')
+                                      ? errors.first('room.city') : 'Tỉnh thành *'}}</label>
                                       <multiselect id="inputUserName" v-model="city"
-                                      label="name" :options="cities" :searchable="true" :show-labels="false" />
+                                      name="room.city" data-vv-as="Tỉnh thành"
+                                      v-validate="step==0 ? 'required':''"
+                                      label="name" :options="cities" :searchable="true"
+                                      :show-labels="false" :allow-empty="false"
+                                      track-by="name"/>
                                     </div>
                                   </div>
                                   <div class="col-lg-6">
                                     <div class="form-group">
-                                      <label>Quận/Huyện</label>
-                                      <multiselect :disabled="city.id == ''" id="inputUserName" v-model="district" label="name" :options="filteredDistrict" :searchable="true" :show-labels="false" />
+                                      <label :style="errors.has('room.district') ? 'color:red;' : ''">{{errors.has('room.district')
+                                        ? errors.first('room.district') : 'Quận huyện *'}}
+                                      </label>
+                                      <multiselect
+                                      id="inputUserName" name="room.district"
+                                      v-validate="step==0 ? 'required':''"
+                                      v-model="district" label="name"
+                                      :options="filteredDistrict" data-vv-as="Quận huyện"
+                                      :searchable="true" :show-labels="false"
+                                      :allow-empty="false"/>
                                     </div>
                                   </div>
                                 </div>
@@ -529,7 +543,7 @@
                 </div>
               </section>
             </tab-content>
-            <tab-content title="Tiện ích phòng ">
+            <tab-content title="Tiện ích phòng" :before-change="validateBeforeNext">
               <div class="card">
                 <div class="card-header">
                   <h5 class="section-semi-title">Tiện ích phòng</h5>
@@ -654,93 +668,6 @@ export default {
       default: ''
     },
   },
-  computed: {
-    merchant_id: {
-      get: function () {
-        if(this.room.user.data.name == null){
-          return null
-        }
-        else {
-          return {
-            name: this.room.user.data.name
-          }
-        }
-      },
-      set: function (val) {
-        this.room.user.data = val;
-        this.room.merchant_id = val.id;
-      }
-    },
-    city: {
-      get: function () {
-        if(this.room.city.data == null){
-          return null
-        }
-        else {
-          return {
-            id: this.room.city.data.id,
-            name: this.room.city.data.name
-          }
-        }
-      },
-      set: function (val) {
-        this.room.city.data = val;
-        this.room.city_id = val.id;
-      }
-    },
-    district: {
-      get: function () {
-        if(this.room.district.data == null){
-          return null
-        }
-        else {
-          return {
-            id: this.room.district.data.id,
-            name: this.room.district.data.name
-          }
-        }
-      },
-      set: function (val) {
-        this.room.district.data = val;
-        this.room.district_id = val.id;
-      }
-    },
-
-    checkCountLang() {
-      if (this.room.details.data.length) {
-        let length = this.room.details.data.length
-        return !!(length == 1)
-      }
-    },
-    checkSpecialDays(){
-      if (this.room.optional_prices.days.length) {
-        let length = this.room.optional_prices.days.length
-        return !!(length > 0)
-      }
-    },
-    filteredDistrict() {
-      let self = this;
-      return this.districts.filter(function(item) {
-        return item.city_id == self.city.id;
-      });
-    },
-  },
-  watch: {
-    specialDays: {
-      handler(val) {
-        this.room.optional_prices.days = [];
-        if(val !== null) {
-          val.forEach(element => {
-            let beforeAddDay = new Date(element);
-            let timeDay = 60 * 60 * 24 * 1000;
-            let afterAddDay = new Date(beforeAddDay.getTime() + timeDay);
-            let day = afterAddDay.toISOString().substring(0, 10);
-            this.room.optional_prices.days.push(day);
-          });
-        }
-      }
-    },
-  },
   data() {
     return {
       step:0,
@@ -775,10 +702,14 @@ export default {
       room: {
         comforts: [],
         city: {
-          data: {}
+          data: {
+            name: null
+          }
         },
         district: {
-          data: {}
+          data: {
+            name: null
+          }
         },
         images:[],
         details:{
@@ -888,6 +819,95 @@ export default {
         }
       ],
     };
+  },
+  computed: {
+    merchant_id: {
+      get: function () {
+        if(this.room.user.data.name == null){
+          return null
+        }
+        else {
+          return {
+            name: this.room.user.data.name
+          }
+        }
+      },
+      set: function (val) {
+        this.room.user.data = val;
+        this.room.merchant_id = val.id;
+      }
+    },
+    city: {
+      get: function () {
+        if(this.room.city.data.name == null) {
+          return null
+        }
+        else {
+          return {
+            id: this.room.city.data.id,
+            name: this.room.city.data.name
+          }
+        }
+      },
+      set: function (val) {
+        this.room.city.data = val;
+        this.room.city_id = val.id;
+      }
+    },
+    district: {
+      get: function () {
+        if(this.room.district.data.name == null){
+          return null
+        }
+        else {
+          return {
+            id: this.room.district.data.id,
+            name: this.room.district.data.name
+          }
+        }
+      },
+      set: function (val) {
+        this.room.district.data = val;
+        this.room.district_id = val.id;
+      }
+    },
+
+    checkCountLang() {
+      if (this.room.details.data.length) {
+        let length = this.room.details.data.length
+        return !!(length == 1)
+      }
+    },
+    checkSpecialDays(){
+      if (this.room.optional_prices.days.length) {
+        let length = this.room.optional_prices.days.length
+        return !!(length > 0)
+      }
+    },
+    filteredDistrict() {
+      let self = this;
+      return this.districts.filter(function(item) {
+        if(self.city != null) {
+          return item.city_id == self.city.id;
+        }
+      });
+    },
+  },
+  watch: {
+    specialDays: {
+      handler(val) {
+        this.room.optional_prices.days = [];
+        if(val !== null) {
+          val.forEach(element => {
+            let beforeAddDay = new Date(element);
+            let timeDay = 60 * 60 * 24 * 1000;
+            let afterAddDay = new Date(beforeAddDay.getTime() + timeDay);
+            let day = afterAddDay.toISOString().substring(0, 10);
+            this.room.optional_prices.days.push(day);
+          });
+        }
+      }
+    },
   },
   methods: {
     setInitData() {
