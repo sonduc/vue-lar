@@ -99,18 +99,14 @@
                   <div class="col-md-6 row">
                     <div class="form-group col-md-12">
                       <label>Ảnh</label>
-                      <!-- <input
-                        v-model="collection.image"
-                        type="text"
-                        class="form-control"
-                        placeholder="Nhập"> -->
-                        <!-- <vue-upload-multiple-image
-                          @upload-success="uploadImageSuccess"
-                          @before-remove="beforeRemove"
-                          @edit-image="editImage"
-                          :data-images="images"
-                          :multiple ='false'>
-                        </vue-upload-multiple-image> -->
+                      <vue-dropzone
+                        @vdropzone-file-added="showFile"
+                        id="dropzone"
+                        @vdropzone-mounted="initImages"
+                        ref="myVueDropzone"
+                        :options="dropzoneOptions"
+                        @vdropzone-complete="afterComplete"
+                        @vdropzone-removed-file="remove" />
                     </div>
                   </div>
 
@@ -247,7 +243,15 @@ export default {
       ],
       rooms:[],
       room:{},
-      images:[{path:''}],
+      dropzoneOptions: {
+        url: "https://httpbin.org/post",
+        maxFilesize: 2,
+        maxFiles: 5,
+        addRemoveLinks: true,
+        thumbnailWidth: 150,
+        thumbnailHeight: 150,
+        dictCancelUpload: "Remove File"
+      },
     }
   },
   mounted() {
@@ -283,6 +287,61 @@ export default {
       }
       this.rooms = valueRooms;
     },
+
+    afterComplete(file) {
+      this.collection.image = file.dataURL;
+    },
+    initImages() {
+      let files = [
+        {
+          file: {
+            size: 49314,
+            name: "img1",
+            type: "image"
+          },
+          url:
+            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
+        },
+        {
+          file: {
+            size: 49314,
+            name: "img2",
+            type: "image"
+          },
+          url:
+            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
+        },
+        {
+          file: {
+            size: 49314,
+            name: "img3",
+            type: "image"
+          },
+          url:
+            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
+        },
+        {
+          file: {
+            size: 49314,
+            name: "img4",
+            type: "image"
+          },
+          url:
+            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
+        }
+      ];
+      files.forEach(element => {
+        this.$refs.myVueDropzone.manuallyAddFile(element.file, element.url);
+      });
+      console.log(this.$refs.myVueDropzone);
+    },
+    showFile(file) {
+      console.log(file);
+    },
+    remove(file) {
+      this.collection.image = null;
+    },
+
     // async getRooms() {
     //   try {
     //     const response = await axios.get(`rooms`, {
@@ -298,21 +357,6 @@ export default {
     //     }
     //   }
     // },
-    async uploadImageSuccess(formData, index, fileList) {
-      this.collection.image = fileList[0].path;
-      console.log(this.images)
-    },
-    beforeRemove (index, done, fileList) {
-      var r = confirm("remove image")
-      if (r == true) {
-        done()
-      } else {
-      }
-    },
-    editImage (formData, index, fileList) {
-      console.log(fileList)
-      this.collection.image = fileList[0].path;
-    },
     setInitData(dataCollection){
       console.log(dataCollection)
       this.collection.image = dataCollection.image;

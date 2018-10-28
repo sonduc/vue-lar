@@ -99,18 +99,14 @@
                   <div class="col-md-6 row">
                     <div class="form-group col-md-12">
                       <label>Ảnh</label>
-                      <!-- <input
-                        v-model="collection.image"
-                        type="text"
-                        class="form-control"
-                        placeholder="Nhập"> -->
-                        <!-- <vue-upload-multiple-image
-                          @upload-success="uploadImageSuccess"
-                          @before-remove="beforeRemove"
-                          @edit-image="editImage"
-                          :data-images="images"
-                          :multiple ='false'>
-                        </vue-upload-multiple-image> -->
+                      <vue-dropzone
+                        @vdropzone-file-added="showFile"
+                        id="dropzone"
+                        ref="myVueDropzone"
+                        :options="dropzoneOptions"
+                        @vdropzone-complete="afterComplete"
+                        @vdropzone-removed-file="remove">
+                      </vue-dropzone>
                     </div>
                   </div>
 
@@ -212,15 +208,15 @@ export default {
     quillEditor,
     'tabs': Tabs,
     'tab': Tab,
-    vueDropzone: vue2Dropzone,
     VueUploadMultipleImage,
+    vueDropzone: vue2Dropzone,
     draggable,
   },
   data(){
     return{
       language :0,
       collection:{
-        image:'',
+        image:null,
         hot:0,
         status:0,
         new:0,
@@ -247,7 +243,18 @@ export default {
       ],
       rooms:[],
       room:{},
-      images:[{path:''}],
+      dropzoneOptions: {
+        url: "https://httpbin.org/post",
+        maxFilesize: 2,
+        maxFiles: 5,
+        addRemoveLinks: true,
+        thumbnailWidth: 150,
+        thumbnailHeight: 150,
+        dictCancelUpload: "Remove File",
+        language : {
+          dictDefaultMessage: 'Drop a PDF file here, or click to select a file to upload.',
+        }
+      },
     }
   },
   mounted() {
@@ -284,37 +291,17 @@ export default {
       this.rooms = valueRooms;
     },
 
-    async uploadImageSuccess(formData, index, fileList) {
-      this.collection.image = fileList[0].path;
-      console.log(fileList[0].path)
+
+    afterComplete(file) {
+      this.collection.image = file.dataURL;
     },
-    beforeRemove (index, done, fileList) {
-      var r = confirm("remove image")
-      if (r == true) {
-        done()
-      } else {
-      }
+    showFile(file) {
+      console.log(file);
     },
-    editImage (formData, index, fileList) {
-      this.collection.image = fileList[0].path;
-      console.log(fileList[0].path)
+    remove(file) {
+      this.collection.image = null;
     },
 
-
-    completeImage(file){
-      console.log(file.dataURL)
-      this.collection.image = file.dataURL
-    },
-    AddFile () {
-      let file = { size: 123, name: 'Icon' }
-      let url = '/assets/img/demo/gallery/' + this.count + '.jpg'
-      this.$refs.myVueDropzone.manuallyAddFile(file, url)
-      if (this.count !== 12) {
-        this.count = this.count + 1
-      } else {
-        this.count = 12
-      }
-    },
     async getRooms() {
       try {
         const response = await axios.get(`rooms`, {
