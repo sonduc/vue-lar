@@ -23,10 +23,14 @@
                 <div class="form-row">
                   <div class="col-md-6 row">
                     <div class="form-group col-md-6">
-                      <label for="nameCollection">Tên bộ sưu tập</label>
+                      <label :style="errors.has('name') ? 'color:red;' : ''">
+                        {{errors.has('name')? errors.first('name') : 'Tên bộ sưu tập *'}}
+                      </label>
                       <input
+                        name="name"
+                        data-vv-as="Tên bộ sưu tập"
+                        v-validate="'required'"
                         v-model="collection.vi.name"
-                        id="nameCollection"
                         type="text"
                         class="form-control"
                         placeholder="Nhập...">
@@ -114,14 +118,21 @@
 
                   <div class="col-md-12 row">
                     <div class="form-group col-md-4 mt-2">
-                      <label class="typo__label">Chọn phòng</label>
+                      <label
+                        class="typo__label"
+                        :style="errors.has('roomCollection') ? 'color:red;' : ''">
+                        {{errors.has('roomCollection')? errors.first('roomCollection') : 'Chọn phòng *'}}
+                      </label>
                       <multiselect
+                        name="roomCollection"
+                        data-vv-as="Phòng"
+                        v-validate="'required'"
                         @select="selectRoom"
                         v-model="room"
                         :options="allRoom"
                         :clear-on-select="true"
                         placeholder="Chọn phòng"
-                        label="name"/>
+                        label="name">
                       </multiselect>
                     </div>
 
@@ -152,8 +163,13 @@
                     <tabs class="tabs-default col-md-12" style="padding-left:1em;padding-top:1em;">
                       <tab id="basic-home" name="Tiếng việt">
                         <div class="form-group custom-margin col-md-12">
-                          <label>Mô tả (tiếng việt)</label>
+                          <label :style="errors.has('descriptionCollection') ? 'color:red;' : ''">
+                            {{errors.has('descriptionCollection')? errors.first('descriptionCollection') : 'Mô tả (tiếng việt) *'}}
+                          </label>
                           <quill-editor
+                            name="descriptionCollection"
+                            data-vv-as="Mô tả (tiếng việt)"
+                            v-validate="'required'"
                             style="height:250px"
                             v-model="collection.vi.description">
                           </quill-editor>
@@ -379,41 +395,49 @@ export default {
       }
     },
     async submitForm(){
-      if(this.collection.en.name == ''){
-        this.collection.en.name = this.collection.vi.name
-      };
-      if(this.collection.en.description == ''){
-        this.collection.en.description = this.collection.vi.description
-      };
-      let data = [];
-      let details = {data};
-      data[0] = this.collection.vi;
-      data[1] = this.collection.en;
-      let valueRooms =[]
-      if(this.rooms.length > 0){
-        for(let i =0;this.rooms.length > i;i++){
-          valueRooms.push(this.rooms[i].id)
+      const result = this.$validator.validateAll();
+      if(result) {
+        if(this.collection.en.name == ''){
+          this.collection.en.name = this.collection.vi.name
+        };
+        if(this.collection.en.description == ''){
+          this.collection.en.description = this.collection.vi.description
+        };
+        let data = [];
+        let details = {data};
+        data[0] = this.collection.vi;
+        data[1] = this.collection.en;
+        let valueRooms =[]
+        if(this.rooms.length > 0){
+          for(let i =0;this.rooms.length > i;i++){
+            valueRooms.push(this.rooms[i].id)
+          }
         }
-      }
-      // console.log(details);
-      try {
-        const response = await axios.put(`collections/${this.$route.params.collectionId}`,{
-          image : this.collection.image,
-          hot : this.collection.hot,
-          new : this.collection.new,
-          status : this.collection.status,
-          rooms : valueRooms,
-          details : details,
-        })
-        .then(response => {
-          this.$swal("Thành công", "Cập nhật thành công", "success");
-          this.$router.push({name: 'collections.list'})
+        // console.log(details);
+        try {
+          const response = await axios.put(`collections/${this.$route.params.collectionId}`,{
+            image : this.collection.image,
+            hot : this.collection.hot,
+            new : this.collection.new,
+            status : this.collection.status,
+            rooms : valueRooms,
+            details : details,
+          })
+          .then(response => {
+            this.$swal("Thành công", "Cập nhật thành công", "success");
+            this.$router.push({name: 'collections.list'})
+          });
+        } catch (error) {
+          if (error) {
+            window.toastr["error"]("There was an error", "Error");
+            console.log(error)
+          }
+        }
+      } else {
+        return window.scroll({
+          top: 0,
+          behavior: "smooth"
         });
-      } catch (error) {
-        if (error) {
-          window.toastr["error"]("There was an error", "Error");
-          console.log(error)
-        }
       }
     },
     hideSidebarOnMobile() {
