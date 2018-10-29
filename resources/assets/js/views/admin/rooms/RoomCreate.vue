@@ -13,12 +13,8 @@ export default {
   data(){
     return {
       titleHeader:"Chào mừng bạn đến với chức năng tạo phòng mới",
+      permissions:"room.create",
     };
   },
-  methods: {
-  },
-  created() {
-
-  }
 };
 </script>

@@ -54,7 +54,7 @@
                             type="text"
                             name="room.number_bed"
                             v-validate="step==0 ? 'required|numeric|min_value:1':''"
-                            data-vv-as="Số phòng ngủ"
+                            data-vv-as="Số giường"
                             v-model.number="room.number_bed"
                             class="form-control">
                           </div>
@@ -438,18 +438,19 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <div class="row" v-for="(r,index) in room.weekday_price" :key="index">
+                    <div class="row" v-for="(r,index) in room.weekday_price" :key="index"
+                    :id="index">
                       <div class="col-lg-2">
                         <div class="form-group">
                           <label :style="errors.has(`weekdays[${index}]weekday`) ? 'color:red;' : ''">{{errors.has(`weekdays[${index}]weekday`)
                             ? errors.first(`weekdays[${index}]weekday`) : 'Ngày *'}}
                           </label>
                           <select-week-day
-                          :id = "index" :weekday_price = "room.weekday_price"
+                          :id="index" :weekday_price="room.weekday_price"
                           v-model="room.weekday_price[index].weekday"
                           v-validate="step==1 ? 'required':''" data-vv-as="Ngày"
                           :name="`weekdays[${index}]weekday`" label="title"
-                          :options="weekdays" track-by="title">
+                          :options="filteredWeekday" track-by="title">
                           </select-week-day>
                         </div>
                       </div>
@@ -577,7 +578,7 @@
             </tab-content>
             <template slot="footer" slot-scope="props">
               <div class="wizard-footer-left">
-                <wizard-button  v-if="props.activeTabIndex > 0" @click.native="previousTabForm(props.prevTab())" :style="props.fillButtonStyle">Previous</wizard-button>
+                <wizard-button v-if="props.activeTabIndex > 0" @click.native="previousTabForm(props.prevTab())" :style="props.fillButtonStyle">Previous</wizard-button>
               </div>
               <div class="wizard-footer-right">
                 <wizard-button v-if="!props.isLastStep" @click.native="props.nextTab()" class="wizard-footer-right" :style="props.fillButtonStyle">Next</wizard-button>
@@ -643,6 +644,7 @@ export default {
       subTitleHeader: "Vui lòng hoàn thành chính xác các thông tin trước khi lưu",
       latest_deal:0,
       specialDays:[],
+      selectedWeekday:[],
       comforts: [],
       status: [],
       imageAvatar: {
@@ -907,6 +909,17 @@ export default {
         }
       });
     },
+    filteredWeekday(){
+      let self = this;
+      if(self.selectedWeekday.length) {
+      return this.weekdays.filter(function(item) {
+          return !(self.selectedWeekday.includes(item.weekday))
+        })
+      }
+      else {
+        return this.weekdays;
+      }
+    }
   },
   watch: {
     specialDays: {
@@ -923,6 +936,18 @@ export default {
         }
       }
     },
+    'room.weekday_price':{
+      handler: function(val){
+        console.log()
+        this.selectedWeekday = [];
+        if(val !== null) {
+          val.forEach(element => {
+            this.selectedWeekday.push(element.weekday)
+          });
+        }
+      },
+      deep:true
+    }
   },
   methods: {
     setInitData() {
@@ -942,6 +967,7 @@ export default {
             w_day.price_hour = item.price_hour
             w_day.price_after_hour = item.price_after_hour
             this.room.weekday_price.push(w_day)
+            this.selectedWeekday.push(w_day.weekday)
           }
           else {
           let date = new Date(item.day)
@@ -968,10 +994,6 @@ export default {
       else {
         this.room.comforts = [];
       }
-      // console.log(this.room.comforts)
-      // if(this.room.comforts.data.length) {
-      //   this.room.comforts = map(this.room.comforts.data,item => { return item.id })
-      // }
     },
     vmountedPost(){
       this.room.images.forEach(item => {
@@ -993,8 +1015,9 @@ export default {
     },
     addWeekday () {
       if(this.room.weekday_price.length < 7 ) {
+        let w = this.filteredWeekday[0].weekday;
         this.room.weekday_price.push({
-          weekday: this.room.weekday_price.length + 1,
+          weekday: w,
           status: 0,
           price_day: 0,
           price_hour: 0,
@@ -1084,7 +1107,7 @@ export default {
             let response = await axios.put(`rooms/${this.$route.params.roomId}`,this.room)
             .then(response => {
               this.$swal("Thành công", "Phòng được cập nhật thành công", "success");
-
+              this.$router.push({name: 'room.list'});
             });
           }
           else {
@@ -1101,6 +1124,7 @@ export default {
             .then(response => {
               console.log(response)
               this.$swal("Thành công", "Phòng được tạo mới thành công", "success");
+              this.$router.push({name: 'room.list'});
             });
           }
         } catch(error) {

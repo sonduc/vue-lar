@@ -14,6 +14,7 @@ export default {
     return {
       titleHeader:"Chào mừng bạn đến với chức năng sửa phòng",
       roomDetail: null,
+      permissions:"room.update",
     };
   },
   methods: {
