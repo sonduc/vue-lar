@@ -290,40 +290,21 @@
                     </div>
                     <div class="row">
                       <div class="col-lg-6">
-                          <div class="form-group">
-                            <label :style="errors.has('room.rent_type') ? 'color:red;' : ''">
-                              {{errors.has('room.rent_type')
-                              ? errors.first('room.rent_type') : 'Thuê theo *'}}
-                            </label>
-                            <multiselect
-                            :allow-empty="false" name="room.rent_type"
-                            v-validate="step==0 ? 'required':''"
-                            data-vv-as="Thuê theo"
-                            v-model="rentType" label="value"
-                            :options="rent_type" :searchable="true"
-                            :show-labels="false" track-by="value">
-                            </multiselect>
-                          </div>
-                        </div>
-                      <!-- <div class = "col-lg-6">
                         <div class="form-group">
                           <label :style="errors.has('room.rent_type') ? 'color:red;' : ''">
                             {{errors.has('room.rent_type')
                             ? errors.first('room.rent_type') : 'Thuê theo *'}}
                           </label>
-                          <select
-                          v-model= "room.rent_type"
-                          name="room.rent_type"
-                          v-validate="step==1 ? 'required':''"
+                          <multiselect
+                          :allow-empty="false" name="room.rent_type"
+                          v-validate="step==0 ? 'required':''"
                           data-vv-as="Thuê theo"
-                          class= "form-control ls-select2 custom-select">
-                            <option
-                            v-for= "(item, index) in rent_type"
-                            :value="item.id" :key= "index">{{item.value}}
-                            </option>
-                          </select>
+                          v-model="rentType" label="value"
+                          :options="rent_type" :searchable="true"
+                          :show-labels="false" track-by="value">
+                          </multiselect>
                         </div>
-                      </div> -->
+                      </div>
                       <div :class = "room.rent_type == 1 ? 'col-lg-6':'col-lg-3'"
                       v-if="room.rent_type == 1 || room.rent_type == 3">
                         <div class="form-group">
@@ -540,7 +521,7 @@
                   <div class="row">
                     <div class = "col-lg-3" v-for="com in comforts" :key="com.id">
                       <div class="form-group custom-control custom-checkbox mb-3">
-                        <input type="checkbox" v-model = "room.comforts"
+                        <input type="checkbox" v-model="room.comforts"
                         :id="com.id" :value="com.id"
                         class="custom-control-input">
                         <label :for="com.id" class="custom-control-label">
@@ -688,7 +669,9 @@ export default {
         headers: { 'My-Awesome-Header': 'header value' }
       },
       room: {
-        comforts: [],
+        comforts:{
+          data:[]
+        },
         city: {
           data: {
             name: null
@@ -904,7 +887,6 @@ export default {
         this.room.district_id = val.id;
       }
     },
-
     checkCountLang() {
       if (this.room.details.data.length) {
         let length = this.room.details.data.length
@@ -972,6 +954,7 @@ export default {
           }
         });
       }
+
       this.room = JSON.parse(JSON.stringify({ ...this.room, ...dataRoom }))
       if(dataRoom.media.data.length){
         dataRoom.media.data.forEach(item => {
@@ -979,8 +962,16 @@ export default {
         });
       }
       if(this.room.comforts.data.length) {
-        this.room.comforts = map(this.room.comforts.data,item => { return item.id })
+        let arr = this.room.comforts.data.map(item => item.id )
+        this.room.comforts = arr;
       }
+      else {
+        this.room.comforts = [];
+      }
+      // console.log(this.room.comforts)
+      // if(this.room.comforts.data.length) {
+      //   this.room.comforts = map(this.room.comforts.data,item => { return item.id })
+      // }
     },
     vmountedPost(){
       this.room.images.forEach(item => {
@@ -1204,6 +1195,7 @@ export default {
   },
   created () {
     !(this.dataRoom === null) && this.setInitData()
+    this.dataRoom === null && (this.room.comforts = [])
   },
   mounted() {
     Auth.getProfile().then(res => {
@@ -1233,77 +1225,7 @@ export default {
 </script>
 
 <style>
-.container {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 22px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
 
-/* Hide the browser's default checkbox */
-.container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-}
-
-/* Create a custom checkbox */
-.checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 25px;
-    width: 25px;
-    background-color: #eee;
-}
-
-/* On mouse-over, add a grey background color */
-.container:hover input ~ .checkmark {
-    background-color: #ccc;
-}
-
-/* When the checkbox is checked, add a blue background */
-.container input:checked ~ .checkmark {
-    background-color: #2196F3;
-}
-.checkmark {
-  border-radius: 5px;
-  font-size: 15px;
-}
-
-/* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
-    border: 5px solid gray;
-}
-
-/* Show the checkmark when checked */
-.container input:checked ~ .checkmark:after {
-    display: block;
-}
-
-/* Style the checkmark/indicator */
-.container .checkmark:after {
-    left: 9px;
-    top: 5px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
 </style>
 
 
