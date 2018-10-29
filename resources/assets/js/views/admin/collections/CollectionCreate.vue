@@ -245,14 +245,14 @@ export default {
       room:{},
       dropzoneOptions: {
         url: "https://httpbin.org/post",
-        maxFilesize: 2,
-        maxFiles: 5,
+        maxFilesize: 5,
+        maxFiles: 1,
         addRemoveLinks: true,
         thumbnailWidth: 150,
         thumbnailHeight: 150,
         dictCancelUpload: "Remove File",
         language : {
-          dictDefaultMessage: 'Drop a PDF file here, or click to select a file to upload.',
+          dictDefaultMessage: 'Click để chọn ảnh',
         }
       },
     }

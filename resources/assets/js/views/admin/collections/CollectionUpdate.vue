@@ -97,16 +97,18 @@
                   </div>
 
                   <div class="col-md-6 row">
-                    <div class="form-group col-md-12">
+                    <div
+                      class="form-group col-md-12">
                       <label>Ảnh</label>
                       <vue-dropzone
-                        @vdropzone-file-added="showFile"
-                        id="dropzone"
-                        @vdropzone-mounted="initImages"
-                        ref="myVueDropzone"
-                        :options="dropzoneOptions"
+                        v-if="isLoaded"
+                        id="dropzone2"
+                        ref="myVueDropzone2"
+                        :options="imagePost"
+                        @vdropzone-removed-file="removedImageInDropzone"
+                        @vdropzone-mounted="vmountedCollection"
                         @vdropzone-complete="afterComplete"
-                        @vdropzone-removed-file="remove" />
+                      />
                     </div>
                   </div>
 
@@ -214,6 +216,7 @@ export default {
   },
   data(){
     return{
+      isLoaded: false,
       language :0,
       collection:{
         image:'',
@@ -252,6 +255,18 @@ export default {
         thumbnailHeight: 150,
         dictCancelUpload: "Remove File"
       },
+      // test image
+      imagePost: {
+        url: 'https://httpbin.org/post',
+        maxFilesize: 5,
+        maxFiles:1,
+        addRemoveLinks: true,
+        thumbnailWidth: 150,
+        thumbnailHeight: 150,
+        dictCancelUpload: 'Cancel File',
+        dictDefaultMessage: "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
+        headers: { 'My-Awesome-Header': 'header value' }
+      },
     }
   },
   mounted() {
@@ -287,61 +302,22 @@ export default {
       }
       this.rooms = valueRooms;
     },
-
-    afterComplete(file) {
-      this.collection.image = file.dataURL;
-    },
-    initImages() {
-      let files = [
-        {
-          file: {
-            size: 49314,
-            name: "img1",
-            type: "image"
-          },
-          url:
-            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
-        },
-        {
-          file: {
-            size: 49314,
-            name: "img2",
-            type: "image"
-          },
-          url:
-            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
-        },
-        {
-          file: {
-            size: 49314,
-            name: "img3",
-            type: "image"
-          },
-          url:
-            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
-        },
-        {
-          file: {
-            size: 49314,
-            name: "img4",
-            type: "image"
-          },
-          url:
-            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
-        }
-      ];
-      files.forEach(element => {
-        this.$refs.myVueDropzone.manuallyAddFile(element.file, element.url);
-      });
-      console.log(this.$refs.myVueDropzone);
-    },
-    showFile(file) {
-      console.log(file);
-    },
-    remove(file) {
+    // test image
+    removedImageInDropzone(file, error, xhr){
       this.collection.image = null;
     },
-
+    vmountedCollection(){
+      // console.log(this.collection.image)
+      let file = { name: this.collection.image, size:50000, type: "image" };
+      let url = this.collection.image;
+      this.$refs.myVueDropzone2.manuallyAddFile(file, url);
+    },
+    afterComplete(file){
+      console.log(file.dataURL)
+      if(file.dataURL){
+        this.collection.image = file.dataURL;
+      }
+    },
     // async getRooms() {
     //   try {
     //     const response = await axios.get(`rooms`, {
@@ -358,12 +334,11 @@ export default {
     //   }
     // },
     setInitData(dataCollection){
-      console.log(dataCollection)
+      // console.log(dataCollection)
       this.collection.image = dataCollection.image;
       this.collection.hot = dataCollection.hot;
       this.collection.status = dataCollection.status;
       this.collection.new = dataCollection.new;
-      this.images[0].path = 'http://sohanews.sohacdn.com/thumb_w/660/2017/photo1513071133217-1513071133217.png';
       if(dataCollection.details.data[0].lang === "vi"){
         this.collection.vi = dataCollection.details.data[0];
         this.collection.en = dataCollection.details.data[1];
@@ -371,6 +346,7 @@ export default {
         this.collection.en = dataCollection.details.data[0];
         this.collection.vi = dataCollection.details.data[1];
       };
+      this.isLoaded = ! this.isLoaded;
     },
 
     AddFile () {
@@ -389,9 +365,10 @@ export default {
           params: {
             include: "details",
           }
+        }).then(res => {
+          this.setInitData(res.data.data)
         });
 
-        this.setInitData(response.data.data)
         // console.log(response.data.data)
       } catch (error) {
         if (error) {
