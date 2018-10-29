@@ -29,6 +29,7 @@
                 </label>
                 <div class="col-sm-9">
                   <input
+                    @keyup.enter="applyFilter(1)"
                     v-model="params.name"
                     id="firstName"
                     type="text"

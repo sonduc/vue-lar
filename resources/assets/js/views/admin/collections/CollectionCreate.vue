@@ -116,6 +116,7 @@
                       <multiselect
                         @select="selectRoom"
                         v-model="room"
+                        :clear-on-select="true"
                         :options="allRoom"
                         placeholder="Chọn phòng"
                         label="name"/>
