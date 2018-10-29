@@ -44,8 +44,7 @@
                     <div class="form-group">
                       <label :style="errors.has('checkin_date') ? 'color:red;' : ''">{{errors.has('checkin_date')
                         ? errors.first('checkin_date') : 'Ngày nhận phòng *'}}</label>
-                      <datepicker name="checkin_date" data-vv-as="Ngày nhận phòng" v-validate="'required'" v-model="booking.checkin"
-                        :disabled-dates="disabledCheckin" :format="format" input-class="form-control" />
+                      <datepicker :disabled-dates="disabledDatesCheckin" name="checkin_date" data-vv-as="Ngày nhận phòng" v-validate="'required'" v-model="booking.checkin" :format="format" input-class="form-control" />
                     </div>
                     <div class="form-group" v-if="booking.booking_type == 1">
                       <label :style="errors.has('checkin_hour') ? 'color:red;' : ''">{{errors.has('checkin_hour')
@@ -86,7 +85,7 @@
                         ? errors.first('checkout_date') : 'Ngày trả phòng *'}}</label>
                       <datepicker name="checkout_date" v-validate="booking.booking_type == 2 ? 'required' : ''"
                         :disabled="booking.booking_type == 1" data-vv-as="Ngày trả phòng" :format="format" v-model="booking.checkout"
-                        :disabled-dates="disabledCheckout" input-class="form-control" />
+                         :disabledDates="disabledDatesCheckout" input-class="form-control" />
                     </div>
                     <div class="form-group" v-if="booking.booking_type == 1">
                       <label :style="errors.has('checkout_hour') ? 'color:red;' : ''">{{errors.has('checkout_hour')
@@ -348,12 +347,15 @@ export default {
         total_fee: 0,
         status: 1
       },
-      disabledCheckout: {
-        to: ""
+      disabledDatesCheckin: {
+        to: new Date(),
+        dates: []
       },
-      disabledCheckin: {
-        to: new Date()
+      disabledDatesCheckout: {
+        to: new Date(),
+        dates: []
       },
+      blocked_dates: [],
       format: "yyyy-MM-dd",
       room: null,
       permissions: "booking.create",
@@ -370,7 +372,7 @@ export default {
   watch: {
     booking: {
       handler(val) {
-        this.disabledCheckout.to = val.checkin;
+        this.disabledDatesCheckout.to = val.checkin;
         if (val.booking_type == 2) {
           this.checkin = val.checkin + " " + this.checkin_hour;
           this.checkout = val.checkin + " " + this.checkout_hour;
@@ -408,6 +410,14 @@ export default {
         this.booking.source = val.value;
       },
       deep: true
+    },
+    blocked_dates: {
+      handler(val) {
+        val.forEach(element => {
+          this.disabledDatesCheckin.dates.push(new Date(element));
+          this.disabledDatesCheckout.dates.push(new Date(element));
+        });
+      }
     }
   },
   computed: {
@@ -420,11 +430,22 @@ export default {
     }
   },
   methods: {
+    async getRoomBlock() {
+      try {
+        const response = await axios.get(`rooms/schedule/${this.$route.params.roomId}`);
+        return this.blocked_dates = response.data.data.blocks;
+      } catch (error) {
+        window.toastr["error"]("There was an error", "Error");
+      }
+    },
     async getRoom() {
       try {
-        const response = await axios.get(
-          `rooms/${this.$route.params.roomId}?include=details`
-        );
+        const response = await axios.get(`rooms/${this.$route.params.roomId}`, {
+          params: {
+            include: "details,blocks"
+          }
+        });
+        // this.blocked_dates = response.data.data.blocks.data;
         return (this.room = response.data.data);
       } catch (error) {
         if (error) {
@@ -454,6 +475,8 @@ export default {
         if (result) {
           // eslint-disable-next-line
           // Calculate the booking fee
+          this.booking.days = 0;
+          this.booking.hours = 0;
           const response = await axios.post(`bookings/price-calculator/`, {
             additional_fee: 0,
             price_discount: 0,
@@ -623,6 +646,7 @@ export default {
             this.$router.push("/permission-denied-403"); // push về page 403
           } else {
             this.getRoom();
+            this.getRoomBlock();
           }
         });
       }
