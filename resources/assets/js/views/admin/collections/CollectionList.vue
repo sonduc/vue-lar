@@ -298,7 +298,7 @@ export default {
         this.count = paginate.count;
         this.collections = response.data.data;
         this.loading = false;
-        console.log(response.data.data)
+        // console.log(response.data.data)
         return {
           data: response.data.data,
           pagination: {
