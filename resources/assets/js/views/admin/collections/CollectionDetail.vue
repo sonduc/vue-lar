@@ -1,15 +1,15 @@
 <template>
   <div class="main-content">
     <div class="page-header">
-      <h3 class="page-title">Chi tiết collections</h3>
+      <h3 class="page-title">Chi tiết Bộ sưu tập</h3>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
         <li class="breadcrumb-item">
           <router-link :to="{ name: 'collections.list'}">
-            <a>Collections</a>
+            <a>Bộ sưu tập</a>
           </router-link>
         </li>
-        <li class="breadcrumb-item active"><a href="#">Chi tiết collections</a></li>
+        <li class="breadcrumb-item active"><a href="#">Chi tiết bộ sưu tập</a></li>
       </ol>
     </div>
 
@@ -27,20 +27,18 @@
               <h3>Thông tin bộ sưu tập</h3>
 
               <tabs class="tabs-default">
-                <tab id="basic-home" name="Tiếng việt">
+                <tab id="vi" name="Tiếng việt">
                   <p>
                     <b><h4>{{collection.vi.name}}</h4></b>
                   </p>
-                  <p>
-                    {{collection.vi.description}}
+                  <p v-html="collection.vi.description">
                   </p>
                 </tab>
-                <tab id="basic-profile" name="Tiếng anh">
+                <tab id="en" name="Tiếng anh">
                   <p>
                     <b><h4>{{collection.en.name}}</h4></b>
                   </p>
-                  <p>
-                    {{collection.en.description}}
+                  <p v-html="collection.en.description">
                   </p>
                 </tab>
               </tabs>
@@ -100,49 +98,49 @@
 </template>
 <script>
 import Auth from "../../../services/auth";
-import { chain } from 'lodash'
+import { chain } from "lodash";
 import Multiselect from "vue-multiselect";
-import VueGallery from 'vue-gallery';
-import { Tabs, Tab } from 'vue-tabs-component'
+import VueGallery from "vue-gallery";
+import { Tabs, Tab } from "vue-tabs-component";
 import { quillEditor } from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-export default{
+export default {
   components: {
-    'tabs': Tabs,
-    'tab': Tab,
+    tabs: Tabs,
+    tab: Tab,
     gallery: VueGallery
   },
   data() {
     return {
       images: [
-        '/assets/img/demo/gallery/1.jpg',
-        '/assets/img/demo/gallery/2.jpg',
-        '/assets/img/demo/gallery/3.jpg',
-        '/assets/img/demo/gallery/4.jpg',
-        '/assets/img/demo/gallery/5.jpg',
-        '/assets/img/demo/gallery/6.jpg',
+        "/assets/img/demo/gallery/1.jpg",
+        "/assets/img/demo/gallery/2.jpg",
+        "/assets/img/demo/gallery/3.jpg",
+        "/assets/img/demo/gallery/4.jpg",
+        "/assets/img/demo/gallery/5.jpg",
+        "/assets/img/demo/gallery/6.jpg"
       ],
       imgIndex: null,
-      collection:{
-        image:'',
-        hot:0,
-        status:0,
-        new:0,
-        vi:{
-          name:'',
-          description:'',
-          lang: 'vi',
+      collection: {
+        image: "",
+        hot: 0,
+        status: 0,
+        new: 0,
+        vi: {
+          name: "",
+          description: "",
+          lang: "vi"
         },
-        en:{
-          name:'',
-          description:'',
-          lang: 'en',
-        },
+        en: {
+          name: "",
+          description: "",
+          lang: "en"
+        }
       },
-      permission:'collection.view',
-    }
+      permission: "collection.view"
+    };
   },
   mounted() {
     Auth.getProfile().then(res => {
@@ -158,34 +156,37 @@ export default{
     });
     this.hideSidebarOnMobile();
   },
-  methods:{
-    setInitData(dataCollection){
+  methods: {
+    setInitData(dataCollection) {
       this.collection.image = dataCollection.image;
       this.collection.hot = dataCollection.hot;
       this.collection.status = dataCollection.status;
       this.collection.new = dataCollection.new;
-      if(dataCollection.details.data[0].lang === "vi"){
+      if (dataCollection.details.data[0].lang === "vi") {
         this.collection.vi = dataCollection.details.data[0];
         this.collection.en = dataCollection.details.data[1];
-      }else if(dataCollection.details.data[0].lang === "en"){
+      } else if (dataCollection.details.data[0].lang === "en") {
         this.collection.en = dataCollection.details.data[0];
         this.collection.vi = dataCollection.details.data[1];
-      };
+      }
       // console.log(this.collection)
     },
     async getCollection() {
       try {
-        const response = await axios.get(`collections/${this.$route.params.collectionId}`, {
-          params: {
-            include: "details",
+        const response = await axios.get(
+          `collections/${this.$route.params.collectionId}`,
+          {
+            params: {
+              include: "details"
+            }
           }
-        });
+        );
 
-        this.setInitData(response.data.data)
+        this.setInitData(response.data.data);
         // console.log(response.data.data)
       } catch (error) {
         if (error) {
-          console.log(error)
+          console.log(error);
           window.toastr["error"]("There was an error", "Error");
         }
       }
@@ -197,15 +198,15 @@ export default{
           self.isLeftSidebarVisible = false;
         }
       };
-    },
-  },
-}
+    }
+  }
+};
 </script>
 <style scoped>
-.color-green{
+.color-green {
   color: green;
 }
-.color-red{
+.color-red {
   color: red;
 }
 </style>
