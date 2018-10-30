@@ -98,6 +98,7 @@
                               ? errors.first('room.merchant') : 'Quản lý phòng *'}}
                             </label>
                             <multiselect
+                            style="z-index: 3"
                             :allow-empty="false" name="room.merchant"
                             v-model="merchant_id" v-validate="step==0 ? 'required':''"
                             data-vv-as="Quản lý phòng" label="name"
@@ -595,21 +596,21 @@
 <script>
 import Auth from "../../../services/auth";
 import { FormWizard, TabContent, WizardButton } from "vue-form-wizard";
-import vue2Dropzone from 'vue2-dropzone'
+import vue2Dropzone from "vue2-dropzone";
 import { hoursList, format, location } from "../../../helpers/mixins";
 import { Tabs, Tab } from "vue-tabs-component";
 import { quillEditor } from "vue-quill-editor";
 import Multiselect from "vue-multiselect";
-import SelectWeekDay from './SelectWeekDay'
+import SelectWeekDay from "./SelectWeekDay";
 import Datepicker from "vuejs-datepicker";
-import { map } from 'lodash'
+import { map } from "lodash";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
 export default {
-  name: 'RoomForm',
+  name: "RoomForm",
   mixins: [hoursList, format, location],
   components: {
     FormWizard,
@@ -626,53 +627,55 @@ export default {
   props: {
     type: {
       type: String,
-      default: 'Create'
+      default: "Create"
     },
     dataRoom: {
       default: () => {
-        return null
-      },
+        return null;
+      }
     },
-    titleHeader:{
+    titleHeader: {
       type: String,
-      default: ''
-    },
+      default: ""
+    }
   },
   data() {
     return {
-      step:0,
-      subTitleHeader: "Vui lòng hoàn thành chính xác các thông tin trước khi lưu",
-      latest_deal:0,
-      specialDays:[],
-      selectedWeekday:[],
+      step: 0,
+      subTitleHeader:
+        "Vui lòng hoàn thành chính xác các thông tin trước khi lưu",
+      latest_deal: 0,
+      specialDays: [],
+      selectedWeekday: [],
       comforts: [],
       status: [],
       imageAvatar: {
-        url: 'https://httpbin.org/post',
+        url: "https://httpbin.org/post",
         maxFilesize: 3,
-        maxFiles:1,
+        maxFiles: 1,
         addRemoveLinks: true,
         thumbnailWidth: 150,
         thumbnailHeight: 150,
-        dictCancelUpload: 'Cancel File',
-        dictDefaultMessage: "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
-        headers: { 'My-Awesome-Header': 'header value' },
-
+        dictCancelUpload: "Cancel File",
+        dictDefaultMessage:
+          "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
+        headers: { "My-Awesome-Header": "header value" }
       },
       imagePost: {
-        url: 'https://httpbin.org/post',
+        url: "https://httpbin.org/post",
         maxFilesize: 3,
-        maxFiles:50,
+        maxFiles: 50,
         addRemoveLinks: true,
         thumbnailWidth: 150,
         thumbnailHeight: 150,
-        dictCancelUpload: 'Cancel File',
-        dictDefaultMessage: "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
-        headers: { 'My-Awesome-Header': 'header value' }
+        dictCancelUpload: "Cancel File",
+        dictDefaultMessage:
+          "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
+        headers: { "My-Awesome-Header": "header value" }
       },
       room: {
-        comforts:{
-          data:[]
+        comforts: {
+          data: []
         },
         city: {
           data: {
@@ -690,34 +693,33 @@ export default {
         roomType: {
           value: null
         },
-        images:[],
-        details:{
-          data:[
+        images: [],
+        details: {
+          data: [
             {
-              name: '',
-              address: '',
-              description: '',
-              lang: 'vi',
-              space: '',
-              note: ''
+              name: "",
+              address: "",
+              description: "",
+              lang: "vi",
+              space: "",
+              note: ""
             }
           ]
         },
-        user:{
-          data:{
-            name:null
+        user: {
+          data: {
+            name: null
           }
         },
         room_time_blocks: [],
         weekday_price: [],
-        optional_prices:
-          {
-            days: [],
-            price_day:null,
-            price_hour: null,
-            price_after_hour: null,
-            status: 1
-          },
+        optional_prices: {
+          days: [],
+          price_day: null,
+          price_hour: null,
+          price_after_hour: null,
+          status: 1
+        },
         max_additional_guest: null,
         price_charge_guest: null,
 
@@ -728,195 +730,191 @@ export default {
         checkin: null,
         checkout: null,
         room_type: 1,
-        room_type_txt:'Nhà riêng',
+        room_type_txt: "Nhà riêng",
         rent_type: 2,
-        rent_type_txt: 'Theo ngày',
+        rent_type_txt: "Theo ngày",
         number_bed: null,
         number_room: null,
         max_guest: null,
-        status:0,
-        status_txt: 'Chưa xác nhận',
-        city_id:null,
-        district_id:null,
+        status: 0,
+        status_txt: "Chưa xác nhận",
+        city_id: null,
+        district_id: null
       },
       room_type: [],
       rent_type: [],
-      merchants:[],
+      merchants: [],
       weekdays: [
         {
-          title: 'Thứ 2',
+          title: "Thứ 2",
           weekday: 2,
           price_day: 0,
           price_hour: 0,
           price_after_hour: 0,
-          status:0
+          status: 0
         },
         {
-          title: 'Thứ 3',
+          title: "Thứ 3",
           weekday: 3,
           price_day: 0,
           price_hour: 0,
           price_after_hour: 0,
-          status:0
+          status: 0
         },
         {
-          title: 'Thứ 4',
+          title: "Thứ 4",
           weekday: 4,
           price_day: 0,
           price_hour: 0,
           price_after_hour: 0,
-          status:0
+          status: 0
         },
         {
-          title: 'Thứ 5',
+          title: "Thứ 5",
           weekday: 5,
           price_day: 0,
           price_hour: 0,
           price_after_hour: 0,
-          status:0
+          status: 0
         },
         {
-          title: 'Thứ 6',
+          title: "Thứ 6",
           weekday: 6,
           price_day: 0,
           price_hour: 0,
           price_after_hour: 0,
-          status:0
+          status: 0
         },
         {
-          title: 'Thứ 7',
+          title: "Thứ 7",
           weekday: 7,
           price_day: 0,
           price_hour: 0,
           price_after_hour: 0,
-          status:0
+          status: 0
         },
         {
-          title: 'Chủ nhật',
+          title: "Chủ nhật",
           weekday: 1,
           price_day: 0,
           price_hour: 0,
           price_after_hour: 0,
-          status:0
+          status: 0
         }
-      ],
+      ]
     };
   },
   computed: {
     merchant_id: {
-      get: function () {
-        if(this.room.user.data.name == null){
-          return null
-        }
-        else {
+      get: function() {
+        if (this.room.user.data.name == null) {
+          return null;
+        } else {
           return {
             name: this.room.user.data.name
-          }
+          };
         }
       },
-      set: function (val) {
+      set: function(val) {
         this.room.user.data = val;
         this.room.merchant_id = val.id;
       }
     },
     statusRoom: {
-      get: function () {
+      get: function() {
         return {
           value: this.room.status_txt
-        }
+        };
       },
-      set: function (val) {
+      set: function(val) {
         this.room.statusRoom = val;
         this.room.status = val.id;
         this.room.status_txt = val.value;
       }
     },
     roomType: {
-      get: function () {
+      get: function() {
         return {
           value: this.room.room_type_txt
-        }
+        };
       },
-      set: function (val) {
+      set: function(val) {
         this.room.roomType = val;
         this.room.room_type = val.id;
         this.room.room_type_txt = val.value;
       }
     },
     rentType: {
-      get: function () {
+      get: function() {
         return {
           value: this.room.rent_type_txt
-        }
+        };
       },
-      set: function (val) {
+      set: function(val) {
         this.room.rentType = val;
         this.room.rent_type = val.id;
         this.room.rent_type_txt = val.value;
       }
     },
     city: {
-      get: function () {
-        if(this.room.city.data.name == null) {
-          return null
-        }
-        else {
+      get: function() {
+        if (this.room.city.data.name == null) {
+          return null;
+        } else {
           return {
             id: this.room.city.data.id,
             name: this.room.city.data.name
-          }
+          };
         }
       },
-      set: function (val) {
+      set: function(val) {
         this.room.city.data = val;
         this.room.city_id = val.id;
       }
     },
     district: {
-      get: function () {
-        if(this.room.district.data.name == null){
-          return null
-        }
-        else {
+      get: function() {
+        if (this.room.district.data.name == null) {
+          return null;
+        } else {
           return {
             id: this.room.district.data.id,
             name: this.room.district.data.name
-          }
+          };
         }
       },
-      set: function (val) {
+      set: function(val) {
         this.room.district.data = val;
         this.room.district_id = val.id;
       }
     },
     checkCountLang() {
       if (this.room.details.data.length) {
-        let length = this.room.details.data.length
-        return !!(length == 1)
+        let length = this.room.details.data.length;
+        return !!(length == 1);
       }
     },
-    checkSpecialDays(){
+    checkSpecialDays() {
       if (this.room.optional_prices.days.length) {
-        let length = this.room.optional_prices.days.length
-        return !!(length > 0)
+        let length = this.room.optional_prices.days.length;
+        return !!(length > 0);
       }
     },
     filteredDistrict() {
       let self = this;
       return this.districts.filter(function(item) {
-        if(self.city != null) {
+        if (self.city != null) {
           return item.city_id == self.city.id;
         }
       });
     },
-    filteredWeekday(){
+    filteredWeekday() {
       let self = this;
-      if(self.selectedWeekday.length) {
-      return this.weekdays.filter(function(item) {
-          return !(self.selectedWeekday.includes(item.weekday))
-        })
-      }
-      else {
+      if (self.selectedWeekday.length) {
+        return this.weekdays.filter(function(item) {
+          return !self.selectedWeekday.includes(item.weekday);
+        });
+      } else {
         return this.weekdays;
       }
     }
@@ -925,7 +923,7 @@ export default {
     specialDays: {
       handler(val) {
         this.room.optional_prices.days = [];
-        if(val !== null) {
+        if (val !== null) {
           val.forEach(element => {
             let beforeAddDay = new Date(element);
             let timeDay = 60 * 60 * 24 * 1000;
@@ -936,229 +934,253 @@ export default {
         }
       }
     },
-    'room.weekday_price':{
-      handler: function(val){
-        console.log()
+    "room.weekday_price": {
+      handler: function(val) {
         this.selectedWeekday = [];
-        if(val !== null) {
+        if (val !== null) {
           val.forEach(element => {
-            this.selectedWeekday.push(element.weekday)
+            this.selectedWeekday.push(element.weekday);
           });
         }
       },
-      deep:true
+      deep: true
     }
   },
   methods: {
     setInitData() {
-      let dataRoom = { ...this.dataRoom }
+      let dataRoom = { ...this.dataRoom };
       if (dataRoom.prices.data.length) {
-          dataRoom.prices.data.forEach(item => {
-          if(item.day === "Không xác định") {
+        dataRoom.prices.data.forEach(item => {
+          if (item.day === "Không xác định") {
             let w_day = {
               weekday: null,
               price_day: null,
               price_hour: null,
               price_after_hour: null,
-              status:0
-            }
-            w_day.weekday = item.weekday
-            w_day.price_day = item.price_day
-            w_day.price_hour = item.price_hour
-            w_day.price_after_hour = item.price_after_hour
-            this.room.weekday_price.push(w_day)
-            this.selectedWeekday.push(w_day.weekday)
-          }
-          else {
-          let date = new Date(item.day)
-          date.setTime(date.getTime() - (7 * 60 * 60 * 1000))
-          this.specialDays.push(date)
-          this.room.optional_prices.days.push(item.day)
-          this.room.optional_prices.price_day === null && (this.room.optional_prices.price_day = item.price_day)
-          this.room.optional_prices.price_hour === null && (this.room.optional_prices.price_hour = item.price_hour)
-          this.room.optional_prices.price_after_hour === null && (this.room.optional_prices.price_after_hour = item.price_after_hour)
+              status: 0
+            };
+            w_day.weekday = item.weekday;
+            w_day.price_day = item.price_day;
+            w_day.price_hour = item.price_hour;
+            w_day.price_after_hour = item.price_after_hour;
+            this.room.weekday_price.push(w_day);
+            this.selectedWeekday.push(w_day.weekday);
+          } else {
+            let date = new Date(item.day);
+            date.setTime(date.getTime() - 7 * 60 * 60 * 1000);
+            this.specialDays.push(date);
+            this.room.optional_prices.days.push(item.day);
+            this.room.optional_prices.price_day === null &&
+              (this.room.optional_prices.price_day = item.price_day);
+            this.room.optional_prices.price_hour === null &&
+              (this.room.optional_prices.price_hour = item.price_hour);
+            this.room.optional_prices.price_after_hour === null &&
+              (this.room.optional_prices.price_after_hour =
+                item.price_after_hour);
           }
         });
       }
 
-      this.room = JSON.parse(JSON.stringify({ ...this.room, ...dataRoom }))
-      if(dataRoom.media.data.length){
+      this.room = JSON.parse(JSON.stringify({ ...this.room, ...dataRoom }));
+      if (dataRoom.media.data.length) {
         dataRoom.media.data.forEach(item => {
-          this.room.images.push({source: item.image, type: item.type});
+          this.room.images.push({ source: item.image, type: item.type });
         });
       }
-      if(this.room.comforts.data.length) {
-        let arr = this.room.comforts.data.map(item => item.id )
+      if (this.room.comforts.data.length) {
+        let arr = this.room.comforts.data.map(item => item.id);
         this.room.comforts = arr;
-      }
-      else {
+      } else {
         this.room.comforts = [];
       }
     },
-    vmountedPost(){
+    vmountedPost() {
       this.room.images.forEach(item => {
-        if(item.type == 1) {
-          let file = { name: item.source, size:12356, type: "image" };
+        if (item.type == 1) {
+          let file = { name: item.source, size: 12356, type: "image" };
           let url = item.source;
           this.$refs.myVueDropzone2.manuallyAddFile(file, url);
         }
       });
     },
-    vmountedAvatar(){
+    vmountedAvatar() {
       this.room.images.forEach(item => {
-        if(item.type == 4) {
-          let file = { name: item.source, size:12356, type: "image" };
+        if (item.type == 4) {
+          let file = { name: item.source, size: 12356, type: "image" };
           let url = item.source;
           this.$refs.myVueDropzone1.manuallyAddFile(file, url);
         }
       });
     },
-    addWeekday () {
-      if(this.room.weekday_price.length < 7 ) {
+    addWeekday() {
+      if (this.room.weekday_price.length < 7) {
         let w = this.filteredWeekday[0].weekday;
         this.room.weekday_price.push({
           weekday: w,
           status: 0,
           price_day: 0,
           price_hour: 0,
-          price_after_hour: 0,
+          price_after_hour: 0
         });
       }
     },
-    deleteWeekday (index) {
-      this.room.weekday_price.splice(index, 1)
+    deleteWeekday(index) {
+      this.room.weekday_price.splice(index, 1);
     },
-    formatDate (date) {
-      if (!date) return null
-      const [h,m,s] = date.split(':')
-      return `${h}:${m}`
+    formatDate(date) {
+      if (!date) return null;
+      const [h, m, s] = date.split(":");
+      return `${h}:${m}`;
     },
     previousTabForm(event) {
       this.step--;
       return event;
     },
-    afterCompleteImageAvatar(file){
+    afterCompleteImageAvatar(file) {
       let picture = {
         source: null,
         type: 4
-      }
-      if(file.dataURL){
-        picture.source = file.dataURL
-        this.room.images.push(picture);
-      }
-    },
-    afterCompleteImagePost(file){
-      let picture = {
-        source: null,
-        type: 1
-      }
-      if(file.dataURL){
+      };
+      if (file.dataURL) {
         picture.source = file.dataURL;
         this.room.images.push(picture);
       }
     },
-    removedImageInDropzone(file, error, xhr){
-      let index = this.room.images.findIndex(item => item.dataURL === file.dataURL)
-      this.room.images.splice(index,1)
+    afterCompleteImagePost(file) {
+      let picture = {
+        source: null,
+        type: 1
+      };
+      if (file.dataURL) {
+        picture.source = file.dataURL;
+        this.room.images.push(picture);
+      }
+    },
+    removedImageInDropzone(file, error, xhr) {
+      let index = this.room.images.findIndex(
+        item => item.dataURL === file.dataURL
+      );
+      this.room.images.splice(index, 1);
     },
     async getBase64ImageFromUrl(imageUrl) {
       let res = await fetch(imageUrl);
       let blob = await res.blob();
 
       return new Promise((resolve, reject) => {
-        let reader  = new FileReader();
-        reader.addEventListener("load", function () {
+        let reader = new FileReader();
+        reader.addEventListener(
+          "load",
+          function() {
             resolve(reader.result);
-        }, false);
+          },
+          false
+        );
 
         reader.onerror = () => {
           return reject(this);
         };
         reader.readAsDataURL(blob);
-      })
+      });
     },
-    async validateBeforeNext(){
+    async validateBeforeNext() {
       const result = await this.$validator.validateAll();
-      if(!result){
+      if (!result) {
         return window.scroll({
           top: 0,
           behavior: "smooth"
         });
-      }
-      else {
+      } else {
         this.step++;
         return true;
       }
     },
     async onSubmit() {
       const result = await this.$validator.validateAll();
-      if(result){
+      if (result) {
         try {
-          if(this.type == 'Update'){
+          if (this.type == "Update") {
             this.$swal({
-                title: 'Đang xử lý',
-                text: '',
-                type: 'info',
-                showCancelButton: false,
-                showConfirmButton: false,
-                showCloseButton: false,
-                showLoaderOnConfirm: false
-              });
-            let response = await axios.put(`rooms/${this.$route.params.roomId}`,this.room)
-            .then(response => {
-              this.$swal("Thành công", "Phòng được cập nhật thành công", "success");
-              this.$router.push({name: 'room.list'});
+              title: "Đang xử lý",
+              text: "",
+              type: "info",
+              showCancelButton: false,
+              showConfirmButton: false,
+              showCloseButton: false,
+              showLoaderOnConfirm: false
             });
-          }
-          else {
+            let response = await axios
+              .put(`rooms/${this.$route.params.roomId}`, this.room)
+              .then(response => {
+                this.$swal(
+                  "Thành công",
+                  "Phòng được cập nhật thành công",
+                  "success"
+                );
+                this.$router.push({ name: "room.list" });
+              });
+          } else {
             this.$swal({
-                title: 'Đang xử lý',
-                text: '',
-                type: 'info',
-                showCancelButton: false,
-                showConfirmButton: false,
-                showCloseButton: false,
-                showLoaderOnConfirm: false
-              });
-            let response = await axios.post('rooms',this.room)
-            .then(response => {
-              console.log(response)
-              this.$swal("Thành công", "Phòng được tạo mới thành công", "success");
-              this.$router.push({name: 'room.list'});
+              title: "Đang xử lý",
+              text: "",
+              type: "info",
+              showCancelButton: false,
+              showConfirmButton: false,
+              showCloseButton: false,
+              showLoaderOnConfirm: false
             });
+            let response = await axios
+              .post("rooms", this.room)
+              .then(response => {
+                this.$swal(
+                  "Thành công",
+                  "Phòng được tạo mới thành công",
+                  "success"
+                );
+                this.$router.push({ name: "room.list" });
+              });
           }
-        } catch(error) {
+        } catch (error) {
           if (error) {
-           this.$swal("Xin lỗi", "Phòng chưa đưọc lưu, làm ơn kiểm tra lại thông tin", "error");
-          } {}
+            this.$swal(
+              "Xin lỗi",
+              "Phòng chưa đưọc lưu, làm ơn kiểm tra lại thông tin",
+              "error"
+            );
+          }
+          {
+          }
         }
       }
     },
     async getRoomType() {
       try {
-        const response = await axios.get('rooms/type');
-        this.room_type = response.data
-      } catch(error) {
+        const response = await axios.get("rooms/type");
+        this.room_type = response.data;
+      } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
-        } {}
+        }
+        {
+        }
       }
     },
     async getRentType() {
       try {
-        const response = await axios.get('rooms/rent-type');
-        this.rent_type = response.data
-      } catch(error) {
+        const response = await axios.get("rooms/rent-type");
+        this.rent_type = response.data;
+      } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
-        } {}
+        }
+        {
+        }
       }
     },
     async getMerchants() {
       try {
         const response = await axios.get(`users`, {
           params: {
-            limit:-1,
+            limit: -1,
             is_owner: 1
           }
         });
@@ -1173,8 +1195,8 @@ export default {
       try {
         const response = await axios.get(`comforts`, {
           params: {
-            limit:-1,
-            include:"details"
+            limit: -1,
+            include: "details"
           }
         });
         this.comforts = response.data.data;
@@ -1186,7 +1208,7 @@ export default {
     },
     async getStatus() {
       try {
-        const response = await axios.get('rooms/room-status');
+        const response = await axios.get("rooms/room-status");
         this.status = response.data;
       } catch (error) {
         if (error) {
@@ -1204,22 +1226,22 @@ export default {
     },
     addNewLangEnglishForm() {
       this.room.details.data.push({
-        name: '',
-        address: '',
-        description: '',
-        lang: 'en',
-        space: '',
-        note: ''
-      })
+        name: "",
+        address: "",
+        description: "",
+        lang: "en",
+        space: "",
+        note: ""
+      });
     },
     deleteLangEnglishForm() {
-      let index = this.room.details.data.findIndex(x => x.lang == 'en')
-      this.room.details.data.splice( index, 1)
-    },
+      let index = this.room.details.data.findIndex(x => x.lang == "en");
+      this.room.details.data.splice(index, 1);
+    }
   },
-  created () {
-    !(this.dataRoom === null) && this.setInitData()
-    this.dataRoom === null && (this.room.comforts = [])
+  created() {
+    !(this.dataRoom === null) && this.setInitData();
+    this.dataRoom === null && (this.room.comforts = []);
   },
   mounted() {
     Auth.getProfile().then(res => {
@@ -1238,10 +1260,10 @@ export default {
       }
     });
     this.hideSidebarOnMobile();
-    if(this.room.checkin) {
+    if (this.room.checkin) {
       this.room.checkin = this.formatDate(this.room.checkin);
     }
-    if(this.room.checkout) {
+    if (this.room.checkout) {
       this.room.checkout = this.formatDate(this.room.checkout);
     }
   }
@@ -1249,7 +1271,6 @@ export default {
 </script>
 
 <style>
-
 </style>
 
 

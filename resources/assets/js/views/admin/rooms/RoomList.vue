@@ -38,14 +38,9 @@
               <div class="form-group row">
                 <label for="firstName" class="col-sm-2 col-form-label">Khoảng giá</label>
                 <div class="col-sm-4 mt-2">
-                  <vue-slider 
-                    v-model="price_range" 
-                    formatter="{value} Đ" 
-                    :min="0" 
-                    :max="10000000"
-                  ></vue-slider>
+                  <vue-slider v-model="price_range" formatter="{value} Đ" :min="0" :max="10000000"></vue-slider>
                 </div>
-                
+
                 <label for="lastName" class="col-sm-2 col-form-label">Phòng</label>
                 <div class="col-sm-4">
                   <multiselect id="inputUserName" v-model="room_type" label="value" :options="room_type_list"
@@ -60,13 +55,8 @@
                 </div>
                 <label for="email" class="col-sm-2 col-form-label">Thuê theo</label>
                 <div class="col-sm-4">
-                  <multiselect 
-                    v-model="rent_type" 
-                    label="value" 
-                    :options="rent_type_list" 
-                    :searchable="true"
-                    :show-labels="false" 
-                  />
+                  <multiselect v-model="rent_type" label="value" :options="rent_type_list" :searchable="true"
+                    :show-labels="false" />
                 </div>
               </div>
             </div>
@@ -76,36 +66,18 @@
                 <label for="email" class="col-sm-2 col-form-label">Hiển thị</label>
                 <div class="col-sm-4 mt-2">
                   <div class="form-check form-check-inline">
-                    <input 
-                      id="inlineCheckbox1" 
-                      class="form-check-input" 
-                      type="checkbox" 
-                      v-model.number="hot_room"
-                      true-value="1"     
-                      false-value="0"
-                      >
+                    <input id="inlineCheckbox1" class="form-check-input" type="checkbox" v-model.number="hot_room"
+                      true-value="1" false-value="0">
                     <label class="form-check-label" for="inlineCheckbox1">Hot</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input 
-                      id="inlineCheckbox2" 
-                      class="form-check-input" 
-                      type="checkbox" 
-                      v-model.number="new_room"
-                      true-value="1" 
-                      false-value="0"
-                      >
+                    <input id="inlineCheckbox2" class="form-check-input" type="checkbox" v-model.number="new_room"
+                      true-value="1" false-value="0">
                     <label class="form-check-label" for="inlineCheckbox2">New</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input 
-                      id="inlineCheckbox3" 
-                      class="form-check-input" 
-                      type="checkbox" 
-                      v-model.number="latest_deal"
-                      true-value="1" 
-                      false-value="0"
-                    >
+                    <input id="inlineCheckbox3" class="form-check-input" type="checkbox" v-model.number="latest_deal"
+                      true-value="1" false-value="0">
                     <label class="form-check-label" for="inlineCheckbox3">Deal</label>
                   </div>
                 </div>
@@ -151,7 +123,7 @@
             <tr v-for="(room,index) in filteredRooms" :key="index" :class="{'read' : room.status }">
               <td>{{index+1}}</td>
               <td>
-                <img :src="room.media.data.type == 1 ? room.media.data.image : ''" height="150px" width="150px"/>
+                <img :src="room.media.data.type == 1 ? room.media.data.image : ''" height="150px" width="150px" />
               </td>
               <td class="cell-content">
                 <div class="content">
@@ -286,25 +258,25 @@
         </button>
       </sweet-modal>
       <sweet-modal ref="optional_prices" overlay-theme="dark">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Ngày</th>
-            <th>Giá theo ngày</th>
-            <th>Giá theo giờ</th>
-            <th>Giờ tiếp theo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(price, index) in room_prices" :key="index">
-            <td>{{price.weekday == null ? price.day : price.weekday | filterWeekDay}}</td>
-            <td>{{price.price_day | formatNumber}}</td>
-            <td>{{price.price_hour | formatNumber}}</td>
-            <td>{{price.price_after_hour | formatNumber}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </sweet-modal>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Ngày</th>
+              <th>Giá theo ngày</th>
+              <th>Giá theo giờ</th>
+              <th>Giờ tiếp theo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(price, index) in room_prices" :key="index">
+              <td>{{price.weekday == null ? price.day : price.weekday | filterWeekDay}}</td>
+              <td>{{price.price_day | formatNumber}}</td>
+              <td>{{price.price_hour | formatNumber}}</td>
+              <td>{{price.price_after_hour | formatNumber}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </sweet-modal>
     </div>
   </div>
 </template>
@@ -331,7 +303,9 @@ export default {
   },
   data() {
     return {
-      defaultOptions: { animationData: animationData },
+      defaultOptions: {
+        animationData: animationData
+      },
       format: "yyyy-MM-dd",
       rooms: [],
       room_type: {
@@ -517,7 +491,6 @@ export default {
       this.$refs.updateHost.close();
     },
     openModalOptionalPrices(room) {
-      console.log(room.prices.data);
       this.room_prices = room.prices.data;
       this.$refs.optional_prices.open();
     },

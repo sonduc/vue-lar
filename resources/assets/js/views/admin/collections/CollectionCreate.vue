@@ -106,7 +106,6 @@
                     <div class="form-group col-md-12">
                       <label>Ảnh</label>
                       <vue-dropzone
-                        @vdropzone-file-added="showFile"
                         id="dropzone"
                         ref="myVueDropzone"
                         :options="dropzoneOptions"
@@ -132,8 +131,8 @@
                         :clear-on-select="true"
                         :options="allRoom"
                         placeholder="Chọn phòng"
-                        label="name"/>
-                      </multiselect>
+                        label="name"
+                      />
                     </div>
 
                     <div
@@ -214,57 +213,60 @@
 </template>
 <script>
 import Auth from "../../../services/auth";
-import vue2Dropzone from 'vue2-dropzone'
-import { chain } from 'lodash'
+import vue2Dropzone from "vue2-dropzone";
+import { chain } from "lodash";
 import Multiselect from "vue-multiselect";
-import { Tabs, Tab } from 'vue-tabs-component'
+import { Tabs, Tab } from "vue-tabs-component";
 import { quillEditor } from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import draggable from 'vuedraggable';
-import VueUploadMultipleImage from 'vue-upload-multiple-image'
+import draggable from "vuedraggable";
+import VueUploadMultipleImage from "vue-upload-multiple-image";
 export default {
   components: {
     Multiselect,
     quillEditor,
-    'tabs': Tabs,
-    'tab': Tab,
+    tabs: Tabs,
+    tab: Tab,
     VueUploadMultipleImage,
     vueDropzone: vue2Dropzone,
-    draggable,
+    draggable
   },
-  data(){
-    return{
-      language :0,
-      collection:{
-        image:null,
-        hot:0,
-        status:0,
-        new:0,
-        vi:{
-          name:'',
-          description:'',
-          lang: 'vi',
+  data() {
+    return {
+      language: 0,
+      collection: {
+        image: null,
+        hot: 0,
+        status: 0,
+        new: 0,
+        vi: {
+          name: "",
+          description: "",
+          lang: "vi"
         },
-        en:{
-          name:'',
-          description:'',
-          lang: 'en',
-        },
+        en: {
+          name: "",
+          description: "",
+          lang: "en"
+        }
       },
-      permission:'collection.create',
-      allRoom:[
-        { name: 'Thành Công Hotel - Luxury Apartment', id:'3143' },
-        { name: 'Thành Công Hotel - Excutive Suite Room', id:'3142' },
-        { name: 'Thành Công Hotel - Deluxe Suite Triple Room', id:'3141' },
-        { name: 'Thành Công Hotel - Deluxe Suite Twin Ocean View Room', id:'3140' },
-        { name: 'Thành Công Hotel - Deluxe Twin Ocean View Room', id:'3139' },
-        { name: 'Thành Công Hotel - Superior Twin Room', id:'3138' },
-        { name: 'Thành Công Hotel - Standard Double Room', id:'3137' },
+      permission: "collection.create",
+      allRoom: [
+        { name: "Thành Công Hotel - Luxury Apartment", id: "3143" },
+        { name: "Thành Công Hotel - Excutive Suite Room", id: "3142" },
+        { name: "Thành Công Hotel - Deluxe Suite Triple Room", id: "3141" },
+        {
+          name: "Thành Công Hotel - Deluxe Suite Twin Ocean View Room",
+          id: "3140"
+        },
+        { name: "Thành Công Hotel - Deluxe Twin Ocean View Room", id: "3139" },
+        { name: "Thành Công Hotel - Superior Twin Room", id: "3138" },
+        { name: "Thành Công Hotel - Standard Double Room", id: "3137" }
       ],
-      rooms:[],
-      room:{},
+      rooms: [],
+      room: {},
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         maxFilesize: 5,
@@ -273,11 +275,11 @@ export default {
         thumbnailWidth: 150,
         thumbnailHeight: 150,
         dictCancelUpload: "Remove File",
-        language : {
-          dictDefaultMessage: 'Click để chọn ảnh',
+        language: {
+          dictDefaultMessage: "Click để chọn ảnh"
         }
-      },
-    }
+      }
+    };
   },
   mounted() {
     Auth.getProfile().then(res => {
@@ -293,32 +295,26 @@ export default {
     });
     this.hideSidebarOnMobile();
   },
-  methods:{
-    selectRoom(selectedOption, id){
-      console.log(selectedOption)
+  methods: {
+    selectRoom(selectedOption, id) {
       let objectRoom = {
-        id :selectedOption.id,
-        name: selectedOption.name,
-      }
+        id: selectedOption.id,
+        name: selectedOption.name
+      };
       this.rooms.push(objectRoom);
     },
-    deleteRoom(name,id){
-      console.log(name,id)
-      let valueRooms = this.rooms
-      for( var i = 0; i < valueRooms.length; i++){
-        if ( valueRooms[i].id === id) {
+    deleteRoom(name, id) {
+      let valueRooms = this.rooms;
+      for (var i = 0; i < valueRooms.length; i++) {
+        if (valueRooms[i].id === id) {
           valueRooms.splice(i, 1);
         }
       }
       this.rooms = valueRooms;
     },
 
-
     afterComplete(file) {
       this.collection.image = file.dataURL;
-    },
-    showFile(file) {
-      console.log(file);
     },
     remove(file) {
       this.collection.image = null;
@@ -329,53 +325,51 @@ export default {
         const response = await axios.get(`rooms`, {
           params: {
             include: "details,user,prices",
-            limit: -1,
+            limit: -1
           }
         });
-        console.log(response.data.data)
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
         }
       }
     },
-    async submitForm(){
+    async submitForm() {
       const result = this.$validator.validateAll();
-      if(result) {
-        if(this.collection.en.name == ''){
-          this.collection.en.name = this.collection.vi.name
-        };
-        if(this.collection.en.description == ''){
-          this.collection.en.description = this.collection.vi.description
-        };
+      if (result) {
+        if (this.collection.en.name == "") {
+          this.collection.en.name = this.collection.vi.name;
+        }
+        if (this.collection.en.description == "") {
+          this.collection.en.description = this.collection.vi.description;
+        }
         let data = [];
-        let details = {data};
+        let details = { data };
         data[0] = this.collection.vi;
         data[1] = this.collection.en;
-        let valueRooms =[]
-        if(this.rooms.length > 0){
-          for(let i =0;this.rooms.length > i;i++){
-            valueRooms.push(this.rooms[i].id)
+        let valueRooms = [];
+        if (this.rooms.length > 0) {
+          for (let i = 0; this.rooms.length > i; i++) {
+            valueRooms.push(this.rooms[i].id);
           }
         }
-        // console.log(valueRooms);
         try {
-          const response = await axios.post(`collections`,{
-            image : this.collection.image,
-            hot : this.collection.hot,
-            new : this.collection.new,
-            status : this.collection.status,
-            rooms : valueRooms,
-            details : details,
-          })
-          .then(response => {
-            this.$swal("Thành công", "Thêm thành công", "success");
-            this.$router.push({name: 'collections.list'})
-          });
+          const response = await axios
+            .post(`collections`, {
+              image: this.collection.image,
+              hot: this.collection.hot,
+              new: this.collection.new,
+              status: this.collection.status,
+              rooms: valueRooms,
+              details: details
+            })
+            .then(response => {
+              this.$swal("Thành công", "Thêm thành công", "success");
+              this.$router.push({ name: "collections.list" });
+            });
         } catch (error) {
           if (error) {
             window.toastr["error"]("There was an error", "Error");
-            console.log(error)
           }
         }
       } else {
@@ -392,24 +386,24 @@ export default {
           self.isLeftSidebarVisible = false;
         }
       };
-    },
-  },
-}
+    }
+  }
+};
 </script>
 <style scoped>
-.custom-margin{
+.custom-margin {
   margin-top: 1em;
 }
-.container-room{
+.container-room {
   border: 1px solid lightgray;
   padding-top: 1rem;
-  border-radius: 15px
+  border-radius: 15px;
 }
-.list-room{
+.list-room {
   display: inline-block;
   margin-left: 1em;
 }
-.name-room:hover{
+.name-room:hover {
   color: yellowgreen;
 }
 .icon-room:hover {

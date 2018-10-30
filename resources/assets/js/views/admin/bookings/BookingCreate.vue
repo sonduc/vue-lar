@@ -501,7 +501,6 @@ export default {
             number_of_guests: this.booking.number_of_guests,
             booking_type: this.booking.booking_type
           });
-          // console.log(response.data.data.total_fee);
           if (response.data.data) {
             if ("days" in response.data.data) {
               this.booking.days = response.data.data.days;
@@ -525,7 +524,6 @@ export default {
       }
     },
     async onSubmit() {
-      // console.log(this.booking)
       const result = this.$validator.validateAll();
       if (result) {
         let response = await axios

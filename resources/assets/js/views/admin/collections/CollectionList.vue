@@ -245,22 +245,22 @@ export default {
     return {
       defaultOptions: { animationData: animationData },
       permissions: "collection.view",
-      collections:[],
-      collection:{},
+      collections: [],
+      collection: {},
       loading: true,
-      params:{
-        name:null,
-        status:null,
-        new:null,
-        hot:null,
+      params: {
+        name: null,
+        status: null,
+        new: null,
+        hot: null
       },
-      countRoom:null,
-      getStatus: ['Select option', 'options', ],
-      getNews: ['Select option', 'options',],
+      countRoom: null,
+      getStatus: ["Select option", "options"],
+      getNews: ["Select option", "options"],
       currentPage: null,
       totalPages: null,
-      count: null,
-    }
+      count: null
+    };
   },
   install(Vue, options) {
     Vue.component("SweetModal", SweetModal);
@@ -282,14 +282,14 @@ export default {
   methods: {
     async allCollection({ page, filter, sort }) {
       try {
-        const response = await axios.get(`collections`,{
-          params:{
-            include:'details,rooms.details',
-            page:page,
-            new:this.params.new,
+        const response = await axios.get(`collections`, {
+          params: {
+            include: "details,rooms.details",
+            page: page,
+            new: this.params.new,
             hot: this.params.hot,
-            status:this.params.status,
-            name: this.params.name,
+            status: this.params.status,
+            name: this.params.name
           }
         });
         let paginate = response.data.meta.pagination;
@@ -298,7 +298,6 @@ export default {
         this.count = paginate.count;
         this.collections = response.data.data;
         this.loading = false;
-        console.log(response.data.data)
         return {
           data: response.data.data,
           pagination: {
@@ -367,7 +366,7 @@ export default {
         page
       });
     },
-    resetFilter(page){
+    resetFilter(page) {
       this.params.name = null;
       this.params.status = null;
       this.params.new = null;
@@ -377,7 +376,6 @@ export default {
       });
     },
     remove(id) {
-      console.log(id)
       this.$swal({
         title: "Bạn có muốn xóa bộ sưu tập không không",
         type: "info",
@@ -387,13 +385,12 @@ export default {
         cancelButtonText: "Quay lại",
         showCloseButton: true,
         showLoaderOnConfirm: true
-      })
-      .then((result) => {
+      }).then(result => {
         if (result.value) {
-          axios.delete('collections/'+id).then(response => {
+          axios.delete("collections/" + id).then(response => {
             window.toastr["success"]("Xóa thành công", "Success");
             this.reloadData(this.currentPage);
-          })
+          });
         }
       });
     },
@@ -404,15 +401,15 @@ export default {
           self.isLeftSidebarVisible = false;
         }
       };
-    },
-  },
-}
+    }
+  }
+};
 </script>
 <style scoped>
-.color-green{
+.color-green {
   color: green;
 }
-.color-red{
+.color-red {
   color: red;
 }
 </style>
