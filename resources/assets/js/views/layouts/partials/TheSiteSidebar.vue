@@ -276,6 +276,19 @@
             </router-link>
           </v-collapse-item>
 
+          <v-collapse-item active-url="/admin/blogs">
+            <a slot="item-title" href="#">
+              <i class="icon-fa icon-fa-newspaper-o"/>Bài viết
+              <span class="icon-fa arrow icon-fa-fw"/>
+            </a>
+            <router-link to="/admin/blogs/list">
+              Danh sách Bài viết
+            </router-link>
+            <router-link to="/admin/blogs/create">
+              Đăng bài viết
+            </router-link>
+          </v-collapse-item>
+
           <v-collapse-item active-url="/admin/apps">
             <a slot="item-title" href="#">
               <i class="icon-fa icon-fa-adn"/>Apps
