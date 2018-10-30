@@ -66,7 +66,6 @@
                             <tabs class="tabs-default">
                               <tab id="basic-home" name="Tab 1">
                                 <div class="col-lg-12">
-
                                   <div class="form-group">
                                     <label>DOB</label>
                                     <div class="input-group">

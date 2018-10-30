@@ -53,8 +53,9 @@
                         data-vv-as="Giờ nhận phòng" :options="hoursData" :searchable="true" :show-labels="false" />
                     </div>
                     <div class="form-group">
-                      <label :style="errors.has('name') ? 'color:red;' : ''">{{errors.has('name')
-                        ? errors.first('name') : 'Họ và tên *'}}</label>
+                      <label :style="errors.has('name') ? 'color:red;' : ''">
+                          {{errors.has('name')? errors.first('name') : 'Họ và tên *'}}
+                      </label>
                       <input name="name" v-validate="'required'" data-vv-as="Họ và tên" type="text" v-model="booking.name"
                         class="form-control">
                     </div>

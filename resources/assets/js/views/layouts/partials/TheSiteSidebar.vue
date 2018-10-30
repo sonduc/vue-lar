@@ -266,6 +266,16 @@
             </router-link>
           </v-collapse-item>
 
+          <v-collapse-item active-url="/admin/collections">
+            <a slot="item-title" href="#">
+              <i class="icon-fa icon-fa-qrcode"/>Collections
+              <span class="icon-fa arrow icon-fa-fw"/>
+            </a>
+            <router-link to="/admin/collections/list">
+              Danh sách bộ sưu tập
+            </router-link>
+          </v-collapse-item>
+
           <v-collapse-item active-url="/admin/rooms">
             <a slot="item-title" href="#">
               <i class="icon-fa icon-fa-home"/>Phòng
