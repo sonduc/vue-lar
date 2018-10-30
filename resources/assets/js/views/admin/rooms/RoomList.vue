@@ -6,6 +6,13 @@
         <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
         <li class="breadcrumb-item active">Danh sách phòng</li>
       </ol>
+      <div class="page-actions">
+        <router-link :to="{ name: 'room.create'}">
+          <a style="color:white" class="btn btn-primary">
+            <i class="icon-fa icon-fa-plus" /> Thêm mới
+          </a>
+        </router-link>
+      </div>
     </div>
     <div class="mailbox">
       <div class="card">
@@ -220,9 +227,9 @@
                     class="btn btn-sm btn-icon btn-outline-info">
                     <i class="icon-fa icon-fa-user" />
                   </button>
-                  <button v-tooltip.top-center="'Câp nhật phòng'" type="button" class="btn btn-sm btn-icon btn-outline-info">
+                  <router-link :to="{ name: 'room.update', params: {roomId: room.id}}" v-tooltip.top-center="'Câp nhật phòng'" type="button" class="btn btn-sm btn-icon btn-outline-info">
                     <i class="icon-fa icon-fa-pencil" />
-                  </button>
+                  </router-link>
                 </div>
 
                 <button class="btn btn-light btn-xs mb-3">
