@@ -433,8 +433,10 @@ export default {
   methods: {
     async getRoomBlock() {
       try {
-        const response = await axios.get(`rooms/schedule/${this.$route.params.roomId}`);
-        return this.blocked_dates = response.data.data.blocks;
+        const response = await axios.get(
+          `rooms/schedule/${this.$route.params.roomId}`
+        );
+        return (this.blocked_dates = response.data.data.blocks);
       } catch (error) {
         window.toastr["error"]("There was an error", "Error");
       }

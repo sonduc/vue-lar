@@ -6,6 +6,7 @@ import Vuelidate from 'vuelidate'
 import VuePrism from 'vue-prism'
 import VTooltip from 'v-tooltip'
 import VueSweetalert2 from 'vue-sweetalert2'
+import VCalendar from 'v-calendar'
 
 import Ls from './services/ls'
 import VDropdown from './components/dropdown/VDropdown'
@@ -20,6 +21,7 @@ import VCollapseItem from './components/collapse/VCollapseItem'
 import 'vue-tabs-component/docs/resources/tabs-component.css'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 import 'vue2-dropzone/dist/vue2Dropzone.css'
+import 'v-calendar/lib/v-calendar.min.css'
 
 /**
  * Global plugins
@@ -37,13 +39,13 @@ global._ = require('lodash')
 global.Vue = require('vue')
 
 /**
- * We'll register a HTTP interceptor to attach the "CSRF" header to each of
+ * We'll register a HTTP interceptor to attach the 'CSRF' header to each of
  * the outgoing requests issued by this application. The CSRF middleware
  * included with Laravel will automatically verify the header's value.
  */
 
 global.axios = require('axios')
-global.axios.defaults.baseURL = "http://ws-api.test/api/";
+global.axios.defaults.baseURL = 'http://ws-api.lc/api/'
 global.axios.defaults.headers.common = {
   'X-Requested-With': 'XMLHttpRequest'
 }
@@ -72,7 +74,7 @@ global.axios.interceptors.request.use(function (config) {
  * allows your team to easily build robust real-time web applications.
  */
 
-// import Echo from "laravel-echo"
+// import Echo from 'laravel-echo'
 
 // global.Echo = new Echo({
 //     broadcaster: 'pusher',
@@ -92,19 +94,32 @@ Vue.component('v-dropdown-item', VDropdownItem)
 Vue.component('v-dropdown-divider', VDropdownDivider)
 Vue.component('v-collapse', VCollapse)
 Vue.component('v-collapse-item', VCollapseItem)
-import * as VueGoogleMaps from "vue2-google-maps";
+import * as VueGoogleMaps from 'vue2-google-maps'
 Vue.use(VueGoogleMaps, {
   load: {
-    key: "AIzaSyDatNJsMOi1l5erQTO-NLPvMkVHv15NiOs",
-    libraries: "places"
+    key: 'AIzaSyDatNJsMOi1l5erQTO-NLPvMkVHv15NiOs',
+    libraries: 'places'
   }
-});
+})
 Vue.use(VueSweetalert2)
 Vue.use(VueRouter)
 Vue.use(VuePrism)
 Vue.use(VTooltip)
 Vue.use(VeeValidate, {
   locale: 'vi',
-  dictionary: { vi, en }
+  dictionary: {
+    vi,
+    en
+  }
 })
-Vue.use(Vuelidate);
+Vue.use(Vuelidate)
+Vue.use(VCalendar, {
+  formats: {
+    title: 'MMMM YYYY',
+    weekdays: 'W',
+    navMonths: 'MMM',
+    input: ['DD-MM-YYYY', 'DD-MM-YYYY'],
+    dayPopover: 'L',
+    data: ['L', 'Y-m-d', 'Y-m-d']
+  }
+})
