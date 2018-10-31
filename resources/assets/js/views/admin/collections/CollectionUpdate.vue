@@ -124,15 +124,25 @@
                         {{errors.has('roomCollection')? errors.first('roomCollection') : 'Chọn phòng *'}}
                       </label>
                       <multiselect
+                        style="z-index: 3"
                         name="roomCollection"
                         data-vv-as="Phòng"
                         v-validate="'required'"
-                        @select="selectRoom"
-                        v-model="room"
+                        v-model="rooms"
                         :options="allRoom"
+                        :multiple="true"
+                        :close-on-select="false"
                         :clear-on-select="true"
+                        :preserve-search="true"
+                        track-by="name"
                         placeholder="Chọn phòng"
                         label="name">
+                        :preselect-first="true"
+                        <template slot="selection" slot-scope="{ values, search, isOpen }">
+                          <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">
+                            {{ values.length }} phòng đã được chọn
+                          </span>
+                        </template>
                       </multiselect>
                     </div>
 
@@ -252,15 +262,16 @@ export default {
         },
       },
       permission:'collection.update',
-      allRoom:[
-        { name: 'Thành Công Hotel - Luxury Apartment', id:'3143' },
-        { name: 'Thành Công Hotel - Excutive Suite Room', id:'3142' },
-        { name: 'Thành Công Hotel - Deluxe Suite Triple Room', id:'3141' },
-        { name: 'Thành Công Hotel - Deluxe Suite Twin Ocean View Room', id:'3140' },
-        { name: 'Thành Công Hotel - Deluxe Twin Ocean View Room', id:'3139' },
-        { name: 'Thành Công Hotel - Superior Twin Room', id:'3138' },
-        { name: 'Thành Công Hotel - Standard Double Room', id:'3137' },
-      ],
+      // allRoom:[
+      //   { name: 'Thành Công Hotel - Luxury Apartment', id:'3143' },
+      //   { name: 'Thành Công Hotel - Excutive Suite Room', id:'3142' },
+      //   { name: 'Thành Công Hotel - Deluxe Suite Triple Room', id:'3141' },
+      //   { name: 'Thành Công Hotel - Deluxe Suite Twin Ocean View Room', id:'3140' },
+      //   { name: 'Thành Công Hotel - Deluxe Twin Ocean View Room', id:'3139' },
+      //   { name: 'Thành Công Hotel - Superior Twin Room', id:'3138' },
+      //   { name: 'Thành Công Hotel - Standard Double Room', id:'3137' },
+      // ],
+      allRoom:[],
       rooms:[],
       room:{},
       dropzoneOptions: {
@@ -294,6 +305,7 @@ export default {
             this.$router.push("/permission-denied-403");
           } else {
             this.getCollection();
+            this.getNameRooms();
           }
         });
       }
@@ -301,14 +313,6 @@ export default {
     this.hideSidebarOnMobile();
   },
   methods:{
-    selectRoom(selectedOption, id){
-      console.log(selectedOption)
-      let objectRoom = {
-        id :selectedOption.id,
-        name: selectedOption.name,
-      }
-      this.rooms.push(objectRoom);
-    },
     deleteRoom(name,id){
       console.log(name,id)
       let valueRooms = this.rooms
@@ -335,23 +339,46 @@ export default {
         this.collection.image = file.dataURL;
       }
     },
-    // async getRooms() {
-    //   try {
-    //     const response = await axios.get(`rooms`, {
-    //       params: {
-    //         include: "details,user,prices",
-    //         limit: -1,
-    //       }
-    //     });
-    //     console.log(response.data.data)
-    //   } catch (error) {
-    //     if (error) {
-    //       window.toastr["error"]("There was an error", "Error");
-    //     }
-    //   }
-    // },
+    async getNameRooms() {
+      try {
+        const response = await axios.get(`rooms/get-name`, {
+          params: {
+            include: "",
+          }
+        });
+        // console.log(response.data.data)
+        let allRoom = response.data.data;
+        for( var i = 0; i < allRoom.length; i++) {
+          let objectRoom = {
+            id :allRoom[i].id,
+            name: allRoom[i].name,
+          }
+          this.allRoom.push(objectRoom);
+        }
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
     setInitData(dataCollection){
       // console.log(dataCollection)
+      let rooms = dataCollection.rooms.data;
+
+      console.log(rooms[0])
+      for (var i = 0; i < rooms.length; i++){
+        let detailRoom = rooms[i].details.data
+        console.log(detailRoom[i])
+        for(var j=0; j <detailRoom.length;j++){
+          if(detailRoom[j].lang ==="vi"){
+            let objectRoom = {
+              id :detailRoom[j].room_id,
+              name: detailRoom[j].name,
+            }
+            this.rooms.push(objectRoom);
+          }
+        }
+      }
       this.collection.image = dataCollection.image;
       this.collection.hot = dataCollection.hot;
       this.collection.status = dataCollection.status;
@@ -380,7 +407,7 @@ export default {
       try {
         const response = await axios.get(`collections/${this.$route.params.collectionId}`, {
           params: {
-            include: "details",
+            include: "details,rooms.details",
           }
         }).then(res => {
           this.setInitData(res.data.data)

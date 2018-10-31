@@ -122,17 +122,28 @@
                         :style="errors.has('roomCollection') ? 'color:red;' : ''">
                         {{errors.has('roomCollection')? errors.first('roomCollection') : 'Chọn phòng *'}}
                       </label>
+
                       <multiselect
+                        style="z-index: 3"
                         name="roomCollection"
                         data-vv-as="Phòng"
                         v-validate="'required'"
-                        @select="selectRoom"
-                        v-model="room"
-                        :clear-on-select="true"
+                        v-model="rooms"
                         :options="allRoom"
+                        :multiple="true"
+                        :close-on-select="false"
+                        :clear-on-select="true"
+                        :preserve-search="true"
+                        track-by="name"
                         placeholder="Chọn phòng"
                         label="name"
-                      />
+                        :preselect-first="true">
+                        <template slot="selection" slot-scope="{ values, search, isOpen }">
+                          <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">
+                            {{ values.length }} phòng đã được chọn
+                          </span>
+                        </template>
+                      </multiselect>
                     </div>
 
                     <div
@@ -253,18 +264,7 @@ export default {
         }
       },
       permission: "collection.create",
-      allRoom: [
-        { name: "Thành Công Hotel - Luxury Apartment", id: "3143" },
-        { name: "Thành Công Hotel - Excutive Suite Room", id: "3142" },
-        { name: "Thành Công Hotel - Deluxe Suite Triple Room", id: "3141" },
-        {
-          name: "Thành Công Hotel - Deluxe Suite Twin Ocean View Room",
-          id: "3140"
-        },
-        { name: "Thành Công Hotel - Deluxe Twin Ocean View Room", id: "3139" },
-        { name: "Thành Công Hotel - Superior Twin Room", id: "3138" },
-        { name: "Thành Công Hotel - Standard Double Room", id: "3137" }
-      ],
+      allRoom: [],
       rooms: [],
       room: {},
       dropzoneOptions: {
@@ -288,7 +288,7 @@ export default {
           if (!response) {
             this.$router.push("/permission-denied-403");
           } else {
-            // this.getRooms();
+            this.getNameRooms();
           }
         });
       }
@@ -320,14 +320,21 @@ export default {
       this.collection.image = null;
     },
 
-    async getRooms() {
+    async getNameRooms() {
       try {
-        const response = await axios.get(`rooms`, {
+        const response = await axios.get(`rooms/get-name`, {
           params: {
-            include: "details,user,prices",
-            limit: -1
+            include: ""
           }
         });
+        let allRoom = response.data.data;
+        for (var i = 0; i < allRoom.length; i++) {
+          let objectRoom = {
+            id: allRoom[i].id,
+            name: allRoom[i].name
+          };
+          this.allRoom.push(objectRoom);
+        }
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
