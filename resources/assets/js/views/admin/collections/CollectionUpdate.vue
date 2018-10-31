@@ -221,47 +221,47 @@
 </template>
 <script>
 import Auth from "../../../services/auth";
-import { chain } from 'lodash'
+import { chain } from "lodash";
 import Multiselect from "vue-multiselect";
-import { Tabs, Tab } from 'vue-tabs-component'
+import { Tabs, Tab } from "vue-tabs-component";
 import { quillEditor } from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import vue2Dropzone from 'vue2-dropzone'
-import draggable from 'vuedraggable';
-import VueUploadMultipleImage from 'vue-upload-multiple-image'
+import vue2Dropzone from "vue2-dropzone";
+import draggable from "vuedraggable";
+import VueUploadMultipleImage from "vue-upload-multiple-image";
 export default {
   components: {
     Multiselect,
     quillEditor,
-    'tabs': Tabs,
-    'tab': Tab,
+    tabs: Tabs,
+    tab: Tab,
     draggable,
     vueDropzone: vue2Dropzone,
-    VueUploadMultipleImage,
+    VueUploadMultipleImage
   },
-  data(){
-    return{
+  data() {
+    return {
       isLoaded: false,
-      language :0,
-      collection:{
-        image:'',
-        hot:0,
-        status:0,
-        new:0,
-        vi:{
-          name:'',
-          description:'',
-          lang: 'vi',
+      language: 0,
+      collection: {
+        image: "",
+        hot: 0,
+        status: 0,
+        new: 0,
+        vi: {
+          name: "",
+          description: "",
+          lang: "vi"
         },
-        en:{
-          name:'',
-          description:'',
-          lang: 'en',
-        },
+        en: {
+          name: "",
+          description: "",
+          lang: "en"
+        }
       },
-      permission:'collection.update',
+      permission: "collection.update",
       // allRoom:[
       //   { name: 'Thành Công Hotel - Luxury Apartment', id:'3143' },
       //   { name: 'Thành Công Hotel - Excutive Suite Room', id:'3142' },
@@ -271,9 +271,9 @@ export default {
       //   { name: 'Thành Công Hotel - Superior Twin Room', id:'3138' },
       //   { name: 'Thành Công Hotel - Standard Double Room', id:'3137' },
       // ],
-      allRoom:[],
-      rooms:[],
-      room:{},
+      allRoom: [],
+      rooms: [],
+      room: {},
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         maxFilesize: 2,
@@ -285,17 +285,18 @@ export default {
       },
       // test image
       imagePost: {
-        url: 'https://httpbin.org/post',
+        url: "https://httpbin.org/post",
         maxFilesize: 5,
-        maxFiles:1,
+        maxFiles: 1,
         addRemoveLinks: true,
         thumbnailWidth: 150,
         thumbnailHeight: 150,
-        dictCancelUpload: 'Cancel File',
-        dictDefaultMessage: "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
-        headers: { 'My-Awesome-Header': 'header value' }
-      },
-    }
+        dictCancelUpload: "Cancel File",
+        dictDefaultMessage:
+          "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
+        headers: { "My-Awesome-Header": "header value" }
+      }
+    };
   },
   mounted() {
     Auth.getProfile().then(res => {
@@ -312,30 +313,27 @@ export default {
     });
     this.hideSidebarOnMobile();
   },
-  methods:{
-    deleteRoom(name,id){
-      console.log(name,id)
-      let valueRooms = this.rooms
-      for( var i = 0; i < valueRooms.length; i++){
-        if ( valueRooms[i].id === id) {
+  methods: {
+    deleteRoom(name, id) {
+      let valueRooms = this.rooms;
+      for (var i = 0; i < valueRooms.length; i++) {
+        if (valueRooms[i].id === id) {
           valueRooms.splice(i, 1);
         }
       }
       this.rooms = valueRooms;
     },
     // test image
-    removedImageInDropzone(file, error, xhr){
+    removedImageInDropzone(file, error, xhr) {
       this.collection.image = null;
     },
-    vmountedCollection(){
-      // console.log(this.collection.image)
-      let file = { name: this.collection.image, size:50000, type: "image" };
+    vmountedCollection() {
+      let file = { name: this.collection.image, size: 50000, type: "image" };
       let url = this.collection.image;
       this.$refs.myVueDropzone2.manuallyAddFile(file, url);
     },
-    afterComplete(file){
-      console.log(file.dataURL)
-      if(file.dataURL){
+    afterComplete(file) {
+      if (file.dataURL) {
         this.collection.image = file.dataURL;
       }
     },
@@ -343,16 +341,15 @@ export default {
       try {
         const response = await axios.get(`rooms/get-name`, {
           params: {
-            include: "",
+            include: ""
           }
         });
-        // console.log(response.data.data)
         let allRoom = response.data.data;
-        for( var i = 0; i < allRoom.length; i++) {
+        for (var i = 0; i < allRoom.length; i++) {
           let objectRoom = {
-            id :allRoom[i].id,
-            name: allRoom[i].name,
-          }
+            id: allRoom[i].id,
+            name: allRoom[i].name
+          };
           this.allRoom.push(objectRoom);
         }
       } catch (error) {
@@ -361,20 +358,17 @@ export default {
         }
       }
     },
-    setInitData(dataCollection){
-      // console.log(dataCollection)
+    setInitData(dataCollection) {
       let rooms = dataCollection.rooms.data;
 
-      console.log(rooms[0])
-      for (var i = 0; i < rooms.length; i++){
-        let detailRoom = rooms[i].details.data
-        console.log(detailRoom[i])
-        for(var j=0; j <detailRoom.length;j++){
-          if(detailRoom[j].lang ==="vi"){
+      for (var i = 0; i < rooms.length; i++) {
+        let detailRoom = rooms[i].details.data;
+        for (var j = 0; j < detailRoom.length; j++) {
+          if (detailRoom[j].lang === "vi") {
             let objectRoom = {
-              id :detailRoom[j].room_id,
-              name: detailRoom[j].name,
-            }
+              id: detailRoom[j].room_id,
+              name: detailRoom[j].name
+            };
             this.rooms.push(objectRoom);
           }
         }
@@ -383,81 +377,79 @@ export default {
       this.collection.hot = dataCollection.hot;
       this.collection.status = dataCollection.status;
       this.collection.new = dataCollection.new;
-      if(dataCollection.details.data[0].lang === "vi"){
+      if (dataCollection.details.data[0].lang === "vi") {
         this.collection.vi = dataCollection.details.data[0];
         this.collection.en = dataCollection.details.data[1];
-      }else if(dataCollection.details.data[0].lang === "en"){
+      } else if (dataCollection.details.data[0].lang === "en") {
         this.collection.en = dataCollection.details.data[0];
         this.collection.vi = dataCollection.details.data[1];
-      };
-      this.isLoaded = ! this.isLoaded;
+      }
+      this.isLoaded = !this.isLoaded;
     },
 
-    AddFile () {
-      let file = { size: 123, name: 'Icon' }
-      let url = '/assets/img/demo/gallery/' + this.count + '.jpg'
-      this.$refs.myVueDropzone.manuallyAddFile(file, url)
+    AddFile() {
+      let file = { size: 123, name: "Icon" };
+      let url = "/assets/img/demo/gallery/" + this.count + ".jpg";
+      this.$refs.myVueDropzone.manuallyAddFile(file, url);
       if (this.count !== 12) {
-        this.count = this.count + 1
+        this.count = this.count + 1;
       } else {
-        this.count = 12
+        this.count = 12;
       }
     },
     async getCollection() {
       try {
-        const response = await axios.get(`collections/${this.$route.params.collectionId}`, {
-          params: {
-            include: "details,rooms.details",
-          }
-        }).then(res => {
-          this.setInitData(res.data.data)
-        });
-
-        // console.log(response.data.data)
+        const response = await axios
+          .get(`collections/${this.$route.params.collectionId}`, {
+            params: {
+              include: "details,rooms.details"
+            }
+          })
+          .then(res => {
+            this.setInitData(res.data.data);
+          });
       } catch (error) {
         if (error) {
-          console.log(error)
           window.toastr["error"]("There was an error", "Error");
         }
       }
     },
-    async submitForm(){
+    async submitForm() {
       const result = this.$validator.validateAll();
-      if(result) {
-        if(this.collection.en.name == ''){
-          this.collection.en.name = this.collection.vi.name
-        };
-        if(this.collection.en.description == ''){
-          this.collection.en.description = this.collection.vi.description
-        };
+      if (result) {
+        if (this.collection.en.name == "") {
+          this.collection.en.name = this.collection.vi.name;
+        }
+        if (this.collection.en.description == "") {
+          this.collection.en.description = this.collection.vi.description;
+        }
         let data = [];
-        let details = {data};
+        let details = { data };
         data[0] = this.collection.vi;
         data[1] = this.collection.en;
-        let valueRooms =[]
-        if(this.rooms.length > 0){
-          for(let i =0;this.rooms.length > i;i++){
-            valueRooms.push(this.rooms[i].id)
+        let valueRooms = [];
+        if (this.rooms.length > 0) {
+          for (let i = 0; this.rooms.length > i; i++) {
+            valueRooms.push(this.rooms[i].id);
           }
         }
-        // console.log(details);
         try {
-          const response = await axios.put(`collections/${this.$route.params.collectionId}`,{
-            image : this.collection.image,
-            hot : this.collection.hot,
-            new : this.collection.new,
-            status : this.collection.status,
-            rooms : valueRooms,
-            details : details,
-          })
-          .then(response => {
-            this.$swal("Thành công", "Cập nhật thành công", "success");
-            this.$router.push({name: 'collections.list'})
-          });
+          const response = await axios
+            .put(`collections/${this.$route.params.collectionId}`, {
+              image: this.collection.image,
+              hot: this.collection.hot,
+              new: this.collection.new,
+              status: this.collection.status,
+              rooms: valueRooms,
+              details: details
+            })
+            .then(response => {
+              this.$swal("Thành công", "Cập nhật thành công", "success");
+              this.$router.push({ name: "collections.list" });
+            });
         } catch (error) {
           if (error) {
             window.toastr["error"]("There was an error", "Error");
-            console.log(error)
           }
         }
       } else {
@@ -474,27 +466,27 @@ export default {
           self.isLeftSidebarVisible = false;
         }
       };
-    },
-  },
-}
+    }
+  }
+};
 </script>
 <style scoped>
-.custom-margin{
+.custom-margin {
   margin-top: 1em;
 }
-.custom-margin{
+.custom-margin {
   margin-top: 1em;
 }
-.container-room{
+.container-room {
   border: 1px solid lightgray;
   padding-top: 1rem;
-  border-radius: 15px
+  border-radius: 15px;
 }
-.list-room{
+.list-room {
   display: inline-block;
   margin-left: 1em;
 }
-.name-room:hover{
+.name-room:hover {
   color: yellowgreen;
 }
 .icon-room:hover {
