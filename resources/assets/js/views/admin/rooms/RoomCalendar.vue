@@ -9,9 +9,9 @@
       </ol>
       <div class="row">
         <div class="col-sm-9">
-          <full-calendar :events="bookingCalendar" :selectable="true" id="calendar"
-          :default-view="defaultView" :header="header" :config="config" :event-limit="true"
-          :editable="false" :selectHelper="true" ref="calendar">
+          <full-calendar v-if="room != null" :events="bookingCalendar" :selectable="true"
+          id="calendar" :default-view="defaultView" :header="header" :config="config"
+          :event-limit="true" :editable="false" :selectHelper="true" ref="calendar">
           </full-calendar>
         </div>
         <div class="col-sm-3">
@@ -23,78 +23,39 @@
               <form>
                 <div class="form-group">
                   <label>Từ ngày *</label>
-                  <datepicker
-                    v-model="date.startDate" input-class="form-control" :format="format"
-                    placeholder="Please choose end date">
+                  <datepicker v-if="status == 0"
+                    v-model="block.startDate" input-class="form-control" :format="format"
+                    placeholder="Please choose end date" key="block.startDate">
+                  </datepicker>
+                  <datepicker v-else
+                    v-model="unblock.startDate" input-class="form-control" :format="format"
+                    placeholder="Please choose end date" key="unblock.startDate">
                   </datepicker>
                 </div>
                 <div class="form-group">
                   <label>Đến ngày *</label>
-                  <datepicker
-                    v-model="date.endDate" :disabled-dates="disabledEndDate" :format="format" readonly="true"
+                  <datepicker v-if="status == 0"
+                    v-model="block.endDate" :disabled-dates="disabledEndDate" :format="format" readonly="true" key="block.endDate"
                     input-class="form-control" placeholder="Please choose end date">
+                  </datepicker>
+                  <datepicker v-else
+                    v-model="unblock.endDate" :disabled-dates="disabledEndDate" :format="format" readonly="true" input-class="form-control" key="unblock.endDate"
+                    placeholder="Please choose end date">
                   </datepicker>
                 </div>
                 <div class="form-group row">
                   <label for="lastName" class="col-sm-12 col-form-label">Trạng thái phòng</label>
                   <div class="col-sm-12" style="text-align: left;">
                     <div class="form-check form-check-inline">
-                      <input v-model="status" id="openRoom" class="form-check-input" type="radio" name="status" value="1">
-                      <label class="form-check-label" for="openRoom">Phòng mở</label>
+                      <input v-model.number="status" id="unblockRoom" class="form-check-input" type="radio" name="status" value="1">
+                      <label class="form-check-label" for="unblockRoom">Mở phòng</label>
                     </div>
                     <div class="form-check form-check-inline">
-                      <input v-model="status" id="blockRoom" class="form-check-input" type="radio" name="status" value="0">
-                      <label class="form-check-label" for="blockRoom">Phòng khóa</label>
+                      <input v-model.number="status" id="blockRoom" class="form-check-input" type="radio" name="status" value="0">
+                      <label class="form-check-label" for="blockRoom">Khóa phòng</label>
                     </div>
                   </div>
                 </div>
-               <!--  <div class="form-group row">
-                  <label for="password" class="col-sm-4 col-form-label">Thuê phòng theo</label>
-                  <div class="col-sm-8">
-                    <label :style="errors.has('room.rent_type') ? 'color:red;' : ''">
-                      {{errors.has('room.rent_type')
-                      ? errors.first('room.rent_type') : 'Thuê theo *'}}
-                    </label>
-                    <multiselect
-                    :allow-empty="false" name="room.rent_type"
-                    v-validate="step==0 ? 'required':''"
-                    data-vv-as="Thuê theo"
-                    v-model="rentType" label="value"
-                    :options="rent_type" :searchable="true"
-                    :show-labels="false" track-by="value">
-                    </multiselect>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="password" class="col-sm-4 col-form-label">Giá theo ngày</label>
-                  <div class="col-sm-8">
-                    <input
-                      id="pasword"
-                      type="pasword"
-                      class="form-control"
-                      placeholder="Price day">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="pasword" class="col-sm-4 col-form-label">Giá theo giờ</label>
-                  <div class="col-sm-8">
-                    <input
-                      id="pasword"
-                      type="pasword"
-                      class="form-control"
-                      placeholder="Price hour">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="pasword" class="col-sm-4 col-form-label">Giá phụ thu</label>
-                  <div class="col-sm-8">
-                    <input
-                      id="pasword"
-                      type="pasword"
-                      class="form-control"
-                      placeholder="Price after hour">
-                  </div>
-                </div> -->
                 <button class="btn btn-outline-success" style="margin-right: 15px;"
                 @click.prevent="onSubmit()">Save</button>
                 <button class="btn btn-outline-danger">Cancel</button>
@@ -126,14 +87,17 @@ export default {
     return {
       car: null,
       room:null,
-      date: {
-        startDate:null,
-        endDate:null,
+      block: {
+        startDate: null,
+        endDate: null
       },
-      format: "dd-MM-yyyy",
+      unblock: {
+        startDate: null,
+        endDate: null
+      },
+      format: "yyyy-MM-dd",
       status:1,
       blockSchedule:[],
-      rent_type:[],
       blockRoom:[],
       room_time_blocks: [],
       bookingCalendar:[],
@@ -147,7 +111,11 @@ export default {
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
       },
-      config: {
+    }
+  },
+  computed: {
+    config() {
+      return {
         locale: 'vi',
         dayRender: function(date,cell) {
           let current = new Date();
@@ -176,7 +144,7 @@ export default {
           }).$mount();
           element.html(vm.$el);
         }
-      },
+      }
     }
   },
   watch: {
@@ -201,40 +169,18 @@ export default {
         }
       }
     },
-    'date.startDate': {
+    'block.startDate': {
       handler(val) {
         this.disabledEndDate.to = val;
       },
       deep: true
     },
-    // date: {
-    //   handler(val) {
-    //     if(val.startDate && val.endDate){
-
-    //       let start = this.correctDay(val.startDate)
-    //       let miliStart = this.convertMiliSecond(start)
-
-    //       let end = this.correctDay(val.endDate)
-    //       let miliEnd = this.convertMiliSecond(end)
-
-    //       let timeDay = 86400000;
-    //       let arr = [];
-    //       while(miliStart <= miliEnd){
-    //         this.blockSchedule.push(miliStart)
-    //         miliStart += timeDay;
-    //       }
-    //       // sắp xếp mảng
-    //       this.blockSchedule.sort();
-    //       // loại bỏ ngày trùng nhau
-    //       this.blockSchedule = Array.from(new Set(this.blockSchedule));
-    //       // chuyển các ngày riêng lẻ thành khoảng ngày: [ ngày bắt đầu, ngày kết thúc ]
-    //       let d = this.convertRangeDate(this.blockSchedule)
-    //       console.log(d)
-
-    //     }
-    //   },
-    //   deep:true
-    // },
+    'unblock.startDate': {
+      handler(val) {
+        this.disabledEndDate.to = val;
+      },
+      deep: true
+    },
     room_time_blocks: {
       handler(val) {
         if(val != null) {
@@ -245,10 +191,10 @@ export default {
               end: null,
               allDay:true,
               textColor: 'white',
-              overlap: false,
+              overlap: true,
               rendering: 'background',
               color: 'rgb(118, 118, 118)',
-              //className:'background-color:red'
+              className:'event-full'
             };
             let currentDate = new Date();
             let today = currentDate.getTime();
@@ -285,68 +231,6 @@ export default {
       let afterAddDay = new Date(beforeAddDay.getTime() + timeDay);
       let day = afterAddDay.toISOString().substring(0, 10);
       return day;
-    },
-    // convertMiliSecond(date) {
-    //   let day = new Date(date);
-    //   let miliSecond = day.getTime();
-    //   return miliSecond;
-    // },
-    // convertMiliToDate(miliDate) {
-    //   let date = new Date(miliDate);
-    //   var d = date.toISOString().substring(0, 10)
-    //   return d;
-    // },
-    // convertRangeDate(arrDate) {
-    //   let length = arrDate.length;
-    //   let arrObj = [];
-    //   let date = { start: null, end: null};
-    //   let i;
-    //   let timeDay = 86400000;
-    //   if(length) {
-    //     date.start = arrDate[0];
-    //     date.end = arrDate[0];
-    //     for(i = 0; i < length; i++) {
-    //       if(arrDate[i+1] == arrDate[i] + timeDay) {
-    //         date.end = arrDate[i+1];
-    //       }
-    //       else {
-    //         date.end = arrDate[i];
-    //         arrObj.push(date);
-    //         date.start = arrDate[i+1];
-    //         date.end = arrDate[i+1];
-    //       }
-    //     }
-    //   }
-    //   console.log(arrObj)
-    //   return arrObj;
-    // },
-    // addEvent: function (start, end, view) {
-    //   this.renderEvent(start, end)
-    // },
-    // renderEvent(start, end) {
-    //   let self = this;
-    //   console.log(start.format('YYYY-MM-DD HH:mm'))
-
-    //   // Add new event
-    //   var evt = {
-    //     id: tmpId,
-    //     title: 'NA',
-    //     start: start,
-    //     end: end,
-    //     color: '#bd362f',
-    //     editable: false
-    //   };
-    //   self.$refs.calendar.fullCalendar('renderEvent', evt, false)
-    // },
-    async getRentType() {
-      try {
-        const response = await axios.get("rooms/rent-type");
-        this.rent_type = response.data;
-      } catch (error) {
-        if (error) {
-          window.toastr["error"]("There was an error", "Error");
-        }
-      }
     },
     async getRoomById() {
       try {
@@ -415,18 +299,43 @@ export default {
     async onSubmit() {
       const result = this.$validator.validateAll();
       if (result) {
-        let date = Object.values(this.date)
-        let blockDays = this.blockRoom.push(date)
-        let response = await axios
-          .put(`rooms/${this.$route.params.roomId}`, {
-            blockRoom: blockDays
+        if(this.status == 1) {
+          this.unblock.startDate = this.unblock.startDate.toISOString().substring(0, 10);
+          this.unblock.endDate = this.unblock.endDate.toISOString().substring(0, 10);
+          let unblock = Object.values(this.unblock)
+          let unblockDays = this.unblock;
+          let blockDays = this.blockRoom;
+          console.log(unblockDays)
+          let response = await axios
+          .put('rooms/update-block', {
+            room_id: this.$route.params.roomId,
+            room_time_blocks: blockDays,
+            unlock_days: unblockDays
           })
           .then(response => {
             this.$refs.calendar.$emit('refetch-events');
           });
+        }
+        else {
+          this.block.startDate = this.block.startDate.toISOString().substring(0, 10);
+          this.block.endDate = this.block.endDate.toISOString().substring(0, 10);
+          let block = Object.values(this.block);
+          this.blockRoom.push(block);
+          let blockDays = this.blockRoom;
+          console.log(blockDays)
+          let response = await axios
+          .put('rooms/update-block', {
+            room_id: this.$route.params.roomId,
+            room_time_blocks: this.blockRoom,
+          })
+          .then(response => {
+            console.log(response)
+            this.$refs.calendar.$emit('reload-events');
+          });
+        }
       } else {
         return window.scroll({
-          top: 80,
+          top: 0,
           behavior: "smooth"
         });
       }
@@ -442,7 +351,6 @@ export default {
             this.getBookingOfRoom();
             this.getBlockOfRoom();
             this.getRoomById();
-            this.getRentType();
             this.getBlockSchedule();
           }
         });
@@ -472,9 +380,15 @@ export default {
 .available:hover {
   background-color: #edeef7;
   outline: rgb(118, 118, 118) solid 1px !important;
-}.
-.block {
-  background-color: red;
+}
+.event-full {
+  background: repeating-linear-gradient(
+    45deg,
+    #cccccc,
+    #cccccc 10px,
+    #f2f2f2 10px,
+    #f2f2f2 20px
+  );
 }
 </style>
 
