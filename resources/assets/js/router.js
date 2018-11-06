@@ -87,6 +87,7 @@ import RoomList from './views/admin/rooms/RoomList.vue'
 import RoomDetail from './views/admin/rooms/RoomDetail.vue'
 import RoomUpdate from './views/admin/rooms/RoomUpdate.vue'
 import RoomCreate from './views/admin/rooms/RoomCreate.vue'
+import RoomCalendar from './views/admin/rooms/RoomCalendar.vue'
 
 // Blogs
 import BlogList from './views/admin/blogs/BlogList.vue'
@@ -420,10 +421,16 @@ const routes = [
         path: 'rooms/update/:roomId',
         name: 'room.update',
         component: RoomUpdate
-      }, {
+      },
+      {
         path: 'rooms/create',
         name: 'room.create',
         component: RoomCreate
+      },
+      {
+        path: 'rooms/calendar/:roomId',
+        name: 'room.calendar',
+        component: RoomCalendar
       },
 
       // Blogs

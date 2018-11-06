@@ -7,7 +7,6 @@ import VuePrism from 'vue-prism'
 import VTooltip from 'v-tooltip'
 import VueSweetalert2 from 'vue-sweetalert2'
 import VCalendar from 'v-calendar'
-
 import Ls from './services/ls'
 import VDropdown from './components/dropdown/VDropdown'
 import VDropdownItem from './components/dropdown/VDropdownItem'
@@ -45,7 +44,7 @@ global.Vue = require('vue')
  */
 
 global.axios = require('axios')
-global.axios.defaults.baseURL = 'http://ws-api.lc/api/'
+global.axios.defaults.baseURL = 'http://ws-api.nhat/api/'
 global.axios.defaults.headers.common = {
   'X-Requested-With': 'XMLHttpRequest'
 }
