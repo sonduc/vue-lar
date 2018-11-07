@@ -7,9 +7,10 @@
         <li class="breadcrumb-item"><a href="#">Room</a></li>
         <li class="breadcrumb-item active">Calendar</li>
       </ol>
-      <div class="row">
+      <div class="row" >
         <div class="col-sm-9">
-          <full-calendar v-if="room != null" :events="bookingCalendar" :selectable="true"
+          <full-calendar v-if="room != null && blockSchedule !=null" :events="bookingCalendar"
+          :selectable="true"
           id="calendar" :default-view="defaultView" :header="header" :config="config"
           :event-limit="true" :editable="false" :selectHelper="true" ref="calendar">
           </full-calendar>
@@ -69,7 +70,6 @@
 </template>
 
 <script>
-import Vue from "vue"
 import { FullCalendar } from 'vue-full-calendar'
 import 'fullcalendar/dist/fullcalendar.css'
 import 'fullcalendar/dist/locale/vi.js'
@@ -87,6 +87,8 @@ export default {
     return {
       car: null,
       room:null,
+      startDay:null,
+      endDay:null,
       block: {
         startDate: null,
         endDate: null
@@ -97,7 +99,7 @@ export default {
       },
       format: "yyyy-MM-dd",
       status:1,
-      blockSchedule:[],
+      blockSchedule:null,
       blockRoom:[],
       room_time_blocks: [],
       bookingCalendar:[],
@@ -115,16 +117,21 @@ export default {
   },
   computed: {
     config() {
+      let roomCalendar = this.room;
+      let blockSchedule = this.blockSchedule;
       return {
         locale: 'vi',
         dayRender: function(date,cell) {
           let current = new Date();
           let currentDate = current.toISOString().substring(0, 10);
-          if(date.format('YYYY-MM-DD') < currentDate) {
+          if(date.format('YYYY-MM-DD') < currentDate ) {
+            cell.addClass("bg-past-day");
+          }
+          else if(blockSchedule.includes(date.format('YYYY-MM-DD'))){
             cell.addClass("bg-blocked-day");
           }
           else {
-            cell.append("<div class='available'></div>");
+            cell.append("<div class='available'>"+roomCalendar.price_day+"đ</div>");
           }
         },
         selectAllow: function(info) {
@@ -143,6 +150,15 @@ export default {
             }
           }).$mount();
           element.html(vm.$el);
+        },
+        select(start, end, jsEvent, view) {
+          let date = [];
+          let startDay = start.format('YYYY-MM-DD');
+          let endDay = end.format('YYYY-MM-DD');
+          date.push(startDay);
+          date.push(endDay);
+          console.log(date)
+          sever.$emit("date-selected",date);
         }
       }
     }
@@ -285,10 +301,9 @@ export default {
         const response = await axios.get(
           `rooms/schedule/${ this.$route.params.roomId }`);
         let data = response.data.data.blocks;
+        this.blockSchedule = [];
         data.forEach(item => {
-          let el = new Date(item)
-          let date = el.getTime()
-          this.blockSchedule.push(date)
+          this.blockSchedule.push(item)
         })
       } catch (error) {
         if (error) {
@@ -302,13 +317,14 @@ export default {
         if(this.status == 1) {
           this.unblock.startDate = this.unblock.startDate.toISOString().substring(0, 10);
           this.unblock.endDate = this.unblock.endDate.toISOString().substring(0, 10);
-          let unblock = Object.values(this.unblock)
+          Object.values(this.unblock)
           let unblockDays = this.unblock;
-          let blockDays = this.blockRoom;
           console.log(unblockDays)
+          let blockDays = this.blockRoom;
+          console.log(blockDays)
           let response = await axios
           .put('rooms/update-block', {
-            room_id: this.$route.params.roomId,
+            room_id: 523,
             room_time_blocks: blockDays,
             unlock_days: unblockDays
           })
@@ -317,12 +333,14 @@ export default {
           });
         }
         else {
-          this.block.startDate = this.block.startDate.toISOString().substring(0, 10);
-          this.block.endDate = this.block.endDate.toISOString().substring(0, 10);
-          let block = Object.values(this.block);
-          this.blockRoom.push(block);
-          let blockDays = this.blockRoom;
-          console.log(blockDays)
+          // this.block.startDate = this.block.startDate.toISOString().substring(0, 10);
+          // this.block.endDate = this.block.endDate.toISOString().substring(0, 10);
+          let date = [];
+          date.push(this.startDay)
+          date.push(this.endDay)
+          //let block = Object.values(this.block);
+          this.blockRoom.push(date);
+          console.log(this.blockRoom)
           let response = await axios
           .put('rooms/update-block', {
             room_id: this.$route.params.roomId,
@@ -330,7 +348,7 @@ export default {
           })
           .then(response => {
             console.log(response)
-            this.$refs.calendar.$emit('reload-events');
+            this.$refs.calendar.$emit('refetch-events');
           });
         }
       } else {
@@ -361,7 +379,7 @@ export default {
 </script>
 
 <style>
-.bg-blocked-day {
+.bg-past-day {
   background: repeating-linear-gradient(
     -45deg,
     #edeef7,
@@ -370,6 +388,9 @@ export default {
     #f2f2f2 20px
   );
   cursor: not-allowed;
+}
+.bg-blocked-day {
+  background-color: #ffffff;
 }
 .available {
   display: flex;
@@ -383,7 +404,7 @@ export default {
 }
 .event-full {
   background: repeating-linear-gradient(
-    45deg,
+    -45deg,
     #cccccc,
     #cccccc 10px,
     #f2f2f2 10px,
