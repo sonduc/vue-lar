@@ -191,10 +191,7 @@ export default {
               block.start = item.date_start;
             }
             if(item.date_start != item.date_end){
-              let beforeAddDay = new Date(item.date_end);
-              let timeDay = 86400000;
-              let afterAddDay = new Date(beforeAddDay.getTime() + timeDay);
-              let day = afterAddDay.toISOString().substring(0, 10);
+              let day = this.correctDay(item.date_end)
               block.end = day;
             }
             else {
@@ -205,6 +202,13 @@ export default {
         }
       }
     },
+    events: {
+      handler(val) {
+        this.$refs.calendar.$emit('refetch-events')
+        this.$refs.calendar.$emit('rerender-events')
+      },
+      deep: true,
+    }
   },
   methods: {
     correctDay(date) {
@@ -251,7 +255,6 @@ export default {
             }
           }
         );
-        console.log(response.data.data.blocks.data);
         this.room_time_blocks = response.data.data.blocks.data;
         this.room_time_blocks.forEach(item => {
           let arr = Object.values(item)
@@ -301,7 +304,10 @@ export default {
         })
         .then(response => {
           this.getBlockOfRoom();
+          this.getBlockSchedule();
         });
+        this.dateSelected.startDate = null;
+        this.dateSelected.endDate = null;
       } else {
         return window.scroll({
           top: 0,
@@ -329,7 +335,10 @@ export default {
         })
         .then(response => {
           this.getBlockOfRoom();
+          this.getBlockSchedule();
         });
+        this.dateSelected.startDate = null;
+        this.dateSelected.endDate = null;
       } else {
         return window.scroll({
           top: 0,
@@ -379,7 +388,7 @@ export default {
 }
 .available:hover {
   background-color: #edeef7;
-  outline: rgb(118, 118, 118) solid 1px !important;
+  outline: rgb(118, 118, 118) solid 2px !important;
 }
 .event-full {
   background: repeating-linear-gradient(
