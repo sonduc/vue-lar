@@ -24,42 +24,20 @@
               <form>
                 <div class="form-group">
                   <label>Từ ngày *</label>
-                  <datepicker v-if="status == 0"
-                    v-model="block.startDate" input-class="form-control" :format="format"
-                    placeholder="Please choose end date" key="block.startDate">
-                  </datepicker>
-                  <datepicker v-else
-                    v-model="unblock.startDate" input-class="form-control" :format="format"
-                    placeholder="Please choose end date" key="unblock.startDate">
-                  </datepicker>
+                  <input type="text" name="dateSelected.startDate"
+                  v-model="dateSelected.startDate" class="form-control" disabled>
                 </div>
                 <div class="form-group">
                   <label>Đến ngày *</label>
-                  <datepicker v-if="status == 0"
-                    v-model="block.endDate" :disabled-dates="disabledEndDate" :format="format" readonly="true" key="block.endDate"
-                    input-class="form-control" placeholder="Please choose end date">
-                  </datepicker>
-                  <datepicker v-else
-                    v-model="unblock.endDate" :disabled-dates="disabledEndDate" :format="format" readonly="true" input-class="form-control" key="unblock.endDate"
-                    placeholder="Please choose end date">
-                  </datepicker>
-                </div>
-                <div class="form-group row">
-                  <label for="lastName" class="col-sm-12 col-form-label">Trạng thái phòng</label>
-                  <div class="col-sm-12" style="text-align: left;">
-                    <div class="form-check form-check-inline">
-                      <input v-model.number="status" id="unblockRoom" class="form-check-input" type="radio" name="status" value="1">
-                      <label class="form-check-label" for="unblockRoom">Mở phòng</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input v-model.number="status" id="blockRoom" class="form-check-input" type="radio" name="status" value="0">
-                      <label class="form-check-label" for="blockRoom">Khóa phòng</label>
-                    </div>
-                  </div>
+                  <input type="text" name="dateSelected.endDate"
+                  v-model="dateSelected.endDate" class="form-control" disabled>
                 </div>
                 <button class="btn btn-outline-success" style="margin-right: 15px;"
-                @click.prevent="onSubmit()">Save</button>
-                <button class="btn btn-outline-danger">Cancel</button>
+                @click.prevent="unblockSubmit()"
+                :disabled="dateSelected.startDate == null ? true: false">Mở phòng</button>
+                <button class="btn btn-outline-danger" style="margin-right: 15px;"
+                @click.prevent="blockSubmit()"
+                :disabled="dateSelected.startDate == null ? true: false">Khóa phòng</button>
               </form>
             </div>
           </div>
@@ -85,20 +63,11 @@ export default {
   },
   data() {
     return {
-      car: null,
       room:null,
-      startDay:null,
-      endDay:null,
-      block: {
+      dateSelected: {
         startDate: null,
         endDate: null
       },
-      unblock: {
-        startDate: null,
-        endDate: null
-      },
-      format: "yyyy-MM-dd",
-      status:1,
       blockSchedule:null,
       blockRoom:[],
       room_time_blocks: [],
@@ -117,6 +86,7 @@ export default {
   },
   computed: {
     config() {
+      let self = this;
       let roomCalendar = this.room;
       let blockSchedule = this.blockSchedule;
       return {
@@ -152,13 +122,9 @@ export default {
           element.html(vm.$el);
         },
         select(start, end, jsEvent, view) {
-          let date = [];
-          let startDay = start.format('YYYY-MM-DD');
-          let endDay = end.format('YYYY-MM-DD');
-          date.push(startDay);
-          date.push(endDay);
-          console.log(date)
-          sever.$emit("date-selected",date);
+          self.dateSelected.startDate = start.format('YYYY-MM-DD');
+          end = end.subtract(1, 'days');
+          self.dateSelected.endDate = end.format('YYYY-MM-DD');
         }
       }
     }
@@ -285,6 +251,7 @@ export default {
             }
           }
         );
+        console.log(response.data.data.blocks.data);
         this.room_time_blocks = response.data.data.blocks.data;
         this.room_time_blocks.forEach(item => {
           let arr = Object.values(item)
@@ -311,46 +278,58 @@ export default {
         }
       }
     },
-    async onSubmit() {
+    async unblockSubmit() {
       const result = this.$validator.validateAll();
       if (result) {
-        if(this.status == 1) {
-          this.unblock.startDate = this.unblock.startDate.toISOString().substring(0, 10);
-          this.unblock.endDate = this.unblock.endDate.toISOString().substring(0, 10);
-          Object.values(this.unblock)
-          let unblockDays = this.unblock;
-          console.log(unblockDays)
-          let blockDays = this.blockRoom;
-          console.log(blockDays)
-          let response = await axios
-          .put('rooms/update-block', {
-            room_id: 523,
-            room_time_blocks: blockDays,
-            unlock_days: unblockDays
-          })
-          .then(response => {
-            this.$refs.calendar.$emit('refetch-events');
-          });
+        let unblock = Object.values(this.dateSelected);
+        if(this.dateSelected.startDate === this.dateSelected.endDate) {
+          unblock.pop();
         }
-        else {
-          // this.block.startDate = this.block.startDate.toISOString().substring(0, 10);
-          // this.block.endDate = this.block.endDate.toISOString().substring(0, 10);
-          let date = [];
-          date.push(this.startDay)
-          date.push(this.endDay)
-          //let block = Object.values(this.block);
-          this.blockRoom.push(date);
-          console.log(this.blockRoom)
-          let response = await axios
-          .put('rooms/update-block', {
-            room_id: this.$route.params.roomId,
-            room_time_blocks: this.blockRoom,
-          })
-          .then(response => {
-            console.log(response)
-            this.$refs.calendar.$emit('refetch-events');
-          });
+        let unblockDays = [];
+        unblockDays.push(unblock);
+        let blockDays = this.blockRoom;
+        blockDays.forEach(item => {
+          if(item[0] === item[1]) {
+            item.pop();
+          }
+        });
+        let response = await axios
+        .put('rooms/update-block', {
+          room_id: this.$route.params.roomId,
+          room_time_blocks: blockDays,
+          unlock_days: unblockDays
+        })
+        .then(response => {
+          this.getBlockOfRoom();
+        });
+      } else {
+        return window.scroll({
+          top: 0,
+          behavior: "smooth"
+        });
+      }
+    },
+    async blockSubmit() {
+      const result = this.$validator.validateAll();
+      if (result) {
+        let blockDate = Object.values(this.dateSelected);
+        this.blockRoom.forEach(item => {
+          if(item[0] === item[1]) {
+            item.pop();
+          }
+        });
+        if(this.dateSelected.startDate === this.dateSelected.endDate) {
+          blockDate.pop();
         }
+        this.blockRoom.push(blockDate);
+        let response = await axios
+        .put('rooms/update-block', {
+          room_id: this.$route.params.roomId,
+          room_time_blocks: this.blockRoom,
+        })
+        .then(response => {
+          this.getBlockOfRoom();
+        });
       } else {
         return window.scroll({
           top: 0,
