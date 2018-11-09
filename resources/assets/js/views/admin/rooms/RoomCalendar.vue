@@ -55,7 +55,7 @@ import Auth from "../../../services/auth"
 import CalendarEvent from "../components/CalendarEvent"
 import Datepicker from "vuejs-datepicker"
 export default {
-  name: "RoomForm",
+  name: "RoomCalendar",
   components: {
     FullCalendar,
     Datepicker
@@ -91,6 +91,9 @@ export default {
         dayRender: function(date,cell) {
           let current = new Date();
           let currentDate = current.toISOString().substring(0, 10);
+          let price_day = self.formatNumber(self.room.price_day);
+          let price_hour = self.formatNumber(self.room.price_hour);
+          let rent_type = self.room.rent_type;
           if(date.format('YYYY-MM-DD') < currentDate)
           {
             cell.addClass("bg-past-day");
@@ -99,7 +102,15 @@ export default {
             cell.addClass("bg-blocked-day");
           }
           else {
-            cell.append("<div class='available'>"+self.room.price_day+'đ'+"</div>");
+            if(rent_type == 3) {
+              cell.append("<div class='available'><div>"+price_day+" đ/1 ngày</div><div class='center'></div><div> "+price_hour+" đ/1 giờ</div></div>");
+            }
+            else if(rent_type == 2) {
+              cell.append("<div class='available' id='price'>"+price_day+" đ/1 ngày</div>");
+            }
+            else {
+              cell.append("<div class='available' id='price'>"+price_hour+" đ/1 giờ</div>");
+            }
           }
         },
         selectAllow: function(info) {
@@ -199,6 +210,9 @@ export default {
         currentDate = addDays.call(currentDate, 1);
       }
       return dates;
+    },
+    formatNumber(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     async getRoomById() {
       try {
@@ -400,7 +414,9 @@ export default {
   background-color: #ffffff;
 }
 .available {
-  display: flex;
+  padding-top: 27px;
+  font-size: 14px;
+  text-align: center;
   align-items: center;
   justify-content: center;
   height: 100%;
@@ -417,6 +433,15 @@ export default {
     #f2f2f2 10px,
     #f2f2f2 20px
   );
+}
+.center {
+  background-color: rgb(155, 155, 134);
+  height: 1px;
+  width: 110px;
+  margin: 5px auto;
+}
+#price {
+  padding-top: 38px;
 }
 </style>
 
