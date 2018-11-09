@@ -10,7 +10,7 @@
       <div class="row" >
         <div class="col-sm-9">
           <full-calendar v-if="room != null && blockSchedule !=null" :events="bookingCalendar"
-          :selectable="true"
+          :selectable="true" :key="1"
           id="calendar" :default-view="defaultView" :header="header" :config="config"
           :event-limit="true" :editable="false" :selectHelper="true" ref="calendar">
           </full-calendar>
@@ -51,10 +51,9 @@
 import { FullCalendar } from 'vue-full-calendar'
 import 'fullcalendar/dist/fullcalendar.css'
 import 'fullcalendar/dist/locale/vi.js'
-import 'fullcalendar/dist/locale/fr.js'
 import Auth from "../../../services/auth"
 import CalendarEvent from "../components/CalendarEvent"
-import Datepicker from "vuejs-datepicker";
+import Datepicker from "vuejs-datepicker"
 export default {
   name: "RoomForm",
   components: {
@@ -87,27 +86,26 @@ export default {
   computed: {
     config() {
       let self = this;
-      let roomCalendar = this.room;
-      let blockSchedule = this.blockSchedule;
       return {
         locale: 'vi',
         dayRender: function(date,cell) {
           let current = new Date();
           let currentDate = current.toISOString().substring(0, 10);
-          if(date.format('YYYY-MM-DD') < currentDate ) {
+          if(date.format('YYYY-MM-DD') < currentDate)
+          {
             cell.addClass("bg-past-day");
           }
-          else if(blockSchedule.includes(date.format('YYYY-MM-DD'))){
+          else if(self.blockSchedule.includes(date.format('YYYY-MM-DD'))){
             cell.addClass("bg-blocked-day");
           }
           else {
-            cell.append("<div class='available'>"+roomCalendar.price_day+"đ</div>");
+            cell.append("<div class='available'>"+self.room.price_day+'đ'+"</div>");
           }
         },
         selectAllow: function(info) {
           let current = new Date();
           let currentDate = current.toISOString().substring(0, 10);
-          if (info.start.isBefore(currentDate)) {
+          if (info.start.format('YYYY-MM-DD') <= currentDate) {
             return false;
           }
           return true;
@@ -125,7 +123,7 @@ export default {
           self.dateSelected.startDate = start.format('YYYY-MM-DD');
           end = end.subtract(1, 'days');
           self.dateSelected.endDate = end.format('YYYY-MM-DD');
-        }
+        },
       }
     }
   },
@@ -145,69 +143,39 @@ export default {
             };
             booking.title = item.name + ': '+ item.total_fee +'đ';
             booking.start = item.checkin;
-            booking.end = item.checkout;
+            booking.end = this.correctDay(item.checkout);
             this.bookingCalendar.push(booking)
           })
         }
       }
     },
-    'block.startDate': {
+    blockRoom: {
       handler(val) {
-        this.disabledEndDate.to = val;
-      },
-      deep: true
-    },
-    'unblock.startDate': {
-      handler(val) {
-        this.disabledEndDate.to = val;
-      },
-      deep: true
-    },
-    room_time_blocks: {
-      handler(val) {
-        if(val != null) {
-          val.forEach(item => {
-            let block = {
-              title: '',
-              start: null,
-              end: null,
-              allDay:true,
-              textColor: 'white',
-              overlap: true,
-              rendering: 'background',
-              color: 'rgb(118, 118, 118)',
-              className:'event-full'
-            };
-            let currentDate = new Date();
-            let today = currentDate.getTime();
-
-            let start_Date = new Date(item.date_start);
-            let start = start_Date.getTime();
-
-            if(today > start) {
-              block.start = currentDate.toISOString().substring(0, 10);
-            }
-            else {
-              block.start = item.date_start;
-            }
-            if(item.date_start != item.date_end){
-              let day = this.correctDay(item.date_end)
-              block.end = day;
-            }
-            else {
-              block.end = item.date_end;
-            }
-            this.bookingCalendar.push(block)
-          })
+        let self = this;
+        let length = val.length;
+        let dayBlock = val[length - 1]
+        let block = {
+          title: '',
+          start: null,
+          end: null,
+          allDay:true,
+          textColor: 'white',
+          overlap: true,
+          rendering: 'background',
+          color: 'rgb(118, 118, 118)',
+          className:'event-block'
+        };
+        if(dayBlock.length == 1) {
+          block.start = dayBlock[0]
+          block.end = this.correctDay(dayBlock[0]);
         }
-      }
-    },
-    events: {
-      handler(val) {
-        this.$refs.calendar.$emit('refetch-events')
-        this.$refs.calendar.$emit('rerender-events')
+        else {
+          block.start = dayBlock[0];
+          block.end = this.correctDay(dayBlock[1]);
+        }
+        self.bookingCalendar.push(block)
       },
-      deep: true,
+      deep:true
     }
   },
   methods: {
@@ -217,6 +185,20 @@ export default {
       let afterAddDay = new Date(beforeAddDay.getTime() + timeDay);
       let day = afterAddDay.toISOString().substring(0, 10);
       return day;
+    },
+    changeToArangeDate(startDate, endDate) {
+      let dates = [];
+      let currentDate = startDate;
+      let addDays = function(days) {
+        var date = new Date(this.valueOf());
+        date.setDate(date.getDate() + days);
+        return date;
+      };
+      while (currentDate <= endDate) {
+        dates.push(currentDate);
+        currentDate = addDays.call(currentDate, 1);
+      }
+      return dates;
     },
     async getRoomById() {
       try {
@@ -260,6 +242,7 @@ export default {
           let arr = Object.values(item)
           this.blockRoom.push(arr)
         })
+        this.initBlockDay(this.blockRoom)
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
@@ -288,10 +271,10 @@ export default {
         if(this.dateSelected.startDate === this.dateSelected.endDate) {
           unblock.pop();
         }
-        let unblockDays = [];
-        unblockDays.push(unblock);
-        let blockDays = this.blockRoom;
-        blockDays.forEach(item => {
+        let unblockDates = [];
+        unblockDates.push(unblock);
+        let blockDates = this.blockRoom;
+        blockDates.forEach(item => {
           if(item[0] === item[1]) {
             item.pop();
           }
@@ -299,15 +282,13 @@ export default {
         let response = await axios
         .put('rooms/update-block', {
           room_id: this.$route.params.roomId,
-          room_time_blocks: blockDays,
-          unlock_days: unblockDays
+          room_time_blocks: blockDates,
+          unlock_days: unblockDates
         })
         .then(response => {
-          this.getBlockOfRoom();
-          this.getBlockSchedule();
+          this.dateSelected.startDate = null;
+          this.dateSelected.endDate = null;
         });
-        this.dateSelected.startDate = null;
-        this.dateSelected.endDate = null;
       } else {
         return window.scroll({
           top: 0,
@@ -334,11 +315,11 @@ export default {
           room_time_blocks: this.blockRoom,
         })
         .then(response => {
-          this.getBlockOfRoom();
-          this.getBlockSchedule();
+          this.dateSelected.startDate = null;
+          this.dateSelected.endDate = null;
         });
-        this.dateSelected.startDate = null;
-        this.dateSelected.endDate = null;
+        //Object.assign(this.$data, this.$options.data.call(this))
+
       } else {
         return window.scroll({
           top: 0,
@@ -346,6 +327,44 @@ export default {
         });
       }
     },
+    initBlockDay(arrBlockDate) {
+      if(arrBlockDate.length){
+        arrBlockDate.forEach(item => {
+          let block = {
+            title: '',
+            start: null,
+            end: null,
+            allDay:true,
+            textColor: 'white',
+            overlap: true,
+            rendering: 'background',
+            color: 'rgb(118, 118, 118)',
+            className:'event-block'
+          };
+          let currentDate = new Date();
+          let today = currentDate.getTime();
+
+          let start_Date = new Date(item[0]);
+          let start = start_Date.getTime();
+
+          if(today > start) {
+            block.start = currentDate.toISOString().substring(0, 10);
+          }
+          else {
+            block.start = item[0];
+          }
+
+          if(item.length == 2){
+            let day = this.correctDay(item[1]);
+            block.end = day;
+          }
+          else {
+            block.end = this.correctDay(item[0]);
+          }
+          this.bookingCalendar.push(block)
+        })
+      }
+    }
   },
   created() {
     Auth.getProfile().then(res => {
@@ -375,7 +394,7 @@ export default {
     #f2f2f2 10px,
     #f2f2f2 20px
   );
-  cursor: not-allowed;
+  cursor: not-allowed !important;
 }
 .bg-blocked-day {
   background-color: #ffffff;
@@ -388,9 +407,9 @@ export default {
 }
 .available:hover {
   background-color: #edeef7;
-  outline: rgb(118, 118, 118) solid 2px !important;
+  outline: rgb(118, 118, 118) solid 2px ;
 }
-.event-full {
+.event-block {
   background: repeating-linear-gradient(
     -45deg,
     #cccccc,
