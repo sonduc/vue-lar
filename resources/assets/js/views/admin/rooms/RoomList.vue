@@ -172,7 +172,10 @@
                 </div>
                 <div class="content-subject mb-3">
                   <button @click="openModalOptionalPrices(room)" class="btn btn-sm btn-secondary btn-pressable">
-                    <i class="icon-fa icon-fa-calendar"></i> Chi tiết giá
+                    Chi tiết giá
+                  </button>
+                  <button @click="openBookingCalendar(room.id)" class="btn btn-danger btn-sm">
+                    <i class="icon-fa icon-fa-calendar"></i>Lịch trống phòng
                   </button>
                 </div>
               </td>
@@ -227,7 +230,7 @@
                     class="btn btn-sm btn-icon btn-outline-info">
                     <i class="icon-fa icon-fa-user" />
                   </button>
-                  <router-link :to="{ name: 'room.update', params: {roomId: room.id}}" v-tooltip.top-center="'Câp nhật phòng'" type="button" class="btn btn-sm btn-icon btn-outline-info">
+                  <router-link :to="{ name: 'room.update', params: {roomId: room.id}}" v-tooltip.top-center="'Cập nhật phòng'" type="button" class="btn btn-sm btn-icon btn-outline-info">
                     <i class="icon-fa icon-fa-pencil" />
                   </router-link>
                 </div>
@@ -479,6 +482,14 @@ export default {
           self.isLeftSidebarVisible = false;
         }
       };
+    },
+    openBookingCalendar(roomId) {
+      this.$router.push({
+        name: "room.calendar",
+        params: {
+          roomId: roomId
+        }
+      });
     },
     createBooking(roomId) {
       this.$router.push({
