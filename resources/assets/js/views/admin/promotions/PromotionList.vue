@@ -292,7 +292,6 @@ export default {
         confirmButtonText: "Đồng ý",
         cancelButtonText: "Quay lại",
         showCloseButton: true,
-        showLoaderOnConfirm: true
       }).then(result => {
         if (result.value) {
           if (status == 1) {
