@@ -30,7 +30,6 @@
                     v-model="promotions.name"
                     class="form-control">
                 </div>
-
                 <div class="row" style="margin-top: 20px;">
                   <div class="col-sm-6">
                     <div class="form-group">
@@ -111,9 +110,8 @@
                     @vdropzone-complete="afterCompleteImagePost"/>
                 </div>
                 <div class="btn-center">
-                  <button class="btn btn-success" style="margin-right: 10px;"
-                    @click.prevent="onSubmit"
-                    :disabled="type === 'Update' ? checkAllowUpdate(promotions.date_start) : false">
+                  <button v-if="type === 'Update' ? checkAllowUpdate(promotions.date_start) : false"
+                    @click.prevent="onSubmit" style="margin-right: 10px;" class="btn btn-success">
                     Lưu khuyến mãi
                   </button>
                   <button class="btn btn-danger"
@@ -127,7 +125,6 @@
         </div>
       </div>
     </form>
-    </div>
   </div>
 </template>
 
@@ -269,6 +266,9 @@ export default {
       if(Time1 >= Time2) {
         return true;
       }
+      else {
+        return false;
+      }
     },
     checkAllowUpdate(date) {
       let current = new Date();
@@ -277,6 +277,9 @@ export default {
 
       let Time2 = this.convertDateToMiliSecond(date);
       if(Time1 >= Time2) {
+        return false;
+      }
+      else {
         return true;
       }
     },

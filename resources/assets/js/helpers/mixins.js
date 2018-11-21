@@ -110,26 +110,24 @@ export const yearsList = {
   data() {
     return {
       years: [
-        { id: 1, value: "2014" },
-        { id: 2, value: "2015" },
-        { id: 3, value: "2016" },
-        { id: 4, value: "2017" },
-        { id: 5, value: "2018" },
-        { id: 6, value: "2019" },
-        { id: 7, value: "2020" },
-        { id: 8, value: "2021" },
-        { id: 9, value: "2022" },
-        { id: 10, value: "2023" },
-        { id: 11, value: "2024" },
-        { id: 12, value: "2025" },
-        { id: 13, value: "2026" },
-        { id: 14, value: "2027" },
-        { id: 15, value: "2028" }
+        { id: 1, value: "2016" },
+        { id: 2, value: "2017" },
+        { id: 3, value: "2018" },
+        { id: 4, value: "2019" }
       ]
     };
   },
   computed: {
     yearsData() {
+      let d = new Date();
+      let oldYears = this.years;
+      let currentYear = d.getFullYear();
+      let length = currentYear.length;
+      oldYears.forEach(item => {
+        if(item.value == currentYear) {
+          this.years.push({id: length + 1, value: currentYear + 2 + ""})
+        }
+      })
       return this.years;
     }
   }
