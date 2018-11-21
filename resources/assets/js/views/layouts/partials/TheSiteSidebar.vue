@@ -289,6 +289,19 @@
             </router-link>
           </v-collapse-item>
 
+          <v-collapse-item active-url="/admin/promotions">
+            <a slot="item-title" href="#">
+              <i class="icon-fa icon-fa-gift"/> Khuyến mãi
+              <span class="icon-fa arrow icon-fa-fw"/>
+            </a>
+            <router-link to="/admin/promotions/list">
+              Chương trình khuyến mãi
+            </router-link>
+            <router-link to="/admin/promotions/create">
+              Tạo chương trình khuyến mãi
+            </router-link>
+          </v-collapse-item>
+
           <v-collapse-item active-url="/admin/blogs">
             <a slot="item-title" href="#">
               <i class="icon-fa icon-fa-newspaper-o"/>Bài viết

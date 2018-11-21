@@ -1,4 +1,5 @@
 import numeral from "numeral";
+import moment from 'moment';
 export const format = {
   filters: {
     formatNumber(value) {
@@ -9,6 +10,12 @@ export const format = {
         return "Chủ nhật";
       } else {
         return "Thứ " + value;
+      }
+    },
+    formatDate(date) {
+      if (date) {
+        let d = new Date(date);
+        return moment(d).format('DD/MM/YYYY')
       }
     }
   }
@@ -71,6 +78,57 @@ export const hoursList = {
   computed: {
     hoursData() {
       return this.hours;
+    }
+  }
+};
+export const monthsList = {
+  data() {
+    return {
+      months: [
+        { id: 1, value: "1" },
+        { id: 2, value: "2" },
+        { id: 3, value: "3" },
+        { id: 4, value: "4" },
+        { id: 5, value: "5" },
+        { id: 6, value: "6" },
+        { id: 7, value: "7" },
+        { id: 8, value: "8" },
+        { id: 9, value: "9" },
+        { id: 10, value: "10" },
+        { id: 11, value: "11" },
+        { id: 12, value: "12" }
+      ]
+    };
+  },
+  computed: {
+    monthsData() {
+      return this.months;
+    }
+  }
+};
+export const yearsList = {
+  data() {
+    return {
+      years: [
+        { id: 1, value: "2016" },
+        { id: 2, value: "2017" },
+        { id: 3, value: "2018" },
+        { id: 4, value: "2019" }
+      ]
+    };
+  },
+  computed: {
+    yearsData() {
+      let d = new Date();
+      let oldYears = this.years;
+      let currentYear = d.getFullYear();
+      let length = currentYear.length;
+      oldYears.forEach(item => {
+        if(item.value == currentYear) {
+          this.years.push({id: length + 1, value: currentYear + 2 + ""})
+        }
+      })
+      return this.years;
     }
   }
 };

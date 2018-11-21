@@ -384,8 +384,8 @@ export default {
     old_booking: {
       handler(val) {
         this.old_booking == true
-          ? (this.disabledCheckin.to = "")
-          : (this.disabledCheckin.to = new Date());
+          ? (this.disabledDatesCheckin.to = "")
+          : (this.disabledDatesCheckin.to = new Date());
       }
     },
     payment_method: {
