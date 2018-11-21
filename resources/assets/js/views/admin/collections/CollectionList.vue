@@ -377,7 +377,7 @@ export default {
     },
     remove(id) {
       this.$swal({
-        title: "Bạn có muốn xóa bộ sưu tập không không",
+        title: "Bạn có muốn xóa bộ sưu tập không",
         type: "info",
         showCancelButton: true,
         showConfirmButton: true,

@@ -32,12 +32,14 @@
                   <input type="text" name="dateSelected.endDate"
                   v-model="dateSelected.endDate" class="form-control" disabled>
                 </div>
-                <button class="btn btn-outline-success" style="margin-right: 15px;"
+                <button class="btn btn-outline-success" style="margin-right: 5px;"
                 @click.prevent="unblockSubmit()"
                 :disabled="dateSelected.startDate == null ? true: false">Mở phòng</button>
-                <button class="btn btn-outline-danger" style="margin-right: 15px;"
+                <button class="btn btn-outline-danger" style="margin-right: 5px;"
                 @click.prevent="blockSubmit()"
                 :disabled="dateSelected.startDate == null ? true: false">Khóa phòng</button>
+                <button class="btn btn-outline-primary" style="margin-right: 5px;"
+                @click.prevent="clearDate()">Reset</button>
               </form>
             </div>
           </div>
@@ -213,6 +215,10 @@ export default {
     },
     formatNumber(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    clearDate(){
+      this.dateSelected.startDate = null;
+      this.dateSelected.endDate = null;
     },
     async getRoomById() {
       try {

@@ -89,6 +89,16 @@ import RoomUpdate from './views/admin/rooms/RoomUpdate.vue'
 import RoomCreate from './views/admin/rooms/RoomCreate.vue'
 import RoomCalendar from './views/admin/rooms/RoomCalendar.vue'
 
+// Promotions
+import PromotionList from './views/admin/promotions/PromotionList.vue'
+import PromotionUpdate from './views/admin/promotions/PromotionUpdate.vue'
+import PromotionCreate from './views/admin/promotions/PromotionCreate.vue'
+import PromotionDetail from './views/admin/promotions/PromotionDetail.vue'
+
+// Coupons
+import CouponUpdate from './views/admin/coupons/CouponUpdate.vue'
+import CouponCreate from './views/admin/coupons/CouponCreate.vue'
+
 // Blogs
 import BlogList from './views/admin/blogs/BlogList.vue'
 import BlogDetail from './views/admin/blogs/BlogDetail.vue'
@@ -431,6 +441,40 @@ const routes = [
         path: 'rooms/calendar/:roomId',
         name: 'room.calendar',
         component: RoomCalendar
+      },
+
+      // Promotions
+      {
+        path: 'promotions/list',
+        name: 'promotion.list',
+        component: PromotionList
+      },
+      {
+        path: 'promotions/update/:promotionId',
+        name: 'promotion.update',
+        component: PromotionUpdate
+      },
+      {
+        path: 'promotions/create',
+        name: 'promotion.create',
+        component: PromotionCreate
+      },
+      {
+        path: 'promotions/detail/:promotionId',
+        name: 'promotion.detail',
+        component: PromotionDetail
+      },
+
+      // Coupons
+      {
+        path: 'coupons/update/:couponId',
+        name: 'coupon.update',
+        component: CouponUpdate
+      },
+      {
+        path: 'coupons/create',
+        name: 'coupon.create',
+        component: CouponCreate
       },
 
       // Blogs
