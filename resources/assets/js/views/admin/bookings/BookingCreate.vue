@@ -18,7 +18,9 @@
           <form-wizard @on-complete="onSubmit" next-button-text="Tiếp tục" finish-button-text="Tạo đặt phòng"
             back-button-text="Quay lại" :title="room != null ? room.details.data[0].name : ''" :subtitle="room != null ? room.details.data[0].address : ''">
             <tab-content :before-change="validateBeforeNext" title="Thông tin khách hàng">
+
               <!-- <tab-content title="Thông tin khách hàng"> -->
+
               <section>
                 <div class="row" v-if="room !== null">
                   <div class="col-lg-2" v-if="room.rent_type == 2 || room.rent_type == 3">
@@ -70,14 +72,20 @@
                       <datepicker v-model="booking.birthday" :format="format" input-class="form-control" />
                     </div>
                     <div class="form-group">
-                      <label :style="errors.has('booking_source') ? 'color:red;' : ''">{{errors.has('booking_source')
-                        ? errors.first('booking_source') : 'Nguồn đặt phòng *'}}</label>
-                      <multiselect
-                        :allow-empty="false" name="booking_source"
-                        v-model="source"
-                        v-validate="'required'"
-                        data-vv-as="Nguồn đặt phòng" label="title" :options="sourceList" :searchable="true"
-                        :show-labels="false" />
+                      <div class="custom-control custom-checkbox mb-3">
+                        <input id="customControlValidation1" v-model="old_booking" type="checkbox" class="custom-control-input"
+                          required />
+                        <label class="custom-control-label" for="customControlValidation1">
+                          Đặt phòng trong quá khứ
+                        </label>
+                      </div>
+                      <div class="custom-control custom-checkbox mb-3">
+                        <input id="customControlValidation2" v-model="booking_for_other" type="checkbox" class="custom-control-input"
+                          required />
+                        <label class="custom-control-label" for="customControlValidation2">
+                          Đặt phòng cho người khác
+                        </label>
+                      </div>
                     </div>
                   </div>
                   <div class="col-lg-6">
@@ -98,7 +106,7 @@
                     <div class="form-group">
                       <label :style="errors.has('phone') ? 'color:red;' : ''">{{errors.has('phone')
                         ? errors.first('phone') : 'Số điện thoại *'}} </label>
-                      <input name="phone" type="text" data-vv-as="Số điện thoại" v-validate="'required|numeric'"
+                      <input name="phone" type="text" data-vv-as="Số điện thoại" v-validate="'required|numeric|min:10|max:14'"
                         v-model="booking.phone" class="form-control">
                     </div>
 
@@ -115,10 +123,23 @@
                     <div class="form-group">
                       <label :style="errors.has('number_guest') ? 'color:red;' : ''">{{errors.has('number_guest')
                         ? errors.first('number_guest') : 'Số khách *'}}</label>
-                      <input name="number_guest" v-validate="'required|numeric'" data-vv-as="Số khách" type="text" v-model.number="booking.number_of_guests"
+                      <input name="number_guest" v-validate="'required|numeric|min_value:1|max_value:'+ max_number_guest"
+                        data-vv-as="Số khách" type="text"
+                        v-model.number="booking.number_of_guests"
                         class="form-control">
                     </div>
                     <div class="form-group">
+                      <label :style="errors.has('booking_source') ? 'color:red;' : ''">{{errors.has('booking_source')
+                        ? errors.first('booking_source') : 'Nguồn đặt phòng *'}}</label>
+                      <multiselect
+                        :allow-empty="false" name="booking_source"
+                        v-model="source"
+                        v-validate="'required'"
+                        data-vv-as="Nguồn đặt phòng" label="title" :options="sourceList" :searchable="true"
+                        :show-labels="false" />
+                    </div>
+
+                    <!-- <div class="form-group">
                       <label>Mã giảm giá</label>
                       <div class="input-group">
                         <input :disabled="true" type="text" v-model="booking.coupon" class="form-control">
@@ -128,25 +149,8 @@
                           <button v-else @click="applyCoupon" class="btn btn-sm btn-primary"><i class="icon-fa icon-fa-check"></i></button>
                         </div>
                       </div>
+                    </div> -->
 
-                    </div>
-
-                  </div>
-                  <div class="col-lg-12">
-                    <div class="custom-control custom-checkbox mb-3">
-                      <input id="customControlValidation1" v-model="old_booking" type="checkbox" class="custom-control-input"
-                        required />
-                      <label class="custom-control-label" for="customControlValidation1">
-                        Đặt phòng trong quá khứ
-                      </label>
-                    </div>
-                    <div class="custom-control custom-checkbox mb-3">
-                      <input id="customControlValidation2" v-model="booking_for_other" type="checkbox" class="custom-control-input"
-                        required />
-                      <label class="custom-control-label" for="customControlValidation2">
-                        Đặt phòng cho người khác
-                      </label>
-                    </div>
                   </div>
                   <div class="col-lg-12" v-if="booking_for_other">
                     <div class="card">
@@ -173,6 +177,8 @@
                 </div>
               </section>
             </tab-content>
+
+
             <tab-content title="Thanh toán">
               <div class="card">
                 <div class="card-header">
@@ -196,6 +202,19 @@
                           ? errors.first('price_discount') : 'Giảm giá'}}</label>
                         <input name="price_discount" data-vv-as="Giảm giá" v-model.number="booking.price_discount"
                           v-validate="'numeric'" type="number" class="form-control">
+                      </div>
+                      <div class="form-group">
+                        <label>Mã giảm giá</label>
+                        <div class="input-group">
+                          <input type="text"
+                            v-model="booking.coupon" class="form-control">
+                          <div class="input-group-append">
+                            <button v-if="fee_after_discount > 0" @click="removeCoupon" class="btn btn-sm btn-primary" disabled="true">
+                              <i class="icon-fa icon-fa-times"></i></button>
+                            <button v-else @click="applyCoupon" class="btn btn-sm btn-primary">
+                              <i class="icon-fa icon-fa-check"></i></button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div class="col-lg-6">
@@ -367,7 +386,9 @@ export default {
         }
       ],
       old_booking: false,
-      booking_for_other: false
+      booking_for_other: false,
+      max_number_guest: null,
+      fee_after_discount: 0,
     };
   },
   watch: {
@@ -426,7 +447,8 @@ export default {
       return (
         this.booking.total_fee +
         this.booking.additional_fee -
-        this.booking.price_discount
+        this.booking.price_discount -
+        this.fee_after_discount
       );
     }
   },
@@ -449,6 +471,7 @@ export default {
           }
         });
         // this.blocked_dates = response.data.data.blocks.data;
+        this.max_number_guest = response.data.data.max_guest + response.data.data.max_additional_guest;
         return (this.room = response.data.data);
       } catch (error) {
         if (error) {
@@ -588,12 +611,32 @@ export default {
       }
     },
     async applyCoupon() {
-      this.$swal(
-        "Xin lỗi",
-        "Chức năng này đang trong quá trình phát triển",
-        "warning"
-      );
-      // if (this.booking.coupon.trim() !== "") {
+      if (this.booking.coupon.trim() !== "") {
+        //let day = new Date();
+        //let currentDay = day.toISOString().substr(0, 10);
+        let currentDay = "2018-11-23";
+        let response = await axios
+          .post("coupons/calculate-discount", {
+            coupon : this.booking.coupon,
+            price_original : this.booking.price_original,
+            room_id : this.room.id,
+            city_id : this.room.city_id,
+            district_id: this.room.district_id,
+            day : currentDay
+          })
+          .then(response => {
+            console.log(response)
+            this.fee_after_discount = response.data.data.price_discount;
+            this.$swal(
+              "Thành công",
+              "Mã giảm giá được áp dụng thành công",
+              "success"
+            );
+          })
+          .catch(error => {
+            this.$swal("Xin lỗi", "Mã giảm giá không hợp lệ hoặc đã hết hạn", "error");
+        });
+
       //   this.$swal(
       //     "Chúc mừng",
       //     "Mã giảm giá được áp dụng thành công",
@@ -613,7 +656,7 @@ export default {
       //   }
       // } else {
       //   this.$swal("Xin lỗi", "Mã giảm giá không được bỏ trống", "warning");
-      // }
+      }
     },
     async removeCoupon() {
       // this.$swal("Thành công", "Mã giảm giá đã được loại bỏ", "success");
