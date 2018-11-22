@@ -23,7 +23,8 @@
 
               <section>
                 <div class="row" v-if="room !== null">
-                  <div class="col-lg-2" v-if="room.rent_type == 2 || room.rent_type == 3">
+                  <div class="col-lg-2" v-if="room.rent_type == 2 || room.rent_type == 3"
+                    style="margin-bottom: 20px;">
                     <div class="custom-control custom-radio">
                       <input id="customControlValidation3" value="2" v-model="booking.booking_type" type="radio" class="custom-control-input"
                         name="radio-stacked" required>
@@ -32,7 +33,8 @@
                       </label>
                     </div>
                   </div>
-                  <div class="col-lg-2" v-if="room.rent_type == 1 || room.rent_type == 3">
+                  <div class="col-lg-2" v-if="room.rent_type == 1 || room.rent_type == 3"
+                    style="margin-bottom: 20px;">
                     <div class="custom-control custom-radio mb-3">
                       <input id="customControlValidation4" value="1" v-model="booking.booking_type" type="radio" class="custom-control-input"
                         name="radio-stacked" required>
@@ -206,10 +208,10 @@
                       <div class="form-group">
                         <label>Mã giảm giá</label>
                         <div class="input-group">
-                          <input type="text"
+                          <input type="text" :disabled="booking.coupon_discount > 0 ? true : false"
                             v-model="booking.coupon" class="form-control">
                           <div class="input-group-append">
-                            <button v-if="fee_after_discount > 0" @click="removeCoupon" class="btn btn-sm btn-primary" disabled="true">
+                            <button v-if="booking.coupon_discount > 0" @click="removeCoupon" class="btn btn-sm btn-primary">
                               <i class="icon-fa icon-fa-times"></i></button>
                             <button v-else @click="applyCoupon" class="btn btn-sm btn-primary">
                               <i class="icon-fa icon-fa-check"></i></button>
@@ -271,7 +273,7 @@
                   <td><span class="label label-danger">{{booking.price_original | formatNumber}}</span></td>
                 </tr>
                 <tr>
-                  <td>Khuyến mãi</td>
+                  <td>Giảm giá</td>
                   <td></td>
                   <td><span class="label label-success">{{booking.price_discount | formatNumber}}</span></td>
                 </tr>
@@ -281,7 +283,7 @@
                   <td><span class="label label-danger">{{booking.additional_fee | formatNumber}}</span></td>
                 </tr>
                 <tr>
-                  <td>Giảm giá</td>
+                  <td>Khuyến mãi</td>
                   <td></td>
                   <td><span class="label label-success">{{booking.coupon_discount | formatNumber}}</span></td>
                 </tr>
@@ -373,6 +375,7 @@ export default {
       },
       disabledDatesCheckout: {
         to: new Date(),
+        from: '',
         dates: []
       },
       blocked_dates: [],
@@ -388,13 +391,21 @@ export default {
       old_booking: false,
       booking_for_other: false,
       max_number_guest: null,
-      fee_after_discount: 0,
+      //fee_after_discount: 0,
     };
   },
   watch: {
     booking: {
       handler(val) {
-        this.disabledDatesCheckout.to = val.checkin;
+        let day = this.addDay(val.checkin);
+        let dayChoose = day.toISOString().substr(0, 10);
+        let arrDisabled = this.disabledDatesCheckout.dates.map(item => item.toISOString().substr(0, 10));
+        let index = arrDisabled.indexOf(dayChoose);
+        if (index > -1) {
+          this.disabledDatesCheckout.from = day;
+          this.disabledDatesCheckout.dates.splice(index, 1);
+        }
+        this.disabledDatesCheckout.to = day;
         if (val.booking_type == 2) {
           this.checkin = val.checkin + " " + this.checkin_hour;
           this.checkout = val.checkin + " " + this.checkout_hour;
@@ -435,6 +446,8 @@ export default {
     },
     blocked_dates: {
       handler(val) {
+        this.disabledDatesCheckin.dates = [];
+        this.disabledDatesCheckout.dates = [];
         val.forEach(element => {
           this.disabledDatesCheckin.dates.push(new Date(element));
           this.disabledDatesCheckout.dates.push(new Date(element));
@@ -448,11 +461,17 @@ export default {
         this.booking.total_fee +
         this.booking.additional_fee -
         this.booking.price_discount -
-        this.fee_after_discount
+        this.booking.coupon_discount
       );
     }
   },
   methods: {
+    addDay(date) {
+      let beforeAddDay = new Date(date);
+      let timeDay = 86400000;
+      let afterAddDay = new Date(beforeAddDay.getTime() + timeDay);
+      return afterAddDay;
+    },
     async getRoomBlock() {
       try {
         const response = await axios.get(
@@ -549,59 +568,73 @@ export default {
     async onSubmit() {
       const result = this.$validator.validateAll();
       if (result) {
-        let response = await axios
-          .post(`bookings`, {
-            name: this.booking.name,
-            phone: this.booking.phone,
-            sex: this.booking.sex,
-            birthday:
-              this.booking.birthday !== null
-                ? this.booking.birthday.toISOString().substr(0, 10)
-                : null,
-            email: this.booking.email,
-            email_received: this.booking_for_other
-              ? this.booking.email_received
-              : this.booking.email,
-            name_received: this.booking_for_other
-              ? this.booking.name_received
-              : this.booking.name,
-            phone_received: this.booking_for_other
-              ? this.booking.phone_received
-              : this.booking.phone,
-            room_id: this.room.id,
-            checkin:
-              this.booking.booking_type == 2
-                ? this.booking.checkin.toISOString().substr(0, 10) + " 14:00:00"
-                : this.booking.checkin.toISOString().substr(0, 10) +
-                  " " +
-                  this.checkin_hour,
-            checkout:
-              this.booking.booking_type == 2
-                ? this.booking.checkout.toISOString().substr(0, 10) +
-                  " 12:00:00"
-                : this.booking.checkin.toISOString().substr(0, 10) +
-                  " " +
-                  this.checkout_hour,
-            additional_fee: this.booking.additional_fee,
-            money_received: this.booking.money_received,
-            price_discount: this.booking.price_discount,
-            coupon: this.booking.coupon,
-            note: "Ai wanna săm wai",
-            status: this.booking.status,
-            number_of_guests: this.booking.number_of_guests,
-            booking_type: this.booking.booking_type,
-            payment_method: this.booking.payment_method,
-            payment_status: this.booking.payment_status,
-            source: this.booking.source,
-            confirm: this.booking.confirm,
-            staff_id: this.current_user.id
-          })
-          .then(response => {
-            this.$swal("Thành công", "Booking đã được tạo", "success");
-          })
-          .catch(error => {
-            let err = error.response.data.data.errors;
-            window.toastr["error"]("There was an error", "Error");
+        this.$swal({
+          title: "Bạn có muốn tạo booking này không",
+          text: "",
+          type: "warning",
+          showCancelButton: true,
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          showCloseButton: false,
+          showLoaderOnConfirm: true,
+          preConfirm: async () => {
+            let response = await axios
+              .post(`bookings`, {
+                name: this.booking.name,
+                phone: this.booking.phone,
+                sex: this.booking.sex,
+                birthday:
+                  this.booking.birthday !== null
+                    ? this.booking.birthday.toISOString().substr(0, 10)
+                    : null,
+                email: this.booking.email,
+                email_received: this.booking_for_other
+                  ? this.booking.email_received
+                  : this.booking.email,
+                name_received: this.booking_for_other
+                  ? this.booking.name_received
+                  : this.booking.name,
+                phone_received: this.booking_for_other
+                  ? this.booking.phone_received
+                  : this.booking.phone,
+                room_id: this.room.id,
+                checkin:
+                  this.booking.booking_type == 2
+                    ? this.booking.checkin.toISOString().substr(0, 10) + " 14:00:00"
+                    : this.booking.checkin.toISOString().substr(0, 10) +
+                      " " +
+                      this.checkin_hour,
+                checkout:
+                  this.booking.booking_type == 2
+                    ? this.booking.checkout.toISOString().substr(0, 10) +
+                      " 12:00:00"
+                    : this.booking.checkin.toISOString().substr(0, 10) +
+                      " " +
+                      this.checkout_hour,
+                additional_fee: this.booking.additional_fee,
+                money_received: this.booking.money_received,
+                price_discount: this.booking.price_discount,
+                coupon: this.booking.coupon,
+                note: "Ai wanna săm wai",
+                status: this.booking.status,
+                number_of_guests: this.booking.number_of_guests,
+                booking_type: this.booking.booking_type,
+                payment_method: this.booking.payment_method,
+                payment_status: this.booking.payment_status,
+                source: this.booking.source,
+                confirm: this.booking.confirm,
+                staff_id: this.current_user.id
+              })
+              .then(response => {
+                console.log(response)
+                this.$swal("Thành công", "Booking đã được tạo", "success");
+              })
+              .catch(error => {
+                let err = error.response.data.data.errors;
+                window.toastr["error"]("There was an error", "Error");
+              });
+            }
           });
       } else {
         return window.scroll({
@@ -626,7 +659,7 @@ export default {
           })
           .then(response => {
             console.log(response)
-            this.fee_after_discount = response.data.data.price_discount;
+            this.booking.coupon_discount = response.data.data.price_discount;
             this.$swal(
               "Thành công",
               "Mã giảm giá được áp dụng thành công",
@@ -654,29 +687,25 @@ export default {
       //       this.$swal("Xin lỗi", "Mã giảm giá không hợp lệ", "error");
       //     }
       //   }
-      // } else {
-      //   this.$swal("Xin lỗi", "Mã giảm giá không được bỏ trống", "warning");
+        } else {
+        this.$swal("Xin lỗi", "Mã giảm giá không được bỏ trống", "warning");
       }
     },
     async removeCoupon() {
-      // this.$swal("Thành công", "Mã giảm giá đã được loại bỏ", "success");
-      // try {
-      //   this.booking.coupon = "";
-      //   this.booking.price_discount = 0;
-      //   // Recalculate the discount
-      //   // const response = await axios.get(
-      //   // `rooms/${this.$route.params.roomId}?include=details`
-      //   // );
-      //   // return;
-      // } catch (error) {
-      //   if (error) {
-      //     this.$swal(
-      //       "Xin lỗi",
-      //       "Có lỗi xảy ra, vui lòng kiểm tra lại",
-      //       "error"
-      //     );
-      //   }
-      // }
+      this.$swal("Thành công", "Mã giảm giá đã được loại bỏ", "success");
+      try {
+        this.booking.coupon = "";
+        this.booking.price_discount = 0;
+        this.booking.coupon_discount = 0;
+      } catch (error) {
+        if (error) {
+          this.$swal(
+            "Xin lỗi",
+            "Có lỗi xảy ra, vui lòng kiểm tra lại",
+            "error"
+          );
+        }
+      }
     }
   },
   mounted() {
