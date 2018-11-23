@@ -645,9 +645,8 @@ export default {
     },
     async applyCoupon() {
       if (this.booking.coupon.trim() !== "") {
-        //let day = new Date();
-        //let currentDay = day.toISOString().substr(0, 10);
-        let currentDay = "2018-11-23";
+        let day = new Date();
+        let currentDay = day.toISOString().substring(0, 10);
         let response = await axios
           .post("coupons/calculate-discount", {
             coupon : this.booking.coupon,
