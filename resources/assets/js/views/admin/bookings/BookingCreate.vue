@@ -375,7 +375,7 @@ export default {
       },
       disabledDatesCheckout: {
         to: new Date(),
-        from: '',
+        from: null,
         dates: []
       },
       blocked_dates: [],
@@ -391,12 +391,15 @@ export default {
       old_booking: false,
       booking_for_other: false,
       max_number_guest: null,
-      //fee_after_discount: 0,
     };
   },
   watch: {
     booking: {
       handler(val) {
+        this.disabledDatesCheckout.dates = [];
+        this.blocked_dates.forEach(date => {
+          this.disabledDatesCheckout.dates.push(new Date(date));
+        });
         let day = this.addDay(val.checkin);
         let dayChoose = day.toISOString().substr(0, 10);
         let arrDisabled = this.disabledDatesCheckout.dates.map(item => item.toISOString().substr(0, 10));
@@ -404,6 +407,9 @@ export default {
         if (index > -1) {
           this.disabledDatesCheckout.from = day;
           this.disabledDatesCheckout.dates.splice(index, 1);
+        }
+        else {
+          this.disabledDatesCheckout.from = null;
         }
         this.disabledDatesCheckout.to = day;
         if (val.booking_type == 2) {
@@ -453,7 +459,7 @@ export default {
           this.disabledDatesCheckout.dates.push(new Date(element));
         });
       }
-    }
+    },
   },
   computed: {
     totalFeeCalculated() {
@@ -615,7 +621,7 @@ export default {
                 additional_fee: this.booking.additional_fee,
                 money_received: this.booking.money_received,
                 price_discount: this.booking.price_discount,
-                coupon: this.booking.coupon,
+                coupon: this.booking.coupon_discount > 0 ? this.booking.coupon:null,
                 note: "Ai wanna săm wai",
                 status: this.booking.status,
                 number_of_guests: this.booking.number_of_guests,
@@ -627,7 +633,6 @@ export default {
                 staff_id: this.current_user.id
               })
               .then(response => {
-                console.log(response)
                 this.$swal("Thành công", "Booking đã được tạo", "success");
               })
               .catch(error => {
@@ -657,7 +662,6 @@ export default {
             day : currentDay
           })
           .then(response => {
-            console.log(response)
             this.booking.coupon_discount = response.data.data.price_discount;
             this.$swal(
               "Thành công",
