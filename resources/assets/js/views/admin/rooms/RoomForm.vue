@@ -36,6 +36,7 @@
                               ? errors.first('room.room_type') : 'Loại phòng *'}}
                             </label>
                             <multiselect
+                            style="z-index:4"
                             :allow-empty="false" name="room.room_type"
                             v-validate="step==0 ? 'required':''"
                             data-vv-as="Loại phòng"
