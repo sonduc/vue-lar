@@ -26,7 +26,9 @@
                   <div class="col-lg-2" v-if="room.rent_type == 2 || room.rent_type == 3"
                     style="margin-bottom: 20px;">
                     <div class="custom-control custom-radio">
-                      <input id="customControlValidation3" value="2" v-model="booking.booking_type" type="radio" class="custom-control-input"
+                      <input id="customControlValidation3" value="2"
+                        v-model="booking.booking_type" type="radio"
+                        class="custom-control-input"
                         name="radio-stacked" required>
                       <label class="custom-control-label" :style="booking.booking_type == null ?'color:red' : ''" for="customControlValidation3">
                         Đặt theo ngày
@@ -47,14 +49,19 @@
                   <div class="col-lg-6">
                     <div class="form-group">
                       <label :style="errors.has('checkin_date') ? 'color:red;' : ''">{{errors.has('checkin_date')
-                        ? errors.first('checkin_date') : 'Ngày nhận phòng *'}}</label>
-                      <datepicker :disabled-dates="disabledDatesCheckin" name="checkin_date" data-vv-as="Ngày nhận phòng" v-validate="'required'" v-model="booking.checkin" :format="format" input-class="form-control" />
-                    </div>
-                    <div class="form-group" v-if="booking.booking_type == 1">
-                      <label :style="errors.has('checkin_hour') ? 'color:red;' : ''">{{errors.has('checkin_hour')
-                        ? errors.first('checkin_hour') : 'Giờ nhận phòng *'}}</label>
-                      <multiselect :allow-empty="false" name="checkin_hour" v-model="checkin_hour" v-validate="booking.booking_type == 1 ? 'required' : ''"
-                        data-vv-as="Giờ nhận phòng" :options="hoursData" :searchable="true" :show-labels="false" />
+                        ? errors.first('checkin_date') : 'Chọn ngày *'}}</label>
+                        <homestay-date-picker
+                        v-if="booking.booking_type == 2 && blocked_dates != null"
+                        format="DD/MM/YYYY" :disabledDates='blocked_dates'
+                        :minNights="1" ref="datepicker" @check-in-changed="setStartDate"
+                        @check-out-changed="setEndDate" name="checkin_date">
+                        </homestay-date-picker>
+
+                        <datepicker v-if="booking.booking_type == 1"
+                        :disabled-dates="disabledDatesCheckin"
+                        name="checkin_date" input-class="form-control"
+                        data-vv-as="Ngày nhận phòng" v-validate="'required'"
+                        v-model="booking.checkin" :format="format" />
                     </div>
                     <div class="form-group">
                       <label :style="errors.has('name') ? 'color:red;' : ''">
@@ -72,6 +79,15 @@
                     <div class="form-group">
                       <label>Ngày sinh</label>
                       <datepicker v-model="booking.birthday" :format="format" input-class="form-control" />
+                    </div>
+                    <div class="form-group" v-if="booking.booking_type == 1">
+                      <label>Giới tính</label>
+                      <select v-model="booking.sex" class="form-control ls-select2">
+                        <option value="0">Không xác định</option>
+                        <option value="1">Nam</option>
+                        <option value="2">Nữ</option>
+                        <option value="3">Khác</option>
+                      </select>
                     </div>
                     <div class="form-group">
                       <div class="custom-control custom-checkbox mb-3">
@@ -91,12 +107,12 @@
                     </div>
                   </div>
                   <div class="col-lg-6">
-                    <div class="form-group">
-                      <label :style="errors.has('checkout_date') ? 'color:red;' : ''">{{errors.has('checkout_date')
-                        ? errors.first('checkout_date') : 'Ngày trả phòng *'}}</label>
-                      <datepicker name="checkout_date" v-validate="booking.booking_type == 2 ? 'required' : ''"
-                        :disabled="booking.booking_type == 1" data-vv-as="Ngày trả phòng" :format="format" v-model="booking.checkout"
-                         :disabledDates="disabledDatesCheckout" input-class="form-control" />
+
+                    <div class="form-group" v-if="booking.booking_type == 1">
+                      <label :style="errors.has('checkin_hour') ? 'color:red;' : ''">{{errors.has('checkin_hour')
+                        ? errors.first('checkin_hour') : 'Giờ nhận phòng *'}}</label>
+                      <multiselect :allow-empty="false" name="checkin_hour" v-model="checkin_hour" v-validate="booking.booking_type == 1 ? 'required' : ''"
+                        data-vv-as="Giờ nhận phòng" :options="hoursData" :searchable="true" :show-labels="false" />
                     </div>
                     <div class="form-group" v-if="booking.booking_type == 1">
                       <label :style="errors.has('checkout_hour') ? 'color:red;' : ''">{{errors.has('checkout_hour')
@@ -112,7 +128,8 @@
                         v-model="booking.phone" class="form-control">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" v-if="booking.booking_type == 2"
+                      style="margin-top:32px;">
                       <label>Giới tính</label>
                       <select v-model="booking.sex" class="form-control ls-select2">
                         <option value="0">Không xác định</option>
@@ -140,18 +157,6 @@
                         data-vv-as="Nguồn đặt phòng" label="title" :options="sourceList" :searchable="true"
                         :show-labels="false" />
                     </div>
-
-                    <!-- <div class="form-group">
-                      <label>Mã giảm giá</label>
-                      <div class="input-group">
-                        <input :disabled="true" type="text" v-model="booking.coupon" class="form-control">
-                        <div class="input-group-append">
-                          <button v-if="booking.price_discount > 0" @click="removeCoupon" class="btn btn-sm btn-primary"><i
-                              class="icon-fa icon-fa-times"></i></button>
-                          <button v-else @click="applyCoupon" class="btn btn-sm btn-primary"><i class="icon-fa icon-fa-check"></i></button>
-                        </div>
-                      </div>
-                    </div> -->
 
                   </div>
                   <div class="col-lg-12" v-if="booking_for_other">
@@ -309,6 +314,7 @@ import { Tabs, Tab } from "vue-tabs-component";
 import Multiselect from "vue-multiselect";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import Datepicker from "vuejs-datepicker";
+import HomestayDatePicker from 'vue-hotel-datepicker';
 export default {
   mixins: [hoursList, format, constant],
   components: {
@@ -317,11 +323,14 @@ export default {
     Tabs,
     Tab,
     Multiselect,
-    Datepicker
+    Datepicker,
+    HomestayDatePicker
   },
   data() {
     return {
       current_user: null,
+      endDate: null,
+      maxNights:null,
       sourceList: [
         {
           value: 1,
@@ -357,7 +366,7 @@ export default {
       booking: {
         checkin: null,
         checkout: null,
-        booking_type: null,
+        booking_type: 2,
         birthday: null,
         payment_status: 3,
         price_discount: 0,
@@ -373,12 +382,8 @@ export default {
         to: new Date(),
         dates: []
       },
-      disabledDatesCheckout: {
-        to: new Date(),
-        from: null,
-        dates: []
-      },
-      blocked_dates: [],
+
+      blocked_dates: null,
       format: "yyyy-MM-dd",
       room: null,
       permissions: "booking.create",
@@ -394,31 +399,6 @@ export default {
     };
   },
   watch: {
-    booking: {
-      handler(val) {
-        this.disabledDatesCheckout.dates = [];
-        this.blocked_dates.forEach(date => {
-          this.disabledDatesCheckout.dates.push(new Date(date));
-        });
-        let day = this.addDay(val.checkin);
-        let dayChoose = day.toISOString().substr(0, 10);
-        let arrDisabled = this.disabledDatesCheckout.dates.map(item => item.toISOString().substr(0, 10));
-        let index = arrDisabled.indexOf(dayChoose);
-        if (index > -1) {
-          this.disabledDatesCheckout.from = day;
-          this.disabledDatesCheckout.dates.splice(index, 1);
-        }
-        else {
-          this.disabledDatesCheckout.from = null;
-        }
-        this.disabledDatesCheckout.to = day;
-        if (val.booking_type == 2) {
-          this.checkin = val.checkin + " " + this.checkin_hour;
-          this.checkout = val.checkin + " " + this.checkout_hour;
-        }
-      },
-      deep: true
-    },
     old_booking: {
       handler(val) {
         this.old_booking == true
@@ -453,13 +433,25 @@ export default {
     blocked_dates: {
       handler(val) {
         this.disabledDatesCheckin.dates = [];
-        this.disabledDatesCheckout.dates = [];
         val.forEach(element => {
           this.disabledDatesCheckin.dates.push(new Date(element));
-          this.disabledDatesCheckout.dates.push(new Date(element));
         });
       }
     },
+    'booking.checkin': {
+      handler(val) {
+        if(val && this.booking.booking_type == 2) {
+          this.booking.checkout = null;
+          let checkinChoose = val.toISOString().substr(0, 10);
+          let addTwoDay = this.addTwoDay(checkinChoose);
+          let index = this.blocked_dates.indexOf(addTwoDay);
+          if (index > -1) {
+            this.setEndDate(new Date(addTwoDay));
+          }
+        }
+      },
+      deep:true
+    }
   },
   computed: {
     totalFeeCalculated() {
@@ -478,12 +470,33 @@ export default {
       let afterAddDay = new Date(beforeAddDay.getTime() + timeDay);
       return afterAddDay;
     },
+    addTwoDay(date) {
+      let beforeAddDay = new Date(date);
+      let timeDay = 86400000 * 2;
+      let afterAddDay = new Date(beforeAddDay.getTime() + timeDay);
+      let afterDay = afterAddDay.toISOString().substr(0, 10);
+      return afterDay;
+    },
+    setStartDate: function(newCheckin) {
+      if (newCheckin) {
+        this.$refs.datepicker.setCheckIn(newCheckin);
+        this.booking.checkout = null;
+        this.booking.checkin = newCheckin;
+      }
+    },
+    setEndDate: function(newCheckout) {
+      if (newCheckout) {
+        this.$refs.datepicker.setCheckOut(newCheckout);
+        this.booking.checkout = newCheckout;
+      }
+    },
     async getRoomBlock() {
       try {
         const response = await axios.get(
           `rooms/schedule/${this.$route.params.roomId}`
         );
-        return (this.blocked_dates = response.data.data.blocks);
+        this.blocked_dates = [];
+        this.blocked_dates = response.data.data.blocks;
       } catch (error) {
         window.toastr["error"]("There was an error", "Error");
       }
@@ -495,7 +508,6 @@ export default {
             include: "details,blocks"
           }
         });
-        // this.blocked_dates = response.data.data.blocks.data;
         this.max_number_guest = response.data.data.max_guest + response.data.data.max_additional_guest;
         return (this.room = response.data.data);
       } catch (error) {
@@ -505,6 +517,12 @@ export default {
       }
     },
     async validateBeforeNext() {
+      let minusHour;
+      if(this.booking.booking_type == 1) {
+        let checkinHour = new Date("1/1/1999 "+ this.checkin_hour);
+        let checkoutHour = new Date("1/1/1999 "+ this.checkout_hour);
+        minusHour = checkoutHour.getTime() - checkinHour.getTime();
+      }
       if (this.booking.booking_type == null) {
         this.$swal({
           title: "Xin lỗi",
@@ -521,11 +539,21 @@ export default {
             behavior: "smooth"
           });
         });
+      }
+      else if (this.booking.checkin == null) {
+        window.toastr["error"]("Vui lòng chọn ngày checkin", "Error");
+      }
+      else if (this.booking.booking_type == 2 && this.booking.checkout == null) {
+        window.toastr["error"]("Vui lòng chọn ngày checkout", "Error");
+      }
+      else if (this.booking.booking_type == 1 && minusHour < 0){
+         window.toastr["error"]("Chọn giờ trả phòng phải lớn hơn giờ nhận phòng", "Error");
+      }
+      else if (this.booking.booking_type == 1 && minusHour > 0 && minusHour < 14400000){
+        window.toastr["error"]("Bạn phải đặt ít nhất 4 giờ", "Error");
       } else {
         const result = this.$validator.validateAll();
         if (result) {
-          // eslint-disable-next-line
-          // Calculate the booking fee
           this.booking.days = 0;
           this.booking.hours = 0;
           const response = await axios.post(`bookings/price-calculator/`, {
@@ -534,7 +562,7 @@ export default {
             room_id: this.room.id,
             checkin:
               this.booking.booking_type == 2
-                ? this.booking.checkin.toISOString().substr(0, 10) + " 14:00:00"
+                ? this.addDay(this.booking.checkin).toISOString().substr(0, 10) + " 14:00:00"
                 : this.booking.checkin.toISOString().substr(0, 10) +
                   " " +
                   this.checkin_hour,
@@ -607,7 +635,7 @@ export default {
                 room_id: this.room.id,
                 checkin:
                   this.booking.booking_type == 2
-                    ? this.booking.checkin.toISOString().substr(0, 10) + " 14:00:00"
+                    ? this.addDay(this.booking.checkin).toISOString().substr(0, 10) + " 14:00:00"
                     : this.booking.checkin.toISOString().substr(0, 10) +
                       " " +
                       this.checkin_hour,
@@ -634,6 +662,7 @@ export default {
               })
               .then(response => {
                 this.$swal("Thành công", "Booking đã được tạo", "success");
+                this.$router.push({ name: "booking.list" });
               })
               .catch(error => {
                 let err = error.response.data.data.errors;
@@ -671,25 +700,7 @@ export default {
           })
           .catch(error => {
             this.$swal("Xin lỗi", "Mã giảm giá không hợp lệ hoặc đã hết hạn", "error");
-        });
-
-      //   this.$swal(
-      //     "Chúc mừng",
-      //     "Mã giảm giá được áp dụng thành công",
-      //     "success"
-      //   );
-      //   try {
-      //     // this.booking.price_discount = 120000;
-      //     // Get discount base on coupon ( must return by number )
-      //     // const response = await axios.get(
-      //     // `rooms/${this.$route.params.roomId}?include=details`
-      //     // );
-      //     // return;
-      //   } catch (error) {
-      //     if (error) {
-      //       this.$swal("Xin lỗi", "Mã giảm giá không hợp lệ", "error");
-      //     }
-      //   }
+          });
         } else {
         this.$swal("Xin lỗi", "Mã giảm giá không được bỏ trống", "warning");
       }
