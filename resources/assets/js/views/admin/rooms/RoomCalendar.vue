@@ -7,15 +7,16 @@
         <li class="breadcrumb-item"><a href="#">Room</a></li>
         <li class="breadcrumb-item active">Calendar</li>
       </ol>
-      <div class="row" >
+      <lottie v-if="loading" :options="defaultOptions" :height="150" :width="150"></lottie>
+      <div class="row" v-if="room != null && blockSchedule !=null">
         <div class="col-sm-9">
-          <full-calendar v-if="room != null && blockSchedule !=null" :events="bookingCalendar"
-          :selectable="true" :key="1"
-          id="calendar" :default-view="defaultView" :header="header" :config="config"
-          :event-limit="true" :editable="false" :selectHelper="true" ref="calendar">
+          <full-calendar
+          :selectable="true" :key="1" :events="bookingCalendar" :config="config"
+          id="calendar" :default-view="defaultView" :header="header" ref="calendar"
+          :event-limit="true" :editable="false" :selectHelper="true" >
           </full-calendar>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-3" >
           <div class="card" style="margin-top: 59px;">
             <div class="card-header">
               <h5>Thay đổi trạng thái phòng</h5>
@@ -33,10 +34,10 @@
                   v-model="dateSelected.endDate" class="form-control" disabled>
                 </div>
                 <button class="btn btn-outline-success" style="margin-right: 5px;"
-                @click.prevent="unblockSubmit()"
+                @click="unblockSubmit()"
                 :disabled="dateSelected.startDate == null ? true: false">Mở phòng</button>
                 <button class="btn btn-outline-danger" style="margin-right: 5px;"
-                @click.prevent="blockSubmit()"
+                @click="blockSubmit()"
                 :disabled="dateSelected.startDate == null ? true: false">Khóa phòng</button>
                 <button class="btn btn-outline-primary" style="margin-right: 5px;"
                 @click.prevent="clearDate()">Reset</button>
@@ -50,142 +51,167 @@
 </template>
 
 <script>
-import { FullCalendar } from "vue-full-calendar";
-import "fullcalendar/dist/fullcalendar.css";
-import "fullcalendar/dist/locale/vi.js";
-import Auth from "../../../services/auth";
-import CalendarEvent from "../components/CalendarEvent";
-import Datepicker from "vuejs-datepicker";
+import { FullCalendar } from 'vue-full-calendar'
+import 'fullcalendar/dist/fullcalendar.css'
+import 'fullcalendar/dist/locale/vi.js'
+import Auth from "../../../services/auth"
+import Datepicker from "vuejs-datepicker"
+import * as animationData from "../../loading/material_wave_loading.json";
+import Lottie from "vue-lottie";
 export default {
   name: "RoomCalendar",
   components: {
     FullCalendar,
-    Datepicker
+    Datepicker,
+    Lottie
   },
   data() {
     return {
-      room: null,
+      defaultOptions: {
+        animationData: animationData
+      },
+      loading: true,
+      room:null,
+      prices:null,
       dateSelected: {
         startDate: null,
         endDate: null
       },
-      blockSchedule: null,
-      blockRoom: [],
+      blockSchedule:null,
+      blockRoom:[],
       room_time_blocks: [],
       bookingCalendar: [],
       bookingRoom: [],
       disabledEndDate: {
         to: ""
       },
-      defaultView: "month",
+      defaultView: 'month',
       header: {
-        left: "prev,next today",
-        center: "title",
-        right: "month,agendaWeek,agendaDay"
-      }
-    };
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+    }
   },
   computed: {
-    isUnblockDisable() {
-      if (
-        this.blockSchedule !== null &&
-        this.blockSchedule.includes(this.dateSelected.startDate)
-      ) {
-        return true;
-      }
-      return false;
-    },
-    isBlockDisable() {
-      if (
-        this.blockSchedule !== null &&
-        !this.blockSchedule.includes(this.dateSelected.startDate)
-      ) {
-        return true;
-      }
-      return false;
-    },
     config() {
       let self = this;
       return {
-        locale: "vi",
-        dayRender: function(date, cell) {
+        locale: 'vi',
+        eventLimit: true,
+        dayRender: function(date,cell) {
+          let d = date.format('YYYY-MM-DD');
+          let realDate = new Date(d);
+          //normal realDate in [0...6] -> dayInWeek in [1...7]
+          let dayInWeek = realDate.getDay() + 1;
+
           let current = new Date();
           let currentDate = current.toISOString().substring(0, 10);
+
           let price_day = self.formatNumber(self.room.price_day);
           let price_hour = self.formatNumber(self.room.price_hour);
+          if(self.prices.length) {
+            self.prices.forEach(specialDay => {
+              // check day must be weekdays?
+              if(specialDay.weekday == dayInWeek) {
+                price_day = self.formatNumber(specialDay.price_day);
+                price_hour = self.formatNumber(specialDay.price_hour);
+              }
+              // check day must be special day?
+              if(specialDay.day === date.format('YYYY-MM-DD')) {
+                price_day = self.formatNumber(specialDay.price_day);
+                price_hour = self.formatNumber(specialDay.price_hour);
+              }
+            })
+          }
+          // else if(self.bookingCalendar.length) {
+
           let rent_type = self.room.rent_type;
-          if (date.format("YYYY-MM-DD") < currentDate) {
+          if(date.format('YYYY-MM-DD') < currentDate)
+          {
             cell.addClass("bg-past-day");
-          } else if (self.blockSchedule.includes(date.format("YYYY-MM-DD"))) {
+          }
+          else if(self.blockSchedule.includes(date.format('YYYY-MM-DD'))){
             cell.addClass("bg-blocked-day");
-          } else {
-            if (rent_type == 3) {
-              cell.append(
-                "<div class='available'><div>" +
-                  price_day +
-                  " đ/1 ngày</div><div class='center'></div><div> " +
-                  price_hour +
-                  " đ/1 giờ</div></div>"
-              );
-            } else if (rent_type == 2) {
-              cell.append(
-                "<div class='available' id='price'>" +
-                  price_day +
-                  " đ/1 ngày</div>"
-              );
-            } else {
-              cell.append(
-                "<div class='available' id='price'>" +
-                  price_hour +
-                  " đ/1 giờ</div>"
-              );
+          }
+          else {
+            if(rent_type == 3) {
+              cell.append("<div class='available'><div>"+price_day+" đ/1 ngày</div><div class='center'></div><div> "+price_hour+" đ/1 giờ</div></div>");
+            }
+            else if(rent_type == 2) {
+              cell.append("<div class='available' id='price'>"+price_day+" đ/1 ngày</div>");
+            }
+            else {
+              cell.append("<div class='available' id='price'>"+price_hour+" đ/1 giờ</div>");
             }
           }
+          self.bookingCalendar.forEach(d => {
+            let day1= new Date(d.start);
+            let day2= new Date(d.end);
+            let currentDay = new Date(date.format('YYYY-MM-DD'));
+            if (currentDay >= day1 && currentDay < day2) {
+              cell.addClass("bg-past-day");
+              cell.children('.available').remove();
+              return true;
+            }
+          })
         },
         selectAllow: function(info) {
           let current = new Date();
+          let temp = 0;
           let currentDate = current.toISOString().substring(0, 10);
-          if (info.start.format("YYYY-MM-DD") <= currentDate) {
+          if (info.start.format('YYYY-MM-DD') <= currentDate) {
+            temp++;
+          }
+          self.bookingCalendar.forEach(d => {
+            let day1= new Date(d.start);
+            let day2= new Date(d.end);
+            let currentDay = new Date(info.start.format('YYYY-MM-DD'));
+            console.log(currentDay)
+            if (currentDay >= day1 && currentDay < day2) {
+              temp++;
+            }
+          })
+          if(temp > 0) {
             return false;
           }
           return true;
         },
         eventRender(event, element) {
-          const Constructor = Vue.extend(CalendarEvent);
-          const vm = new Constructor({
-            propsData: {
-              event
-            }
-          }).$mount();
-          element.html(vm.$el);
+          element.css({
+            'font-size':'15px',
+            'padding-top':'3px',
+            'padding-bottom':'3px',
+            'text-align' : 'center',
+          });
         },
         select(start, end, jsEvent, view) {
-          self.dateSelected.startDate = start.format("YYYY-MM-DD");
-          end = end.subtract(1, "days");
-          self.dateSelected.endDate = end.format("YYYY-MM-DD");
-        }
-      };
+          self.dateSelected.startDate = start.format('YYYY-MM-DD');
+          end = end.subtract(1, 'days');
+          self.dateSelected.endDate = end.format('YYYY-MM-DD');
+        },
+      }
     }
   },
   watch: {
     bookingRoom: {
       handler(val) {
         this.bookings = [];
-        if (val != null) {
+        if(val != null) {
           val.forEach(item => {
             let booking = {
               title: null,
               start: null,
               end: null,
-              allDay: true,
-              textColor: "white",
-              color: "#257e4a"
+              allDay:true,
+              textColor: 'white',
+              color: '#257e4a',
             };
-            booking.title = item.name + ": " + item.total_fee + "đ";
-            booking.start = item.checkin;
+            booking.title = item.name + ': '+ item.total_fee +'đ';
+            booking.start = item.checkin.substring(0,10);
             booking.end = this.correctDay(item.checkout);
-            this.bookingCalendar.push(booking);
-          });
+            this.bookingCalendar.push(booking)
+          })
         }
       }
     },
@@ -193,28 +219,29 @@ export default {
       handler(val) {
         let self = this;
         let length = val.length;
-        let dayBlock = val[length - 1];
+        let dayBlock = val[length - 1]
         let block = {
-          title: "",
+          title: '',
           start: null,
           end: null,
-          allDay: true,
-          textColor: "white",
+          allDay:true,
+          textColor: 'white',
           overlap: true,
-          rendering: "background",
-          color: "rgb(118, 118, 118)",
-          className: "event-block"
+          rendering: 'background',
+          color: 'rgb(118, 118, 118)',
+          className:'event-block'
         };
-        if (dayBlock.length == 1) {
+        if(dayBlock.length == 1) {
           block.start = dayBlock[0];
           block.end = this.correctDay(dayBlock[0]);
-        } else {
+        }
+        else {
           block.start = dayBlock[0];
           block.end = this.correctDay(dayBlock[1]);
         }
-        self.bookingCalendar.push(block);
+        self.bookingCalendar.push(block)
       },
-      deep: true
+      deep:true
     }
   },
   methods: {
@@ -248,8 +275,14 @@ export default {
     },
     async getRoomById() {
       try {
-        const response = await axios.get(`rooms/${this.$route.params.roomId}`);
+        const response = await axios.get(`rooms/${ this.$route.params.roomId }`,
+          {
+          params: {
+            include: "prices"
+          }
+        });
         this.room = response.data.data;
+        this.prices = response.data.data.prices.data;
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
@@ -258,12 +291,22 @@ export default {
     },
     async getBookingOfRoom() {
       try {
-        const response = await axios.get(`rooms/${this.$route.params.roomId}`, {
-          params: {
-            include: "bookings"
+        const response = await axios.get(
+          `rooms/${ this.$route.params.roomId }`,
+          {
+            params: {
+              include: "bookings"
+            }
+          }
+        );
+        this.bookingRoom = [];
+        response.data.data.bookings.data.forEach(booking => {
+          if(booking.status != 5) {
+            this.bookingRoom.push(booking);
           }
         });
-        this.bookingRoom = response.data.data.bookings.data;
+        this.loading = false;
+
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
@@ -272,17 +315,20 @@ export default {
     },
     async getBlockOfRoom() {
       try {
-        const response = await axios.get(`rooms/${this.$route.params.roomId}`, {
-          params: {
-            include: "blocks"
+        const response = await axios.get(
+          `rooms/${ this.$route.params.roomId }`,
+          {
+            params: {
+              include: "blocks"
+            }
           }
-        });
+        );
         this.room_time_blocks = response.data.data.blocks.data;
         this.room_time_blocks.forEach(item => {
-          let arr = Object.values(item);
-          this.blockRoom.push(arr);
-        });
-        this.initBlockDay(this.blockRoom);
+          let arr = Object.values(item)
+          this.blockRoom.push(arr)
+        })
+        this.initBlockDay(this.blockRoom)
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
@@ -292,13 +338,12 @@ export default {
     async getBlockSchedule() {
       try {
         const response = await axios.get(
-          `rooms/schedule/${this.$route.params.roomId}`
-        );
+          `rooms/schedule/${ this.$route.params.roomId }`);
         let data = response.data.data.blocks;
         this.blockSchedule = [];
         data.forEach(item => {
-          this.blockSchedule.push(item);
-        });
+          this.blockSchedule.push(item)
+        })
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
@@ -309,27 +354,27 @@ export default {
       const result = this.$validator.validateAll();
       if (result) {
         let unblock = Object.values(this.dateSelected);
-        if (this.dateSelected.startDate === this.dateSelected.endDate) {
+        if(this.dateSelected.startDate === this.dateSelected.endDate) {
           unblock.pop();
         }
         let unblockDates = [];
         unblockDates.push(unblock);
         let blockDates = this.blockRoom;
         blockDates.forEach(item => {
-          if (item[0] === item[1]) {
+          if(item[0] === item[1]) {
             item.pop();
           }
         });
         let response = await axios
-          .put("rooms/update-block", {
-            room_id: this.$route.params.roomId,
-            room_time_blocks: blockDates,
-            unlock_days: unblockDates
-          })
-          .then(response => {
-            this.dateSelected.startDate = null;
-            this.dateSelected.endDate = null;
-          });
+        .put('rooms/update-block', {
+          room_id: this.$route.params.roomId,
+          room_time_blocks: blockDates,
+          unlock_days: unblockDates
+        })
+        .then(response => {
+          this.dateSelected.startDate = null;
+          this.dateSelected.endDate = null;
+        });
       } else {
         return window.scroll({
           top: 0,
@@ -342,24 +387,25 @@ export default {
       if (result) {
         let blockDate = Object.values(this.dateSelected);
         this.blockRoom.forEach(item => {
-          if (item[0] === item[1]) {
+          if(item[0] === item[1]) {
             item.pop();
           }
         });
-        if (this.dateSelected.startDate === this.dateSelected.endDate) {
+        if(this.dateSelected.startDate === this.dateSelected.endDate) {
           blockDate.pop();
         }
         this.blockRoom.push(blockDate);
         let response = await axios
-          .put("rooms/update-block", {
-            room_id: this.$route.params.roomId,
-            room_time_blocks: this.blockRoom
-          })
-          .then(response => {
-            this.dateSelected.startDate = null;
-            this.dateSelected.endDate = null;
-          });
+        .put('rooms/update-block', {
+          room_id: this.$route.params.roomId,
+          room_time_blocks: this.blockRoom,
+        })
+        .then(response => {
+          this.dateSelected.startDate = null;
+          this.dateSelected.endDate = null;
+        });
         //Object.assign(this.$data, this.$options.data.call(this))
+
       } else {
         return window.scroll({
           top: 0,
@@ -368,18 +414,18 @@ export default {
       }
     },
     initBlockDay(arrBlockDate) {
-      if (arrBlockDate.length) {
+      if(arrBlockDate.length){
         arrBlockDate.forEach(item => {
           let block = {
-            title: "",
+            title: '',
             start: null,
             end: null,
-            allDay: true,
-            textColor: "white",
+            allDay:true,
+            textColor: 'white',
             overlap: true,
-            rendering: "background",
-            color: "rgb(118, 118, 118)",
-            className: "event-block"
+            rendering: 'background',
+            color: 'rgb(118, 118, 118)',
+            className:'event-block'
           };
           let currentDate = new Date();
           let today = currentDate.getTime();
@@ -387,20 +433,22 @@ export default {
           let start_Date = new Date(item[0]);
           let start = start_Date.getTime();
 
-          if (today > start) {
+          if(today > start) {
             block.start = currentDate.toISOString().substring(0, 10);
-          } else {
+          }
+          else {
             block.start = item[0];
           }
 
-          if (item.length == 2) {
+          if(item.length == 2){
             let day = this.correctDay(item[1]);
             block.end = day;
-          } else {
+          }
+          else {
             block.end = this.correctDay(item[0]);
           }
-          this.bookingCalendar.push(block);
-        });
+          this.bookingCalendar.push(block)
+        })
       }
     }
   },
@@ -419,7 +467,7 @@ export default {
         });
       }
     });
-  }
+  },
 };
 </script>
 
@@ -447,7 +495,7 @@ export default {
 }
 .available:hover {
   background-color: #edeef7;
-  outline: rgb(118, 118, 118) solid 2px;
+  outline: rgb(118, 118, 118) solid 2px ;
 }
 .event-block {
   background: repeating-linear-gradient(
