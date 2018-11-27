@@ -291,7 +291,12 @@ export default {
             }
           }
         );
-        this.bookingRoom = response.data.data.bookings.data;
+        this.bookingRoom = [];
+        response.data.data.bookings.data.forEach(booking => {
+          if(booking.status != 5) {
+            this.bookingRoom.push(booking);
+          }
+        });
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
