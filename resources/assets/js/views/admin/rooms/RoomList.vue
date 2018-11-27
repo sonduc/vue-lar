@@ -175,7 +175,7 @@
                     Chi tiết giá
                   </button>
                   <button @click="openBookingCalendar(room.id)" class="btn btn-danger btn-sm">
-                    <i class="icon-fa icon-fa-calendar"></i>Booking Calendar
+                    <i class="icon-fa icon-fa-calendar"></i>Lịch trống phòng
                   </button>
                 </div>
               </td>

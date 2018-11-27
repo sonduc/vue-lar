@@ -7,6 +7,7 @@
         <li class="breadcrumb-item"><a href="#">Room</a></li>
         <li class="breadcrumb-item active">Calendar</li>
       </ol>
+      <lottie v-if="loading" :options="defaultOptions" :height="150" :width="150"></lottie>
       <div class="row" v-if="room != null && blockSchedule !=null">
         <div class="col-sm-9">
           <full-calendar
@@ -55,14 +56,21 @@ import 'fullcalendar/dist/fullcalendar.css'
 import 'fullcalendar/dist/locale/vi.js'
 import Auth from "../../../services/auth"
 import Datepicker from "vuejs-datepicker"
+import * as animationData from "../../loading/material_wave_loading.json";
+import Lottie from "vue-lottie";
 export default {
   name: "RoomCalendar",
   components: {
     FullCalendar,
-    Datepicker
+    Datepicker,
+    Lottie
   },
   data() {
     return {
+      defaultOptions: {
+        animationData: animationData
+      },
+      loading: true,
       room:null,
       prices:null,
       dateSelected: {
@@ -297,6 +305,8 @@ export default {
             this.bookingRoom.push(booking);
           }
         });
+        this.loading = false;
+
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
