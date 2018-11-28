@@ -10,6 +10,11 @@
       <lottie v-if="loading" :options="defaultOptions" :height="150" :width="150"></lottie>
       <div class="row" v-if="room != null && blockSchedule !=null">
         <div class="col-sm-9">
+          <div style="position: absolute;">
+            <button class="button-prev" @click="prev"><</button>
+            <button class="button-next" @click="next">></button>
+            <button class="button-today" @click="today">Hôm nay</button>
+          </div>
           <full-calendar
           :selectable="true" :key="1" :events="bookingCalendar" :config="config"
           id="calendar" :default-view="defaultView" :header="header" ref="calendar"
@@ -70,14 +75,16 @@ export default {
       defaultOptions: {
         animationData: animationData
       },
+      date_in: new Date(new Date().getFullYear(), new Date().getMonth()- 1, 1),
+      date_out: new Date(new Date().getFullYear(), new Date().getMonth()+ 1, 1),
       loading: true,
-      room:null,
-      prices:null,
+      room: null,
+      prices: null,
       dateSelected: {
         startDate: null,
         endDate: null
       },
-      blockSchedule:null,
+      blockSchedule: null,
       blockRoom:[],
       room_time_blocks: [],
       bookingCalendar: [],
@@ -87,7 +94,7 @@ export default {
       },
       defaultView: 'month',
       header: {
-        left: 'prev,next today',
+        left: '',
         center: 'title',
         right: 'month,agendaWeek,agendaDay'
       },
@@ -167,7 +174,6 @@ export default {
             let day1= new Date(d.start);
             let day2= new Date(d.end);
             let currentDay = new Date(info.start.format('YYYY-MM-DD'));
-            console.log(currentDay)
             if (currentDay >= day1 && currentDay < day2) {
               temp++;
             }
@@ -196,7 +202,9 @@ export default {
   watch: {
     bookingRoom: {
       handler(val) {
+        let self = this;
         this.bookings = [];
+        this.bookingCalendar = [];
         if(val != null) {
           val.forEach(item => {
             let booking = {
@@ -208,9 +216,16 @@ export default {
               color: '#257e4a',
             };
             booking.title = item.name + ': '+ item.total_fee +'đ';
-            booking.start = item.checkin.substring(0,10);
-            booking.end = this.correctDay(item.checkout);
-            this.bookingCalendar.push(booking)
+            if(item.booking_type == 1) {
+              booking.start = item.checkin;
+              booking.end = item.checkout;
+              booking.allDay = false
+            }
+            else {
+              booking.start = item.checkin.substring(0,10);
+              booking.end = self.correctDay(item.checkout);
+            }
+            self.bookingCalendar.push(booking)
           })
         }
       }
@@ -218,28 +233,30 @@ export default {
     blockRoom: {
       handler(val) {
         let self = this;
-        let length = val.length;
-        let dayBlock = val[length - 1]
-        let block = {
-          title: '',
-          start: null,
-          end: null,
-          allDay:true,
-          textColor: 'white',
-          overlap: true,
-          rendering: 'background',
-          color: 'rgb(118, 118, 118)',
-          className:'event-block'
-        };
-        if(dayBlock.length == 1) {
-          block.start = dayBlock[0];
-          block.end = this.correctDay(dayBlock[0]);
+        if(val != null) {
+          let length = val.length;
+          let dayBlock = val[length - 1]
+          let block = {
+            title: '',
+            start: null,
+            end: null,
+            allDay:true,
+            textColor: 'white',
+            overlap: true,
+            rendering: 'background',
+            color: 'rgb(118, 118, 118)',
+            className:'event-block'
+          };
+          if(dayBlock.length == 1) {
+            block.start = dayBlock[0];
+            block.end = self.correctDay(dayBlock[0]);
+          }
+          else {
+            block.start = dayBlock[0];
+            block.end = self.correctDay(dayBlock[1]);
+          }
+          self.bookingCalendar.push(block)
         }
-        else {
-          block.start = dayBlock[0];
-          block.end = this.correctDay(dayBlock[1]);
-        }
-        self.bookingCalendar.push(block)
       },
       deep:true
     }
@@ -273,6 +290,60 @@ export default {
       this.dateSelected.startDate = null;
       this.dateSelected.endDate = null;
     },
+    next() {
+      if(this.$refs.calendar.fireMethod('getView').name === "month") {
+        this.date_in = new Date(new Date(this.date_in).setMonth(this.date_in.getMonth()+1));
+        this.date_out = new Date(new Date(this.date_out).setMonth(this.date_out.getMonth()+1));
+        this.reloadData();
+        this.$refs.calendar.fireMethod('next');
+      }
+      else if(this.$refs.calendar.fireMethod('getView').name === "agendaWeek") {
+        this.date_in = new Date(new Date(this.date_in).setDate(this.date_in.getDate()+7));
+        this.date_out = new Date(new Date(this.date_out).setDate(this.date_out.getDate()+7));
+        this.reloadData();
+        this.$refs.calendar.fireMethod('next');
+      }
+      else {
+        this.date_in = new Date(new Date(this.date_in).setDate(this.date_in.getDate()+1));
+        this.date_out = new Date(new Date(this.date_out).setDate(this.date_out.getDate()+1));
+        this.reloadData();
+        this.$refs.calendar.fireMethod('next');
+      }
+    },
+    prev() {
+      if(this.$refs.calendar.fireMethod('getView').name === "month") {
+        this.date_in = new Date(new Date(this.date_in).setMonth(this.date_in.getMonth()-1));
+        this.date_out = new Date(new Date(this.date_out).setMonth(this.date_out.getMonth()-1));
+        this.reloadData();
+        this.$refs.calendar.fireMethod('prev');
+      }
+      else if(this.$refs.calendar.fireMethod('getView').name === "agendaWeek") {
+        this.date_in = new Date(new Date(this.date_in).setDate(this.date_in.getDate()-7));
+        this.date_out = new Date(new Date(this.date_out).setDate(this.date_out.getDate()-7));
+        this.reloadData();
+        this.$refs.calendar.fireMethod('prev');
+      }
+      else {
+        this.date_in = new Date(new Date(this.date_in).setDate(this.date_in.getDate()-1));
+        this.date_out = new Date(new Date(this.date_out).setDate(this.date_out.getDate()-1));
+        this.reloadData();
+        this.$refs.calendar.fireMethod('prev');
+      }
+    },
+    today() {
+      this.date_in = new Date(new Date().getFullYear(), new Date().getMonth()- 1, 1),
+      this.date_out = new Date(new Date().getFullYear(), new Date().getMonth()+ 1, 1),
+      this.reloadData();
+      this.$refs.calendar.fireMethod('today');
+    },
+    getCalendarDateRange() {
+      let calendar = this.$refs.calendar('getCalendar');
+      let view = calendar.view;
+      let start = view.start._d;
+      let end = view.end._d;
+      let dates = { start: start, end: end };
+      return dates;
+    },
     async getRoomById() {
       try {
         const response = await axios.get(`rooms/${ this.$route.params.roomId }`,
@@ -289,18 +360,43 @@ export default {
         }
       }
     },
+    // async getBookingOfRoom() {
+    //   try {
+    //     const response = await axios.get(
+    //       `rooms/${ this.$route.params.roomId }`,
+    //       {
+    //         params: {
+    //           include: "bookings"
+    //         }
+    //       }
+    //     );
+    //     this.bookingRoom = [];
+    //     response.data.data.bookings.data.forEach(booking => {
+    //       if(booking.status != 5) {
+    //         this.bookingRoom.push(booking);
+    //       }
+    //     });
+    //     this.loading = false;
+
+    //   } catch (error) {
+    //     if (error) {
+    //       window.toastr["error"]("There was an error", "Error");
+    //     }
+    //   }
+    // },
     async getBookingOfRoom() {
       try {
-        const response = await axios.get(
-          `rooms/${ this.$route.params.roomId }`,
+        const response = await axios.get(`bookings`,
           {
             params: {
-              include: "bookings"
+              room: this.$route.params.roomId,
+              date_in: this.date_in.toISOString().substr(0, 10),
+              date_out: this.date_out.toISOString().substr(0, 10)
             }
           }
         );
         this.bookingRoom = [];
-        response.data.data.bookings.data.forEach(booking => {
+        response.data.data.forEach(booking => {
           if(booking.status != 5) {
             this.bookingRoom.push(booking);
           }
@@ -404,14 +500,15 @@ export default {
           this.dateSelected.startDate = null;
           this.dateSelected.endDate = null;
         });
-        //Object.assign(this.$data, this.$options.data.call(this))
-
       } else {
         return window.scroll({
           top: 0,
           behavior: "smooth"
         });
       }
+    },
+    reloadData() {
+      this.getBookingOfRoom();
     },
     initBlockDay(arrBlockDate) {
       if(arrBlockDate.length){
@@ -483,7 +580,13 @@ export default {
   cursor: not-allowed !important;
 }
 .bg-blocked-day {
-  background-color: #ffffff;
+  background: repeating-linear-gradient(
+    -45deg,
+    #edeef7,
+    #edeef7 10px,
+    #f2f2f2 10px,
+    #f2f2f2 20px
+  );
 }
 .available {
   padding-top: 27px;
@@ -514,6 +617,22 @@ export default {
 }
 #price {
   padding-top: 38px;
+}
+.button-today {
+  color:#333333;
+  cursor: pointer;
+  padding:3px 10px;
+  font-size:16px;
+}
+.button-prev {
+  color:#333333;
+  cursor: pointer;
+  padding:3px 8px 3px 8px;
+}
+.button-next {
+  color:#333333;
+  cursor: pointer;
+  padding:3px 8px 3px 8px;
 }
 </style>
 
