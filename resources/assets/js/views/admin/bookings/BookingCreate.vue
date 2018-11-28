@@ -61,7 +61,7 @@
                         :disabled-dates="disabledDatesCheckin"
                         name="checkin_date" input-class="form-control"
                         data-vv-as="Ngày nhận phòng" v-validate="'required'"
-                        v-model="booking.checkin" :format="format" />
+                        v-model="checkin" :format="format" />
                     </div>
                     <div class="form-group">
                       <label :style="errors.has('name') ? 'color:red;' : ''">
@@ -195,25 +195,29 @@
                   <div class="row">
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label>Hình thức thanh toán *</label>
-                        <multiselect :allow-empty="false" v-model="payment_method" value="value" label="title" :options="paymentMethodList"
-                          :searchable="true" :show-labels="false" />
+                        <label :style="errors.has('payment_method') ? 'color:red;' : ''">{{errors.has('payment_method')
+                        ? errors.first('payment_method') : 'Hình thức thanh toán *'}}</label>
+                        <multiselect :allow-empty="false" v-model="payment_method" value="value" label="title" :options="paymentMethodList" v-validate="'required'"
+                        data-vv-as="Hình thức thanh toán" name="payment_method"
+                        :searchable="true" :show-labels="false" />
                       </div>
                       <div class="form-group">
                         <label :style="errors.has('money_received') ? 'color:red;' : ''">{{errors.has('money_received')
-                          ? errors.first('money_received') : 'Số tiền thanh toán *'}}</label>
+                          ? errors.first('money_received') : 'Số tiền thanh toán'}}</label>
                         <input name="money_received" v-model.number="booking.money_received" v-validate="'numeric'" type="number" class="form-control" data-vv-as="Số tiền thanh toán" >
                       </div>
                       <div class="form-group">
                         <label :style="errors.has('price_discount') ? 'color:red;' : ''">{{errors.has('price_discount')
                           ? errors.first('price_discount') : 'Giảm giá'}}</label>
-                        <input name="price_discount" data-vv-as="Giảm giá" v-model.number="booking.price_discount"
+                        <input name="price_discount" data-vv-as="Giảm giá"
+                          v-model.number="booking.price_discount"
                           v-validate="'numeric'" type="number" class="form-control">
                       </div>
                       <div class="form-group">
                         <label>Mã giảm giá</label>
                         <div class="input-group">
-                          <input type="text" :disabled="booking.coupon_discount > 0 ? true : false"
+                          <input
+                            type="text" :disabled="booking.coupon_discount > 0 ? true : false"
                             v-model="booking.coupon" class="form-control">
                           <div class="input-group-append">
                             <button v-if="booking.coupon_discount > 0" @click="removeCoupon" class="btn btn-sm btn-primary">
@@ -226,9 +230,11 @@
                     </div>
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label>Trạng thái thanh toán *</label>
-                        <multiselect :allow-empty="false" v-model="payment_status" value="value" label="title" :options="paymentList"
-                          :searchable="true" :show-labels="false" />
+                       <label :style="errors.has('payment_status') ? 'color:red;' : ''">{{errors.has('payment_status')
+                          ? errors.first('payment_status') : 'Trạng thái thanh toán * '}}</label>
+                        <multiselect :allow-empty="false" v-model="payment_status" value="value" label="title" :options="paymentList" v-validate="'required'"
+                        data-vv-as="Trạng thái thanh toán" name="payment_status"
+                        :searchable="true" :show-labels="false" />
                       </div>
                       <div class="form-group">
                         <label :style="errors.has('additional_fee') ? 'color:red;' : ''">{{errors.has('additional_fee')
@@ -237,9 +243,13 @@
                           v-validate="'numeric'" type="number" class="form-control">
                       </div>
                       <div class="form-group">
-                        <label>Trạng thái booking *</label>
-                        <multiselect :allow-empty="false" v-model="status" value="value" label="title" :options="statusList"
-                          :searchable="true" :show-labels="false" />
+                        <label :style="errors.has('status') ? 'color:red;' : ''">
+                          {{errors.has('status')
+                          ? errors.first('status') : 'Trạng thái booking * '}}</label>
+                        <multiselect :allow-empty="false" v-model="status" value="value"
+                        label="title" :options="statusList" name="status"
+                        v-validate="'required'" data-vv-as="Trạng thái booking"
+                        :searchable="true" :show-labels="false" />
                       </div>
                     </div>
                   </div>
@@ -363,9 +373,11 @@ export default {
       source: null,
       checkout_hour: null,
       checkin_hour: null,
+      checkin: null,
+      checkout: null,
       booking: {
-        checkin: null,
-        checkout: null,
+        days: 0,
+        hours: 0,
         booking_type: 2,
         birthday: null,
         payment_status: 3,
@@ -438,10 +450,10 @@ export default {
         });
       }
     },
-    'booking.checkin': {
+    checkin: {
       handler(val) {
-        if(val && this.booking.booking_type == 2) {
-          this.booking.checkout = null;
+        if(val != null && this.booking.booking_type == 2) {
+          this.checkout = null;
           let checkinChoose = val.toISOString().substr(0, 10);
           let addTwoDay = this.addTwoDay(checkinChoose);
           let index = this.blocked_dates.indexOf(addTwoDay);
@@ -449,8 +461,7 @@ export default {
             this.setEndDate(new Date(addTwoDay));
           }
         }
-      },
-      deep:true
+      }
     }
   },
   computed: {
@@ -480,14 +491,13 @@ export default {
     setStartDate: function(newCheckin) {
       if (newCheckin) {
         this.$refs.datepicker.setCheckIn(newCheckin);
-        this.booking.checkout = null;
-        this.booking.checkin = newCheckin;
+        this.checkin = newCheckin;
       }
     },
     setEndDate: function(newCheckout) {
       if (newCheckout) {
         this.$refs.datepicker.setCheckOut(newCheckout);
-        this.booking.checkout = newCheckout;
+        this.checkout = newCheckout;
       }
     },
     async getRoomBlock() {
@@ -540,10 +550,10 @@ export default {
           });
         });
       }
-      else if (this.booking.checkin == null) {
+      else if (this.checkin == null) {
         window.toastr["error"]("Vui lòng chọn ngày checkin", "Error");
       }
-      else if (this.booking.booking_type == 2 && this.booking.checkout == null) {
+      else if (this.booking.booking_type == 2 && this.checkout == null) {
         window.toastr["error"]("Vui lòng chọn ngày checkout", "Error");
       }
       else if (this.booking.booking_type == 1 && minusHour < 0){
@@ -552,25 +562,33 @@ export default {
       else if (this.booking.booking_type == 1 && minusHour > 0 && minusHour < 14400000){
         window.toastr["error"]("Bạn phải đặt ít nhất 4 giờ", "Error");
       } else {
+        let index;
+        if(this.checkout != null) {
+          console.log(this.checkout)
+          index = this.blocked_dates.indexOf(this.checkout.toISOString().substr(0,10));
+          console.log(index)
+          if (index == -1) {
+            this.checkout = this.addDay(this.checkout);
+          }
+        }
         const result = this.$validator.validateAll();
         if (result) {
-          this.booking.days = 0;
-          this.booking.hours = 0;
+          console.log(this.addDay(this.checkin).toISOString().substr(0, 10) + " 14:00:00")
+          console.log(this.checkout.toISOString().substr(0, 10) + " 12:00:00")
           const response = await axios.post(`bookings/price-calculator/`, {
             additional_fee: 0,
             price_discount: 0,
             room_id: this.room.id,
             checkin:
               this.booking.booking_type == 2
-                ? this.addDay(this.booking.checkin).toISOString().substr(0, 10) + " 14:00:00"
-                : this.booking.checkin.toISOString().substr(0, 10) +
+                ? this.addDay(this.checkin).toISOString().substr(0, 10) + " 14:00:00"
+                : this.checkin.toISOString().substr(0, 10) +
                   " " +
                   this.checkin_hour,
             checkout:
               this.booking.booking_type == 2
-                ? this.booking.checkout.toISOString().substr(0, 10) +
-                  " 12:00:00"
-                : this.booking.checkin.toISOString().substr(0, 10) +
+                ? this.checkout.toISOString().substr(0, 10) + " 12:00:00"
+                : this.checkin.toISOString().substr(0, 10) +
                   " " +
                   this.checkout_hour,
             coupon: this.booking.coupon,
@@ -635,15 +653,15 @@ export default {
                 room_id: this.room.id,
                 checkin:
                   this.booking.booking_type == 2
-                    ? this.addDay(this.booking.checkin).toISOString().substr(0, 10) + " 14:00:00"
-                    : this.booking.checkin.toISOString().substr(0, 10) +
+                    ? this.addDay(this.checkin).toISOString().substr(0, 10) + " 14:00:00"
+                    : this.checkin.toISOString().substr(0, 10) +
                       " " +
                       this.checkin_hour,
                 checkout:
                   this.booking.booking_type == 2
-                    ? this.booking.checkout.toISOString().substr(0, 10) +
+                    ? this.checkout.toISOString().substr(0, 10) +
                       " 12:00:00"
-                    : this.booking.checkin.toISOString().substr(0, 10) +
+                    : this.checkin.toISOString().substr(0, 10) +
                       " " +
                       this.checkout_hour,
                 additional_fee: this.booking.additional_fee,

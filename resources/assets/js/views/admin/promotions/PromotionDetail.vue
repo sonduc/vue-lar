@@ -58,17 +58,14 @@
                     <p>Áp dụng cho <span class="custom-value-discount">tất cả các phòng</span></p>
                   </div>
                   <div v-else>
-                    <p>Áp dụng cho các phòng/căn hộ:
-                      <span v-for="room in coupon.settings.rooms">
-                        <span class="custom-value-discount">{{room.name}}</span>, </span>
+                    <p>Áp dụng cho
+                      <span>{{coupon.settings.rooms.length}}</span> phòng/căn hộ
                     </p>
-                    <p>Áp dụng cho các tỉnh/thành phố:
-                      <span v-for="city in coupon.settings.cities">
-                        <span class="custom-value-discount">{{city.name}}</span>, </span>
+                    <p>Áp dụng cho
+                      <span>{{coupon.settings.cities.length}}</span> tỉnh/thành phố
                     </p>
-                    <p>Áp dụng cho các quận/huyện:
-                      <span v-for="district in coupon.settings.districts">
-                        <span class="custom-value-discount">{{district.name}}</span>, </span>
+                    <p>Áp dụng cho
+                      <span>{{coupon.settings.districts.length}}</span> quận/huyện
                     </p>
                   </div>
                 </div>
@@ -138,9 +135,5 @@ export default {
   border: 2px solid green;
   padding: 10px;
   border-radius: 25px;
-}
-.custom-value-discount {
-  font-size: 18px;
-  font-weight: bold;
 }
 </style>

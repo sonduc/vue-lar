@@ -110,8 +110,10 @@
                     @vdropzone-complete="afterCompleteImagePost"/>
                 </div>
                 <div class="btn-center">
-                  <button v-if="type === 'Update' ? checkAllowUpdate(promotions.date_start) : false"
-                    @click.prevent="onSubmit" style="margin-right: 10px;" class="btn btn-success">
+                  <button
+                    v-if="type === 'Update' ? checkAllowUpdate(promotions.date_start) : true"
+                    @click.prevent="onSubmit" style="margin-right: 10px;"
+                    class="btn btn-success">
                     Lưu khuyến mãi
                   </button>
                   <button class="btn btn-danger"
