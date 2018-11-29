@@ -413,6 +413,13 @@
         let day = afterAddDay.toISOString().substring(0,10);
         return day;
       },
+      minusDay(date) {
+        let beforeAddDay = new Date(date);
+        let timeDay = 86400000;
+        let afterAddDay = new Date(beforeAddDay.getTime() - timeDay);
+        let day = afterAddDay.toISOString().substring(0,10);
+        return day;
+      },
       async getRooms() {
         try {
           const response = await axios.get('rooms/get-name');
@@ -561,7 +568,8 @@
     created() {
       !(this.dataCoupon === null) && this.setInitData();
       this.disabledDay.to = new Date(this.getPromotionDay.startDay.substring(0,10));
-      this.disabledDay.from = new Date(this.getPromotionDay.endDay.substring(0,10));
+      let disabledEnd = this.minusDay(this.getPromotionDay.endDay.substring(0,10));
+      this.disabledDay.from = new Date(disabledEnd);
     },
     mounted() {
       Auth.getProfile().then(res => {

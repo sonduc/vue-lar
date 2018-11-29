@@ -136,24 +136,6 @@ export default {
     };
   },
   computed: {
-    isUnblockDisable() {
-      if (
-        this.blockSchedule !== null &&
-        this.blockSchedule.includes(this.dateSelected.startDate)
-      ) {
-        return true;
-      }
-      return false;
-    },
-    isBlockDisable() {
-      if (
-        this.blockSchedule !== null &&
-        !this.blockSchedule.includes(this.dateSelected.startDate)
-      ) {
-        return true;
-      }
-      return false;
-    },
     config() {
       let self = this;
       return {

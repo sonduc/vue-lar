@@ -74,7 +74,7 @@
               <td>{{index + 1}}</td>
               <td>{{coupon.code}}</td>
               <td>{{coupon.discount}} %</td>
-              <td>{{coupon.discount}} VNĐ</td>
+              <td>{{coupon.max_discount | formatNumber}}</td>
               <td>{{coupon.used}}/{{coupon.usable}}</td>
               <td v-if="coupon.all_day == 0">
                 <p>{{coupon.settings.rooms.length}} phòng/căn hộ</p>

@@ -36,6 +36,7 @@
                               ? errors.first('room.room_type') : 'Loại phòng *'}}
                             </label>
                             <multiselect
+                            style="z-index:4"
                             :allow-empty="false" name="room.room_type"
                             v-validate="step==0 ? 'required':''"
                             data-vv-as="Loại phòng"
@@ -957,7 +958,7 @@ export default {
               price_day: null,
               price_hour: null,
               price_after_hour: null,
-              status: 0
+              status: 1
             };
             w_day.weekday = item.weekday;
             w_day.price_day = item.price_day;
@@ -1017,7 +1018,7 @@ export default {
         let w = this.filteredWeekday[0].weekday;
         this.room.weekday_price.push({
           weekday: w,
-          status: 0,
+          status: 1,
           price_day: 0,
           price_hour: 0,
           price_after_hour: 0
