@@ -262,7 +262,7 @@ export default {
        + encodeURIComponent(svg),
        scaledSize: new google.maps.Size(80,80),
        origin: new google.maps.Point(0,0),
-       anchor: new google.maps.Point(20,10)
+       anchor: new google.maps.Point(30,20)
       };
       return myIcon;
     },
