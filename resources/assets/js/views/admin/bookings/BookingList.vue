@@ -3,28 +3,40 @@
     <div class="page-header">
       <h4 class="page-title">Danh sách Booking</h4>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
-        <li class="breadcrumb-item"><a href="#">Bookings</a></li>
+        <li class="breadcrumb-item">
+          <a href="#">Trang chủ</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="#">Bookings</a>
+        </li>
       </ol>
     </div>
     <div :class="{'is-open': isLeftSidebarVisible}" class="mailbox">
       <button class="btn btn-theme btn-sm btn-block" @click="openBookingFilter">Bộ lọc</button>
-      <booking-sidebar :selected-category="selectedStatus" :categories="categories" :is-left-sidebar-visible="isLeftSidebarVisible"
-        @selected="selectStatus" @toggle="isLeftSidebarVisible = !isLeftSidebarVisible" />
+      <booking-sidebar
+        :selected-category="selectedStatus"
+        :categories="categories"
+        :is-left-sidebar-visible="isLeftSidebarVisible"
+        @selected="selectStatus"
+        @toggle="isLeftSidebarVisible = !isLeftSidebarVisible"
+      />
 
       <div class="mailbox-content">
         <div class="mailbox-content-header">
           <div class="mailbox-actions">
             <div class="custom-control custom-checkbox mailbox-action" style="display:inline-block">
-              <input id="customCheckAll" v-model="selectAll" type="checkbox" class="custom-control-input">
-              <label class="custom-control-label" for="customCheckAll" />
+              <input
+                id="customCheckAll"
+                v-model="selectAll"
+                type="checkbox"
+                class="custom-control-input"
+              >
+              <label class="custom-control-label" for="customCheckAll"/>
             </div>
 
             <v-dropdown active-url="/admin/dashboard" theme-light class="mailbox-action">
               <a slot="activator" href="#" @click.prevent>
-                <button class="btn btn-light dropdown-toggle" type="button">
-                  Actions
-                </button>
+                <button class="btn btn-light dropdown-toggle" type="button">Actions</button>
               </a>
 
               <v-dropdown-item>
@@ -34,10 +46,9 @@
                 <a href="#" @click.prevent="showCrossCheckingModal">Yêu cầu đối soát</a>
               </v-dropdown-item>
             </v-dropdown>
-
           </div>
         </div>
-        
+
         <lottie v-if="loading" :options="defaultOptions" :height="150" :width="150"></lottie>
         <table v-else class="table table-hover">
           <thead>
@@ -52,25 +63,43 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(booking,index) in filteredBookings" :key="index" :class="{'read' : booking.status }">
+            <tr
+              v-for="(booking,index) in filteredBookings"
+              :key="index"
+              :class="{'read' : booking.status }"
+            >
               <td class="cell-checkbox" @click.stop>
                 <div class="custom-control custom-checkbox">
-                  <input :id="index" v-model="selectedBookings" :value="booking.id" type="checkbox" class="custom-control-input">
-                  <label :for="index" class="custom-control-label" />
+                  <input
+                    :id="index"
+                    v-model="selectedBookings"
+                    :value="booking.id"
+                    type="checkbox"
+                    class="custom-control-input"
+                  >
+                  <label :for="index" class="custom-control-label"/>
                 </div>
               </td>
               <td class="cell-content" @click="openBookingModal(booking)">
                 <div class="content">
-                  <div class="content-name">
-                    #{{ booking.code }} - {{booking.id}}
-                  </div>
+                  <div class="content-name">#{{ booking.code }} - {{booking.id}}</div>
                   <div class="content-subject">
-                    Thời gian book: <br /><i class="icon-fa icon-fa-clock-o attachment-icon" /> {{ booking.created_at
+                    Thời gian book:
+                    <br>
+                    <i class="icon-fa icon-fa-clock-o attachment-icon"/>
+                    {{ booking.created_at
                     }}
                   </div>
                   <div class="content-subject">
-                    Checkin: <br /><i class="icon-fa icon-fa-clock-o attachment-icon" /> {{ booking.checkin }} <br />
-                    Checkout: <br /><i class="icon-fa icon-fa-clock-o attachment-icon" /> {{ booking.checkout }} <br />
+                    Checkin:
+                    <br>
+                    <i class="icon-fa icon-fa-clock-o attachment-icon"/>
+                    {{ booking.checkin }}
+                    <br>Checkout:
+                    <br>
+                    <i class="icon-fa icon-fa-clock-o attachment-icon"/>
+                    {{ booking.checkout }}
+                    <br>
                   </div>
                 </div>
               </td>
@@ -82,13 +111,20 @@
                 </div>
               </td>
               <td class="cell-content" @click="openBookingPaymentModal(booking)">
-                <div class="content-subject">Hình thức: <label class="label label-primary">{{booking.payment_method_txt}}</label></div>
+                <div class="content-subject">
+                  Hình thức:
+                  <label class="label label-primary">{{booking.payment_method_txt}}</label>
+                </div>
                 <div class="content-subject">Tiền phòng: {{booking.price_original | formatNumber}}</div>
-                <div v-if="booking.additional_fee > 0" class="content-subject">Phụ thu: {{booking.additional_fee | formatNumber}}</div>
-                <div v-if="booking.price_discount > 0" class="content-subject">Giảm giá: {{booking.price_discount |
-                  formatNumber}}</div>
+                <div
+                  v-if="booking.additional_fee > 0"
+                  class="content-subject"
+                >Phụ thu: {{booking.additional_fee | formatNumber}}</div>
+                <div v-if="booking.price_discount > 0" class="content-subject">
+                  Giảm giá: {{booking.price_discount |
+                  formatNumber}}
+                </div>
                 <div class="content-subject">Tổng thu: {{(booking.total_fee) | formatNumber}}</div>
-
               </td>
               <td class="cell-content">
                 <div class="content-subject">Tên: {{booking.name}}</div>
@@ -98,34 +134,42 @@
               </td>
               <td class="cell-content" style="text-align: center">
                 <div class="content-subject">
-                  <button @click="showModalUpdateStatus(booking)" class="btn btn-outline-info btn-sm btn-pressable">
-                    {{booking.payment_status_txt}}
-                  </button>
+                  <button
+                    @click="showModalUpdateStatus(booking)"
+                    class="btn btn-outline-info btn-sm btn-pressable"
+                  >{{booking.payment_status_txt}}</button>
                 </div>
-                <hr />
+                <hr>
                 <div class="content-subject">
-                  <button @click="showModalUpdatePaymentStatus(booking)" class="btn btn-warning btn-sm btn-pressable">
-                    {{booking.status_txt}}
-                  </button>
+                  <button
+                    @click="showModalUpdatePaymentStatus(booking)"
+                    class="btn btn-warning btn-sm btn-pressable"
+                  >{{booking.status_txt}}</button>
                 </div>
               </td>
               <td class="cell-content" style="text-align:center">
                 <div class="content-subject">
-                  <button @click="showModalDiscount(booking)" class="btn btn-primary btn-sm btn-pressable">Giảm giá</button>
-                  <button @click="showModalSurcharge(booking)" class="btn btn-warning btn-sm btn-pressable">Phụ thu</button>
+                  <button
+                    @click="showModalDiscount(booking)"
+                    class="btn btn-primary btn-sm btn-pressable"
+                  >Giảm giá</button>
+                  <button
+                    @click="showModalSurcharge(booking)"
+                    class="btn btn-warning btn-sm btn-pressable"
+                  >Phụ thu</button>
                 </div>
-                <hr />
+                <hr>
+                <div class="content-subject">Mã giảm giá</div>
                 <div class="content-subject">
-                  Mã giảm giá
-                </div>
-                <div class="content-subject">
-                  <button class="btn btn-outline-primary btn-sm btn-pressable">{{booking.coupon_txt}}</button>
+                  <button
+                    class="btn btn-outline-primary btn-sm btn-pressable"
+                  >{{booking.coupon_txt}}</button>
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
-        <pagination @clicked="reloadData" :total-pages="totalPages" :current-page="currentPage" />
+        <pagination @clicked="reloadData" :total-pages="totalPages" :current-page="currentPage"/>
       </div>
 
       <transition name="fade">
@@ -133,7 +177,8 @@
           :booking="booking"
           v-show="isModalVisible"
           :is-visible="isModalVisible"
-          @close="closeMailModal" />
+          @close="closeMailModal"
+        />
       </transition>
 
       <transition name="fade">
@@ -142,8 +187,8 @@
           :bookingPayment="bookingPayment"
           v-show="modalPayment"
           :is-visible="modalPayment"
-          @closePaymentModal="closePaymentModal">
-        </booking-payment>
+          @closePaymentModal="closePaymentModal"
+        ></booking-payment>
       </transition>
 
       <sweet-modal overlay-theme="dark" ref="filter">
@@ -154,58 +199,94 @@
           <div class="card-body">
             <div class="form-group">
               <label for="inputFirstName">Tìm kiếm</label>
-              <input v-model="q" id="inputFirstName" type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+              <input
+                v-model="q"
+                id="inputFirstName"
+                type="text"
+                class="form-control"
+                placeholder="Nhập từ khóa tìm kiếm"
+              >
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="exampleInputEmail">Từ ngày</label>
-                <datepicker v-model="date_start" :format="format" input-class="form-control" />
+                <datepicker v-model="date_start" :format="format" input-class="form-control"/>
               </div>
               <div class="form-group col-md-6">
                 <label for="exampleInputEmail">Đến ngày</label>
-                <datepicker v-model="date_end" :format="format" input-class="form-control" />
+                <datepicker v-model="date_end" :format="format" input-class="form-control"/>
               </div>
             </div>
             <div class="form-group">
               <label for="inputUserName">Chủ nhà</label>
-              <multiselect id="inputUserName" v-model="merchant" label="name" :options="merchants" :searchable="true"
-                :show-labels="false" />
+              <multiselect
+                id="inputUserName"
+                v-model="merchant"
+                label="name"
+                :options="merchants"
+                :searchable="true"
+                :show-labels="false"
+              />
             </div>
 
             <div class="form-group">
               <label for="exampleInputPassword">Thành phố</label>
-              <multiselect id="inputUserName" v-model="city" label="name" :options="cities" :searchable="true"
-                :show-labels="false" />
+              <multiselect
+                id="inputUserName"
+                v-model="city"
+                label="name"
+                :options="cities"
+                :searchable="true"
+                :show-labels="false"
+              />
             </div>
             <div class="form-group" v-if="city !== null">
               <label for="exampleInputPassword">Quận / Huyện</label>
-              <multiselect :disabled="city == null" id="inputUserName" v-model="district" label="name" :options="filteredDistrict"
-                :searchable="true" :show-labels="false" />
+              <multiselect
+                :disabled="city == null"
+                id="inputUserName"
+                v-model="district"
+                label="name"
+                :options="filteredDistrict"
+                :searchable="true"
+                :show-labels="false"
+              />
             </div>
           </div>
         </div>
 
-        <button slot="button" type="button" class="btn btn-default" data-dismiss="modal" @click="resetFilter(1)">
-          Làm mới
-        </button>
-
-        <button slot="button" type="button" class="btn btn-primary" @click="applyFilter(1)">
-          Áp dụng
-        </button>
+        <button
+          slot="button"
+          type="button"
+          class="btn btn-default"
+          data-dismiss="modal"
+          @click="resetFilter(1)"
+        >Làm mới</button>
+        
+        <button slot="button" type="button" class="btn btn-primary" @click="applyFilter(1)">Áp dụng</button>
       </sweet-modal>
-      <sweet-modal 
-        ref="update_modal"
-        overlay-theme="dark"
-      >
+      <sweet-modal ref="update_modal" overlay-theme="dark">
         <div class="card">
           <div class="card-header">
             <h5>#{{update_booking.code}}</h5>
           </div>
           <div class="card-body">
-            <multiselect v-if="option == 1" v-model="update_payment_status" label="title" :options="paymentList"
-              :searchable="true" :show-labels="false" />
-            <multiselect v-if="option == 2" v-model="update_booking_status" label="title" :options="statusList"
-              :searchable="true" :show-labels="false" />
+            <multiselect
+              v-if="option == 1"
+              v-model="update_payment_status"
+              label="title"
+              :options="paymentList"
+              :searchable="true"
+              :show-labels="false"
+            />
+            <multiselect
+              v-if="option == 2"
+              v-model="update_booking_status"
+              label="title"
+              :options="statusList"
+              :searchable="true"
+              :show-labels="false"
+            />
           </div>
         </div>
         <button
@@ -213,30 +294,25 @@
           slot="button"
           type="button"
           class="btn btn-theme"
-          @click="submitUpdatePaymentStatus()">
-          Cập nhập
-        </button>
+          @click="submitUpdatePaymentStatus()"
+        >Cập nhập</button>
         <button
           v-if="option == 2"
           slot="button"
           type="button"
           class="btn btn-theme"
-          @click="submitUpdateBookingStatus()">
-          Cập nhập
-        </button>
+          @click="submitUpdateBookingStatus()"
+        >Cập nhập</button>
         <button
           v-if="option == 3"
           slot="button"
           type="button"
           class="btn btn-theme"
-          @click="closeUpdateModal()">
-          Cập nhập
-        </button>
+          @click="closeUpdateModal()"
+        >Cập nhập</button>
       </sweet-modal>
 
-      <sweet-modal
-        ref="money_update"
-        overlay-theme="dark">
+      <sweet-modal ref="money_update" overlay-theme="dark">
         <div class="card">
           <div class="card-header">
             <h5>#{{update_booking.code}}</h5>
@@ -244,23 +320,25 @@
           <div class="card-body">
             <form>
               <div class="form-group" v-if="option == 3">
-                <label for="">Giá giảm</label>
+                <label for>Giá giảm</label>
                 <input
                   @keydown.enter.prevent="submitUpdatePrice"
                   v-model="update_booking.price_discount"
                   type="number"
                   class="form-control"
-                  placeholder="Nhập giá">
+                  placeholder="Nhập giá"
+                >
               </div>
 
               <div class="form-group" v-if="option == 4">
-                <label for="">Phụ giá</label>
+                <label for>Phụ giá</label>
                 <input
                   @keydown.enter.prevent="submitUpdateSurcharge"
                   v-model="update_booking.additional_fee"
                   type="number"
                   class="form-control"
-                  placeholder="Nhập giá">
+                  placeholder="Nhập giá"
+                >
               </div>
             </form>
           </div>
@@ -270,17 +348,15 @@
           slot="button"
           type="button"
           class="btn btn-theme"
-          @click="submitUpdatePrice">
-          Cập nhật
-        </button>
+          @click="submitUpdatePrice"
+        >Cập nhật</button>
         <button
           v-if="option == 4"
           slot="button"
           type="button"
           class="btn btn-theme"
-          @click="submitUpdateSurcharge">
-          Cập nhật
-        </button>
+          @click="submitUpdateSurcharge"
+        >Cập nhật</button>
       </sweet-modal>
     </div>
   </div>
@@ -542,7 +618,7 @@ export default {
           }
         );
         this.bookingPayment = response.data.data;
-        console.log(response.data.data);
+        // console.log(response.data.data);
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
@@ -596,7 +672,7 @@ export default {
     },
     selectStatus(status, page) {
       this.selectedStatus = status;
-      console.log(status);
+      // console.log(status);
       this.getBookings({
         page
       });

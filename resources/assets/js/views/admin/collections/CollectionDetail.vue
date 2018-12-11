@@ -186,7 +186,7 @@ export default {
         // console.log(response.data.data)
       } catch (error) {
         if (error) {
-          console.log(error);
+          // console.log(error);
           window.toastr["error"]("There was an error", "Error");
         }
       }

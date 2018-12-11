@@ -219,7 +219,7 @@ export default {
     roles: {
       handler(val) {
         this.user.roles = [];
-        console.log(val);
+        // console.log(val);
         val.forEach(element => {
           this.user.roles.push(element.id);
         });

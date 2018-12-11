@@ -197,7 +197,7 @@ export default {
       files.forEach(element => {
         this.$refs.myVueDropzone.manuallyAddFile(element.file, element.url);
       });
-      console.log(this.$refs.myVueDropzone);
+      // console.log(this.$refs.myVueDropzone);
     },
     showFile(file) {
       console.log(file);
