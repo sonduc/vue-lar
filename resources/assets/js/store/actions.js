@@ -6,8 +6,19 @@ let actions = {
   },
   changeProDay({commit}, payload) {
     commit(types.CHANGE_PROMOTION_DAY, payload)
+  },
+  searchRoomGoogleMap({commit}, payload) {
+    commit(types.CHANGE_ROOM_GOOGLE_MAP, payload)
+  },
+  changeCountRoomGMap({commit}, payload) {
+    commit(types.CHANGE_COUNT_ROOM_GOOGLE_MAP, payload)
+  },
+  changeSearchMapStatus({commit}, payload) {
+    commit(types.SEARCH_MAP_STATUS, payload)
+  },
+  changeInfoSearchRoom({commit}, payload) {
+    commit(types.INFO_SEARCH_ROOM, payload)
   }
-
 }
 
 export default actions

@@ -96,7 +96,7 @@ Vue.component('v-collapse-item', VCollapseItem)
 import * as VueGoogleMaps from 'vue2-google-maps'
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyDatNJsMOi1l5erQTO-NLPvMkVHv15NiOs',
+    key: 'AIzaSyDAawkWY4a0cJx-Y1HzcymEP7pMNoa1GFk',
     libraries: 'places'
   }
 })

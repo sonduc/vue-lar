@@ -88,6 +88,7 @@ import RoomDetail from './views/admin/rooms/RoomDetail.vue'
 import RoomUpdate from './views/admin/rooms/RoomUpdate.vue'
 import RoomCreate from './views/admin/rooms/RoomCreate.vue'
 import RoomCalendar from './views/admin/rooms/RoomCalendar.vue'
+import RoomGoogleMap from './views/admin/rooms/RoomGoogleMap.vue'
 
 // Promotions
 import PromotionList from './views/admin/promotions/PromotionList.vue'
@@ -441,6 +442,11 @@ const routes = [
         path: 'rooms/calendar/:roomId',
         name: 'room.calendar',
         component: RoomCalendar
+      },
+      {
+        path: 'rooms/googlemap',
+        name: 'room.googlemap',
+        component: RoomGoogleMap
       },
 
       // Promotions

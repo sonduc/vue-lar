@@ -110,9 +110,13 @@
           </div>
           <button @click="applyFilter(1)" class="btn btn-success btn-sm">Áp dụng</button>
           <button @click="resetFilter(1)" class="btn btn-info btn-sm">Làm mới</button>
+          <button @click="openRoomGoogleMap" class="btn btn-primary btn-sm">
+            <i class="icon-fa icon-fa-map-marker"/>Tìm trên bản đồ
+          </button>
 
         </div>
       </div>
+
       <div class="mailbox-content">
         <lottie v-if="loading" :options="defaultOptions" :height="150" :width="150"></lottie>
         <table class="table" v-else>
@@ -292,6 +296,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import RoomGoogleMap from './RoomGoogleMap';
 import { SweetModal } from "sweet-modal-vue";
 import Datepicker from "vuejs-datepicker";
 import Multiselect from "vue-multiselect";
@@ -309,7 +315,11 @@ export default {
     Datepicker,
     SweetModal,
     VueSlider,
-    Lottie
+    Lottie,
+    RoomGoogleMap
+  },
+  install (Vue, options) {
+    Vue.component('SweetModal', SweetModal)
   },
   data() {
     return {
@@ -341,10 +351,12 @@ export default {
         id: ""
       },
       city: {
-        id: ""
+        id: "",
+        name: "",
       },
       district: {
-        id: ""
+        id: "",
+        name: "",
       },
       hot_room: null,
       new_room: null,
@@ -414,6 +426,11 @@ export default {
     this.hideSidebarOnMobile();
   },
   methods: {
+    ...mapActions(['searchRoomGoogleMap',
+      'changeCountRoomGMap',
+      'changeSearchMapStatus',
+      'changeInfoSearchRoom']),
+
     async getMerchants() {
       try {
         const response = await axios.get(`users`, {
@@ -445,11 +462,11 @@ export default {
             name: this.q,
             type_room: this.room_type.id,
             rent_type: this.rent_type.id,
-            city: this.city.id,
+            city_id: this.city.id,
             status: this.status.id,
             price_range_start: this.price_range[0],
             price_range_end: this.price_range[1],
-            district: this.district.id,
+            district_id: this.district.id,
             hot: this.hot_room,
             new: this.new_room,
             latest_deal: this.latest_deal,
@@ -470,6 +487,52 @@ export default {
         }
       }
     },
+    async getRoomSearch() {
+      let date_start =
+        this.date_start !== null
+          ? this.date_start.toISOString().substr(0, 10)
+          : "";
+      let date_end =
+        this.date_end !== null ? this.date_end.toISOString().substr(0, 10) : "";
+      try {
+        const response = await axios.get(`rooms`, {
+          params: {
+            include: "details",
+            limit: 50,
+            name: this.q,
+            type_room: this.room_type.id,
+            rent_type: this.rent_type.id,
+            city_id: this.city.id,
+            status: this.status.id,
+            price_range_start: this.price_range[0],
+            price_range_end: this.price_range[1],
+            district_id: this.district.id,
+            hot: this.hot_room,
+            new: this.new_room,
+            latest_deal: this.latest_deal,
+            merchant: this.merchant_id,
+            manager: this.is_manager
+          }
+        });
+        let paginate = response.data.meta.pagination;
+        this.changeCountRoomGMap(paginate.total);
+        this.searchRoomGoogleMap(response.data.data);
+        this.changeInfoSearchRoom({
+          name: this.q,
+          price_range: [this.price_range[0],this.price_range[1]],
+          city_id: this.city.id,
+          city_name: this.city.name,
+          district_id: this.district.id,
+          district_name: this.district.name
+        })
+        this.loading = false;
+        this.changeSearchMapStatus(1);
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
     reloadData(page) {
       this.getRooms({
         page
@@ -482,6 +545,12 @@ export default {
           self.isLeftSidebarVisible = false;
         }
       };
+    },
+    openRoomGoogleMap() {
+      this.getRoomSearch();
+      this.$router.push({
+        name: "room.googlemap",
+      });
     },
     openBookingCalendar(roomId) {
       this.$router.push({
