@@ -132,7 +132,7 @@ export default {
       infoOptions: {
         pixelOffset: {
           width: 0,
-          height: -75
+          height: -15
         }
       },
     };
