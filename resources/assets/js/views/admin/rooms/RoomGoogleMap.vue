@@ -44,15 +44,15 @@
     <div class="row">
       <div class="col-sm-12">
         <div>
-          <button
+          <button v-if="isLoaded"
             class="btn-search" @click="filterMarkers">
             <i class="icon-fa icon-fa-refresh"/> Tìm ở khu này
           </button>
           <gmap-map
             ref="map"
             :center="center"
-            :zoom="13"
-            :options="{ minZoom:5, maxZoom:18 }"
+            :zoom="6"
+            :options="{ minZoom:6, maxZoom:18 }"
             style="width:100%; height: 830px;"
             @idle="onIdle"
           >
@@ -62,7 +62,7 @@
               :position="m.latLng"
               :clickable="true"
               :draggable="false"
-              :icon="getIcon(m.price_day)"
+              :icon="getIcon(m)"
               @mouseover="toggleInfoWindow(m,index)"
             ></gmap-marker>
             <gmap-info-window
@@ -112,7 +112,7 @@ export default {
       count: null,
       checkTypeSearch: 0,
       price_range: [0, 10000000],
-      center: { lat: 21.036904, lng: 105.834712 },
+      center: { lat: 14.542312, lng: 107.923343 },
       markers: [],
       currentPlace: null,
       rooms: null,
@@ -122,10 +122,10 @@ export default {
         lng: 0
       },
       areaBounds: {
-        lat_min: 20.95757398863812,
-        lat_max: 21.09056803927478,
-        long_min: 105.70733925830075,
-        long_max: 105.97650429736325
+        lat_min: 6.96020496098099,
+        lat_max: 24.438120801731465,
+        long_min: 89.74531390000004,
+        long_max: 124.19843890000004
       },
       infoWinOpen: false,
       currentMidx: null,
@@ -235,16 +235,35 @@ export default {
     setPlace(place) {
       this.currentPlace = place;
     },
-    getIcon (label) {
-      let price_day = this.formatNumber(label);
-      let svg = [
-        '<?xml version="1.0"?>',
-        '<svg width="26px" height="26px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">',
-        '<rect x="0" y="0" class="bar" width="100" height="30" ry="10" style="stroke: red; fill: #EA6732;"/>',
-        '<text x="10" y="20" style="fill:white;">'+ price_day +' đ</text>',
-        '</svg>'
-      ].join('\n');
-      let myIcon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), scaledSize: new google.maps.Size(80, 80) };
+    getIcon (marker) {
+      let price_day = this.formatNumber(marker.price_day);
+      let price_hour = this.formatNumber(marker.price_hour);
+      let rent_type = marker.rent_type;
+      let svg;
+      if(rent_type == 1) {
+        svg = [
+          '<?xml version="1.0"?>',
+          '<svg width="26px" height="26px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">',
+          '<rect x="0" y="0" class="bar" width="100" height="30" ry="15" style="stroke: red; fill: #EA6732;"/>',
+          '<text x="13" y="20" style="fill:white;">'+ price_hour +' đ</text>',
+          '</svg>'
+        ].join('\n');
+      }
+      else {
+        svg = [
+          '<?xml version="1.0"?>',
+          '<svg width="26px" height="26px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">',
+          '<rect x="0" y="0" class="bar" width="100" height="30" ry="15" style="stroke: red; fill: #EA6732;"/>',
+          '<text x="8" y="20" style="fill:white;">'+ price_day +' đ</text>',
+          '</svg>'
+        ].join('\n');
+      }
+      let myIcon = { url: 'data:image/svg+xml;charset=UTF-8,'
+       + encodeURIComponent(svg),
+       scaledSize: new google.maps.Size(80,80),
+       origin: new google.maps.Point(0,0),
+       anchor: new google.maps.Point(40,80)
+      };
       return myIcon;
     },
     formatNumber(x) {
@@ -410,6 +429,7 @@ export default {
             long_max: this.areaBounds.long_max
           }
         );
+        console.log(this.areaBounds);
         let roomSearch;
         if(this.getSearchMapStatus){
           this.q = this.getInfoSearchRoom.name;
