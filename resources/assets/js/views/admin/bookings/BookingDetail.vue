@@ -1,26 +1,29 @@
 <template>
-  <div v-if="!(Object.keys(booking).length === 0 && booking.constructor === Object)" class="mailbox-modal">
+  <div
+    v-if="!(Object.keys(booking).length === 0 && booking.constructor === Object)"
+    class="mailbox-modal"
+  >
     <div class="mail-header">
       <div class="mail-actions">
         <ul class="mail-action-list">
           <li class="action" @click="closeModal">
             <a v-tooltip.top-center="'Go Back'" href="#">
-              <i class="icon-fa icon-fa-arrow-left" />
+              <i class="icon-fa icon-fa-arrow-left"/>
             </a>
           </li>
           <li class="action">
             <a v-tooltip.top-center="'Report'" href="#">
-              <i class="icon-fa icon-fa-exclamation" />
+              <i class="icon-fa icon-fa-exclamation"/>
             </a>
           </li>
           <li class="action">
             <a v-tooltip.top-center="'Trash'" href="#">
-              <i class="icon-fa icon-fa-trash" />
+              <i class="icon-fa icon-fa-trash"/>
             </a>
           </li>
           <li class="action">
             <a v-tooltip.top-center="'Forward'" href="#">
-              <i class="icon-fa icon-fa-envelope-open icon-fa-fw" />
+              <i class="icon-fa icon-fa-envelope-open icon-fa-fw"/>
             </a>
           </li>
         </ul>
@@ -34,12 +37,17 @@
           <div class="card">
             <div class="card-header">
               <div class="caption">
-                <h5><b>{{booking.room.data.details.data[0].name}}</b></h5>
+                <h5>
+                  <b>{{booking.room.data.details.data[0].name}}</b>
+                </h5>
                 <p>{{booking.room.data.details.data[0].address}}</p>
               </div>
               <div class="actions">
-                <router-link :to="'/admin/bookings/update/'+booking.id" class="btn btn-primary btn-sm">
-                  <i class="icon-fa icon-fa-pencil" /> Sửa booking
+                <router-link
+                  :to="'/admin/bookings/update/'+booking.id"
+                  class="btn btn-primary btn-sm"
+                >
+                  <i class="icon-fa icon-fa-pencil"/> Sửa booking
                 </router-link>
               </div>
             </div>
@@ -57,11 +65,13 @@
                     <td class="cell-content">
                       <div class="content">
                         <div class="content-subject">
-                          <button disabled type="button" class="btn btn-sm btn-outline-secondary">
-                            #{{booking.code}}
-                          </button>
+                          <button
+                            disabled
+                            type="button"
+                            class="btn btn-sm btn-outline-secondary"
+                          >#{{booking.code}}</button>
                         </div>
-                        <hr />
+                        <hr>
                         <div class="content-subject">
                           <p>{{booking.status_txt}}</p>
                         </div>
@@ -147,12 +157,14 @@
           <div class="card">
             <div class="card-header">
               <div class="caption">
-                <h5><b>Thông tin thanh toán</b></h5>
+                <h5>
+                  <b>Thông tin thanh toán</b>
+                </h5>
                 <p>#{{booking.code}}</p>
               </div>
               <div class="actions">
                 <button class="btn btn-primary btn-sm">
-                  <i class="icon-fa icon-fa-plus" /> Send Invoice
+                  <i class="icon-fa icon-fa-plus"/> Send Invoice
                 </button>
               </div>
             </div>
@@ -168,17 +180,20 @@
                         </div>
                       </div>
                     </td>
-                    <td class="cell-content">
-                    </td>
+                    <td class="cell-content"></td>
                     <td class="cell-content">
                       <div class="content">
                         <div class="content-subject">
-                          <p style="color: green" v-if="booking.payment_status == 3"> <i class="icon-fa icon-fa-check-circle"
-                              style="color: green"></i> {{booking.payment_status_txt}}</p>
-                          <p style="color: red" v-if="booking.payment_status == 1"> <i class="icon-fa icon-fa-times-circle"
-                              style="color: red"></i> {{booking.payment_status_txt}}</p>
+                          <p style="color: green" v-if="booking.payment_status == 3">
+                            <i class="icon-fa icon-fa-check-circle" style="color: green"></i>
+                            {{booking.payment_status_txt}}
+                          </p>
+                          <p style="color: red" v-if="booking.payment_status == 1">
+                            <i class="icon-fa icon-fa-times-circle" style="color: red"></i>
+                            {{booking.payment_status_txt}}
+                          </p>
                         </div>
-                        <hr />
+                        <hr>
                         <div class="content-subject">
                           <p>{{booking.payment_method_txt}}</p>
                         </div>
@@ -226,7 +241,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -256,9 +270,6 @@ export default {
         this.$emit("close");
       }
     }
-  },
-  created() {
-    console.log(this.booking);
   }
 };
 </script>

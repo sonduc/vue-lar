@@ -3,8 +3,12 @@
     <div class="page-header">
       <h3 class="page-title">Users</h3>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Users</a></li>
+        <li class="breadcrumb-item">
+          <a href="#">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="#">Users</a>
+        </li>
         <li class="breadcrumb-item active">Users</li>
       </ol>
     </div>
@@ -13,36 +17,46 @@
         <div class="card">
           <div class="card-header">
             <h6>All Users</h6>
-            <div class="card-actions" />
+            <div class="card-actions"/>
           </div>
           <div class="card-body">
-            <table-component :data="getUsers" sort-by="row.name" sort-order="desc" table-class="table">
-              <table-column show="id" label="ID" />
-              <table-column show="name" label="Name" />
-              <table-column show="email" label="Email" />
-              <table-column show="type_txt" label="Role" />
+            <table-component
+              :data="getUsers"
+              sort-by="row.name"
+              sort-order="desc"
+              table-class="table"
+            >
+              <table-column show="id" label="ID"/>
+              <table-column show="name" label="Name"/>
+              <table-column show="email" label="Email"/>
+              <table-column show="type_txt" label="Role"/>
               <table-column label="Status" :sortable="false" :filterable="false">
-                  <template slot-scope="row">
-                      <button :class="row.status == 0 ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'">
-                        {{row.status_txt}}
-                      </button>
-                  </template>
+                <template slot-scope="row">
+                  <button
+                    :class="row.status == 0 ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'"
+                  >{{row.status_txt}}</button>
+                </template>
               </table-column>
               <table-column :sortable="true" :filterable="true" label="Actions">
                 <template slot-scope="row">
                   <div class="table__actions">
                     <router-link :to="{ name: 'user.profile', params: { userId: row.id }}">
                       <a class="btn btn-default btn-sm">
-                        <i class="icon-fa icon-fa-search" /> View
+                        <i class="icon-fa icon-fa-search"/> View
                       </a>
                     </router-link>
                     <router-link :to="{ name: 'user.edit', params: { userId: row.id }}">
                       <a class="btn btn-default btn-sm">
-                        <i class="icon-fa icon-fa-search" /> Edit
+                        <i class="icon-fa icon-fa-search"/> Edit
                       </a>
                     </router-link>
-                    <a class="btn btn-default btn-sm" data-delete data-confirmation="notie" @click="deleteUser(row.id)">
-                      <i class="icon-fa icon-fa-trash" /> Delete
+                    <a
+                      class="btn btn-default btn-sm"
+                      data-delete
+                      data-confirmation="notie"
+                      @click="deleteUser(row.id)"
+                    >
+                      <i class="icon-fa icon-fa-trash"/> Delete
                     </a>
                   </div>
                 </template>
@@ -86,7 +100,7 @@ export default {
       try {
         const response = await axios.get(`users?type=1&page=${page}`);
         let paginate = response.data.meta.pagination;
-        console.log(paginate);
+        // console.log(paginate);
         return {
           data: response.data.data,
           pagination: {

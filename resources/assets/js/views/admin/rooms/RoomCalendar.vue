@@ -31,7 +31,226 @@
             :event-limit="true"
             :editable="false"
             :selectHelper="true"
+            @event-selected="eventClicked"
           ></full-calendar>
+
+          <sweet-modal ref="booking_modal" overlay-theme="dark" modal-theme="light">
+            <div class="row" v-if="booking_current">
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="caption">
+                      <h5>
+                        <b>{{booking_current.room.data.details.data[0].name}}</b>
+                      </h5>
+                      <p>{{booking_current.room.data.details.data[0].address}}</p>
+                    </div>
+                    <div class="actions">
+                      <router-link
+                        :to="'/admin/bookings/update/'+booking_current.id"
+                        class="btn btn-primary btn-sm"
+                      >
+                        <i class="icon-fa icon-fa-pencil"/> Sửa booking
+                      </router-link>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-hover">
+                      <tbody>
+                        <tr>
+                          <td class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>Mã đặt phòng</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <button
+                                  disabled
+                                  type="button"
+                                  class="btn btn-sm btn-outline-secondary"
+                                >#{{booking_current.code}}</button>
+                              </div>
+                              <hr>
+                              <div class="content-subject">
+                                <p>{{booking_current.status_txt}}</p>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>Thông tin người nhận</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>{{booking_current.name_received}}</p>
+                              </div>
+                              <div class="content-subject">
+                                <p>{{booking_current.email_received}}</p>
+                              </div>
+                              <div class="content-subject">
+                                <p>{{booking_current.phone_received}}</p>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>Thông tin người đặt</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>{{booking_current.name}}</p>
+                              </div>
+                              <div class="content-subject">
+                                <p>{{booking_current.email}}</p>
+                              </div>
+                              <div class="content-subject">
+                                <p>{{booking_current.phone}}</p>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>Nhận phòng</p>
+                              </div>
+                            </div>
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>Trả phòng</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>{{booking_current.checkin}}</p>
+                              </div>
+                            </div>
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>{{booking_current.checkout}}</p>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="caption">
+                      <h5>
+                        <b>Thông tin thanh toán</b>
+                      </h5>
+                      <p>#{{booking_current.code}}</p>
+                    </div>
+                    <div class="actions">
+                      <button class="btn btn-primary btn-sm">
+                        <i class="icon-fa icon-fa-plus"/> Send Invoice
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-hover">
+                      <tbody>
+                        <tr>
+                          <td width="20%" class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>Trạng thái thanh toán</p>
+                                <p></p>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="cell-content"></td>
+                          <td class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <p style="color: green" v-if="booking_current.payment_status == 3">
+                                  <i class="icon-fa icon-fa-check-circle" style="color: green"></i>
+                                  {{booking_current.payment_status_txt}}
+                                </p>
+                                <p style="color: red" v-if="booking_current.payment_status == 1">
+                                  <i class="icon-fa icon-fa-times-circle" style="color: red"></i>
+                                  {{booking_current.payment_status_txt}}
+                                </p>
+                              </div>
+                              <hr>
+                              <div class="content-subject">
+                                <p>{{booking_current.payment_method_txt}}</p>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="20%" class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>Thông tin thanh toán</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>Giá phòng</p>
+                              </div>
+                              <div class="content-subject">
+                                <p>Giảm giá</p>
+                              </div>
+                              <div class="content-subject">
+                                <p>Tổng tiền</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="cell-content">
+                            <div class="content">
+                              <div class="content-subject">
+                                <p>{{booking_current.price_original | formatNumber}}</p>
+                              </div>
+                              <div class="content-subject">
+                                <p>{{booking_current.price_discount | formatNumber}}</p>
+                              </div>
+                              <div class="content-subject">
+                                <p>{{booking_current.booking_fee | formatNumber}}</p>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button
+              slot="button"
+              type="button"
+              class="btn btn-theme"
+              @click="$refs.booking_modal.close()"
+            >Confirm</button>
+          </sweet-modal>
         </div>
         <div class="col-sm-3">
           <div class="card" style="margin-top: 59px;">
@@ -94,12 +313,16 @@ import Auth from "../../../services/auth";
 import Datepicker from "vuejs-datepicker";
 import * as animationData from "../../loading/material_wave_loading.json";
 import Lottie from "vue-lottie";
+import { SweetModal } from "sweet-modal-vue";
+import { format } from "../../../helpers/mixins";
 export default {
+  mixins: [format],
   name: "RoomCalendar",
   components: {
     FullCalendar,
     Datepicker,
-    Lottie
+    Lottie,
+    SweetModal
   },
   data() {
     return {
@@ -132,7 +355,8 @@ export default {
         left: "",
         center: "title",
         right: "month,agendaWeek,agendaDay"
-      }
+      },
+      booking_current: null
     };
   },
   computed: {
@@ -257,9 +481,11 @@ export default {
               end: null,
               allDay: true,
               textColor: "white",
-              color: "#257e4a"
+              color: "#257e4a",
+              booking_detail: item
             };
-            booking.title = item.name + ": " + item.total_fee + "đ";
+            booking.title =
+              item.name + ": " + self.formatNumber(item.total_fee) + "đ";
             if (item.booking_type == 1) {
               booking.start = item.checkin;
               booking.end = item.checkout;
@@ -304,6 +530,10 @@ export default {
     }
   },
   methods: {
+    eventClicked(calEvent, jsEvent, view) {
+      this.booking_current = calEvent.booking_detail;
+      this.$refs.booking_modal.open();
+    },
     correctDay(date) {
       let beforeAddDay = new Date(date);
       let timeDay = 86400000;
@@ -461,7 +691,8 @@ export default {
       try {
         const response = await axios.get(`bookings`, {
           params: {
-            room: this.$route.params.roomId,
+            include: "room.details",
+            rooms: this.$route.params.roomId,
             date_in: this.date_in.toISOString().substr(0, 10),
             date_out: this.date_out.toISOString().substr(0, 10)
           }

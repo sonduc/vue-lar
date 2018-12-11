@@ -111,9 +111,9 @@ export default {
       let url = '/api/admin/todos/toggleTodo/' + todo.id
       try {
         let response = await window.axios.post(url, { completed: todo.completed })
-        console.log(response)
+        // console.log(response)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
       }
     }
   }

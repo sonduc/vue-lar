@@ -1,5 +1,7 @@
 import Ls from "./ls";
-import { forEach } from "lodash";
+import {
+  forEach
+} from "lodash";
 export default {
   async login(loginData) {
     try {
@@ -15,7 +17,7 @@ export default {
         toastr["error"]("Invalid Credentials", "Error");
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log("Error", error.message);
+        // console.log("Error", error.message);
       }
     }
   },
@@ -27,7 +29,7 @@ export default {
       Ls.remove("auth.token");
       toastr["success"]("Logged out!", "Success");
     } catch (error) {
-      console.log("Error", error.message);
+      // console.log("Error", error.message);
     }
   },
 
@@ -44,7 +46,9 @@ export default {
       if (response.data.data.roles) {
         let permissions = {};
         forEach(response.data.data.roles.data, role => {
-          permissions = { ...permissions, ...role.permissions };
+          permissions = { ...permissions,
+            ...role.permissions
+          };
         });
         return permissions;
       }
