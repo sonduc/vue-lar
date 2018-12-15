@@ -607,7 +607,7 @@
                 <label for="pasword" class="col-sm-3 col-form-label">
                 Áp dụng cho giá booking trên:
                 </label>
-                <div class="col-sm-8">
+                <div class="col-sm-8 min-price">
                  <input
                     type="text"
                     v-model="coupons.settings.min_price"
@@ -1273,5 +1273,16 @@
 .style-checkbox {
   padding-top: 30px;
   margin-left: 35px;
+}
+.min-price {
+  display: inline-block;
+  position: relative;
+}
+.min-price::after {
+  position: absolute;
+  top: 7px;
+  right: 1.5em;
+  transition: all .05s ease-in-out;
+  content: 'vnđ';
 }
 </style>
