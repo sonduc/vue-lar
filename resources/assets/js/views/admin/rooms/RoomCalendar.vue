@@ -15,8 +15,8 @@
       <div class="row" v-if="room != null && blockSchedule !=null">
         <div class="col-sm-9">
           <div style="position: absolute;">
-            <button class="button-prev" @click="prev"><</button>
-            <button class="button-next" @click="next">></button>
+            <button class="button-prev" @click="prev">&#60;</button>
+            <button class="button-next" @click="next">&#62;</button>
             <button class="button-today" @click="today">Hôm nay</button>
           </div>
           <full-calendar
@@ -44,14 +44,6 @@
                         <b>{{booking_current.room.data.details.data[0].name}}</b>
                       </h5>
                       <p>{{booking_current.room.data.details.data[0].address}}</p>
-                    </div>
-                    <div class="actions">
-                      <router-link
-                        :to="'/admin/bookings/update/'+booking_current.id"
-                        class="btn btn-primary btn-sm"
-                      >
-                        <i class="icon-fa icon-fa-pencil"/> Sửa booking
-                      </router-link>
                     </div>
                   </div>
                   <div class="card-body">
@@ -165,11 +157,6 @@
                       </h5>
                       <p>#{{booking_current.code}}</p>
                     </div>
-                    <div class="actions">
-                      <button class="btn btn-primary btn-sm">
-                        <i class="icon-fa icon-fa-plus"/> Send Invoice
-                      </button>
-                    </div>
                   </div>
                   <div class="card-body">
                     <table class="table table-hover">
@@ -244,12 +231,6 @@
                 </div>
               </div>
             </div>
-            <button
-              slot="button"
-              type="button"
-              class="btn btn-theme"
-              @click="$refs.booking_modal.close()"
-            >Confirm</button>
           </sweet-modal>
         </div>
         <div class="col-sm-3">
@@ -329,10 +310,10 @@ export default {
       defaultOptions: {
         animationData: animationData
       },
-      date_in: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
+      date_in: new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1),
       date_out: new Date(
         new Date().getFullYear(),
-        new Date().getMonth() + 1,
+        new Date().getMonth() + 2,
         1
       ),
       loading: true,
@@ -421,10 +402,10 @@ export default {
             }
           }
           self.bookingCalendar.forEach(d => {
-            let day1 = new Date(d.start);
-            let day2 = new Date(d.end);
+            let date_start_event = new Date(d.start);
+            let date_end_event = new Date(d.end);
             let currentDay = new Date(date.format("YYYY-MM-DD"));
-            if (currentDay >= day1 && currentDay < day2) {
+            if (currentDay >= date_start_event && currentDay < date_end_event) {
               cell.addClass("bg-past-day");
               cell.children(".available").remove();
               return true;
@@ -439,10 +420,10 @@ export default {
             temp++;
           }
           self.bookingCalendar.forEach(d => {
-            let day1 = new Date(d.start);
-            let day2 = new Date(d.end);
+            let date_start_event = new Date(d.start);
+            let date_end_event = new Date(d.end);
             let currentDay = new Date(info.start.format("YYYY-MM-DD"));
-            if (currentDay >= day1 && currentDay < day2) {
+            if (currentDay >= date_start_event && currentDay < date_end_event) {
               temp++;
             }
           });
@@ -485,7 +466,11 @@ export default {
               booking_detail: item
             };
             booking.title =
-              item.name + ": " + self.formatNumber(item.total_fee) + "đ";
+              item.name +
+              `(${item.code})` +
+              ": " +
+              self.formatNumber(item.total_fee) +
+              "đ";
             if (item.booking_type == 1) {
               booking.start = item.checkin;
               booking.end = item.checkout;
