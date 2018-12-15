@@ -177,7 +177,6 @@
           <button @click="openRoomGoogleMap" class="btn btn-primary btn-sm">
             <i class="icon-fa icon-fa-map-marker"/>Tìm trên bản đồ
           </button>
-
         </div>
       </div>
 
@@ -415,8 +414,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import RoomGoogleMap from './RoomGoogleMap';
+import { mapActions } from "vuex";
+import RoomGoogleMap from "./RoomGoogleMap";
 import { SweetModal } from "sweet-modal-vue";
 import Datepicker from "vuejs-datepicker";
 import Multiselect from "vue-multiselect";
@@ -437,8 +436,8 @@ export default {
     Lottie,
     RoomGoogleMap
   },
-  install (Vue, options) {
-    Vue.component('SweetModal', SweetModal)
+  install(Vue, options) {
+    Vue.component("SweetModal", SweetModal);
   },
   data() {
     return {
@@ -471,11 +470,11 @@ export default {
       },
       city: {
         id: "",
-        name: "",
+        name: ""
       },
       district: {
         id: "",
-        name: "",
+        name: ""
       },
       hot_room: null,
       new_room: null,
@@ -545,10 +544,12 @@ export default {
     this.hideSidebarOnMobile();
   },
   methods: {
-    ...mapActions(['searchRoomGoogleMap',
-      'changeCountRoomGMap',
-      'changeSearchMapStatus',
-      'changeInfoSearchRoom']),
+    ...mapActions([
+      "searchRoomGoogleMap",
+      "changeCountRoomGMap",
+      "changeSearchMapStatus",
+      "changeInfoSearchRoom"
+    ]),
 
     async getMerchants() {
       try {
@@ -638,12 +639,12 @@ export default {
         this.searchRoomGoogleMap(response.data.data);
         this.changeInfoSearchRoom({
           name: this.q,
-          price_range: [this.price_range[0],this.price_range[1]],
+          price_range: [this.price_range[0], this.price_range[1]],
           city_id: this.city.id,
           city_name: this.city.name,
           district_id: this.district.id,
           district_name: this.district.name
-        })
+        });
         this.loading = false;
         this.changeSearchMapStatus(1);
       } catch (error) {
@@ -668,7 +669,7 @@ export default {
     openRoomGoogleMap() {
       this.getRoomSearch();
       this.$router.push({
-        name: "room.googlemap",
+        name: "room.googlemap"
       });
     },
     openBookingCalendar(roomId) {
