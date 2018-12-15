@@ -209,11 +209,11 @@ export const constant = {
         { value: 5, title: "Qua Booking.com" }
       ],
       room_type_list: [
-        { id: 1, value: "Nhà riêng" },
-        { id: 2, value: "Căn hộ/ Chung cư" },
-        { id: 3, value: "Biệt thự" },
-        { id: 4, value: "Phòng riêng" },
-        { id: 5, value: "Khách sạn" }
+        { id: 1, name: "Nhà riêng" },
+        { id: 2, name: "Căn hộ/ Chung cư" },
+        { id: 3, name: "Biệt thự" },
+        { id: 4, name: "Phòng riêng" },
+        { id: 5, name: "Khách sạn" }
       ],
       rent_type_list: [
         { id: 1, value: "Theo giờ" },
@@ -226,7 +226,20 @@ export const constant = {
         { id: 0, value: "Chưa xác nhận" },
         { id: 3, value: "Dọn dẹp phòng" },
         { id: 4, value: "Thiết lập dịch vụ" }
-      ]
+      ],
+      booking_type_list: [
+        { id: 1, name: "Theo giờ" },
+        { id: 2, name: "Theo ngày" },
+      ],
+      weekday_list: [
+        { id: 2, name: "Thứ 2" },
+        { id: 3, name: "Thứ 3" },
+        { id: 4, name: "Thứ 4" },
+        { id: 5, name: "Thứ 5" },
+        { id: 6, name: "Thứ 6" },
+        { id: 7, name: "Thứ 7" },
+        { id: 1, name: "Chủ nhật" },
+      ],
     };
   },
   computed: {

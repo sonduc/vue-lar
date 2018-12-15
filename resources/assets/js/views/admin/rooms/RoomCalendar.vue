@@ -329,10 +329,10 @@ export default {
       defaultOptions: {
         animationData: animationData
       },
-      date_in: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
+      date_in: new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1),
       date_out: new Date(
         new Date().getFullYear(),
-        new Date().getMonth() + 1,
+        new Date().getMonth() + 2,
         1
       ),
       loading: true,

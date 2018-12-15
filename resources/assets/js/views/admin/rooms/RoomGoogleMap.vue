@@ -222,8 +222,8 @@
         this.currentPlace = place;
       },
       getIcon(marker) {
-        let price_day = this.formatNumber(price_day);
-        let price_hour = this.formatNumber(price_hour);
+        let price_day = this.formatNumber(marker.price_day);
+        let price_hour = this.formatNumber(marker.price_hour);
         let rent_type = marker.rent_type;
         let svg;
         if (rent_type == 1) {
@@ -296,8 +296,8 @@
         }
       },
       getInfoWindowContent: function (marker) {
-        let price_day = this.formatNumber(price_day);
-        let price_hour = this.formatNumber(price_hour);
+        let price_day = this.formatNumber(marker.price_day);
+        let price_hour = this.formatNumber(marker.price_hour);
         if (marker.rent_type == 1) {
           return (
             `<div class="row" style="margin:0px;">
@@ -412,7 +412,6 @@
               long_max: this.areaBounds.long_max
             }
           );
-          console.log(this.areaBounds);
           let roomSearch;
           if (this.getSearchMapStatus) {
             this.q = this.getInfoSearchRoom.name;
