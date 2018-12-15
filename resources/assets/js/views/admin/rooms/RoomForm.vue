@@ -204,7 +204,7 @@
                                     class="form-control"
                                   >
                                 </div>
-                                
+
                                 <div class="form-group">
                                   <label>Giới thiệu phòng</label>
                                   <quill-editor
@@ -494,7 +494,6 @@
                     </div>
                   </div>
                 </div>
-
                 <div class="card">
                   <div class="card-header">
                     <div class="row">
@@ -619,6 +618,80 @@
                     </div>
                   </div>
                 </div>
+                <div class="card">
+                  <div class="card-header">
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <h5 class="section-semi-title">Chính sách hủy booking</h5>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-4 row">
+                        <label for="cancel" class="col-sm-5 col-form-label">
+                          Cho phép hủy booking:</label>
+                        <div class="col-sm-7 mt-2 ml-0">
+                          <div class="form-check form-check-inline"
+                            style="margin-right: 50px;">
+                            <input
+                              id="inlineCheckbox1"
+                              v-model="room.settings.no_booking_cancel"
+                              class="form-check-input"
+                              type="radio"
+                              :value="1"
+                              >
+                            <label class="form-check-label" for="inlineCheckbox1">
+                              Không
+                            </label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              id="inlineCheckbox2"
+                              v-model="room.settings.no_booking_cancel"
+                              class="form-check-input"
+                              type="radio"
+                              :value="0">
+                            <label class="form-check-label" for="inlineCheckbox2">
+                              Có
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-5">
+                        <div class="form-group row"
+                          v-if="room.settings.no_booking_cancel == 0">
+                          <label class="col-sm-4 col-form-label" for="firstName"
+                            :style="errors.has('room.cancelDay') ? 'color:red;' : ''">
+                            {{ errors.has('room.cancelDay')
+                            ? errors.first('room.cancelDay') : 'Chỉ được hủy trước:'}}
+                          </label>
+                          <div class="col-sm-8 pr-0 cancel-day">
+                            <input id="firstName"
+                              name="room.cancelDay"
+                              v-validate="step==1 ? 'required|numeric|min_value:1':''"
+                              data-vv-as="Ngày hủy trước"
+                              v-model.number="room.settings.refunds[0].days"
+                              type="text" class="form-control">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3"
+                        v-if="room.settings.no_booking_cancel == 0">
+                        <div class="form-group row">
+                          <label for="firstName" class="col-sm-4 col-form-label"
+                            style="text-align: center;">
+                            Hoàn tiền:</label>
+                          <div class="col-sm-8 pr-0 percent">
+                            <input disabled="true" value="100"
+                              type="text" class="form-control">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </section>
             </tab-content>
             <tab-content title="Tiện ích phòng" :before-change="validateBeforeNext">
@@ -690,31 +763,39 @@
                 </div>
               </div>
             </tab-content>
-
             <tab-content title="Địa chỉ" :before-change="validateBeforeNext">
               <div class="card">
                 <div class="card-header">
                   <h5 class="section-semi-title">Địa chỉ phòng</h5>
                 </div>
                 <div class="card-body">
-                  <div class="row mt-4">
-                    <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-11">
                       <div class="form-group">
                         <label>
                           Địa chỉ *
                         </label>
-                        <GmapAutocomplete 
-                          type="text" 
+                        <GmapAutocomplete
+                          type="text"
                           :disabled="lockPlace"
-                          name="detail.address" 
+                          name="detail.address"
                           @place_changed="setPlace"
                           data-vv-as="Địa chỉ phòng"
                           class="form-control"
                         >
                         </GmapAutocomplete>
-                        <button class="btn btn-success" v-if="!lockPlace" @click="usePlace">Khóa</button>
-                        <button class="btn btn-danger" v-else @click="lockPlace = !lockPlace">Thay đổi</button>
                       </div>
+                    </div>
+                    <div class="col-sm-1" style="padding-top: 30px;">
+                      <div class="form-group">
+                        <button class="btn btn-success" v-if="!lockPlace"
+                        @click="usePlace" style="padding: 6px 28px;">Khóa</button>
+                        <button class="btn btn-danger" v-else
+                        style="padding: 6px 28px;"
+                        @click="lockPlace = !lockPlace" >Thay đổi</button>
+                      </div>
+                    </div>
+                    <div class="col-sm-12">
                       <div class="row">
                         <div class="col-lg-6">
                           <div class="form-group">
@@ -755,7 +836,6 @@
                         </div>
                       </div>
 
-                      <!-- Vì data trong DB trùng nhau nên chưa để :duplicateCheck="true" được -->
                       <GmapMap
                         :center="{
                             lat: this.place != null ? this.place.geometry.location.lat() : 21.0083069,
@@ -960,7 +1040,16 @@ export default {
         status: 0,
         status_txt: "Chưa xác nhận",
         city_id: null,
-        district_id: null
+        district_id: null,
+        settings: {
+          no_booking_cancel: 1,
+          refunds: [
+            {
+              days: 1,
+              amount: 100
+            }
+          ]
+        },
       },
       room_type: [],
       rent_type: [],
@@ -1167,7 +1256,7 @@ export default {
         }
       },
       deep: true
-    }
+    },
   },
   methods: {
     updateCoordinates(location) {
@@ -1209,8 +1298,18 @@ export default {
           }
         });
       }
-
       this.room = JSON.parse(JSON.stringify({ ...this.room, ...dataRoom }));
+      if(dataRoom.settings.no_booking_cancel == 1) {
+        this.room.settings = {
+          no_booking_cancel: 1,
+          refunds: [
+            {
+              days: 1,
+              amount: 100
+            }
+          ]
+        }
+      }
       if (dataRoom.media.data.length) {
         dataRoom.media.data.forEach(item => {
           this.room.images.push({ source: item.image, type: item.type });
@@ -1516,9 +1615,9 @@ export default {
             this.room.district_id = element.id
           }
         })
-        
+
       }
-      
+
     }
   },
   created() {
@@ -1553,6 +1652,24 @@ export default {
 </script>
 
 <style>
+.cancel-day, .percent {
+  display: inline-block;
+  position: relative;
+}
+.cancel-day::after {
+  position: absolute;
+  top: 5px;
+  right: .5em;
+  transition: all .05s ease-in-out;
+  content: 'ngày';
+}
+.percent::after {
+  position: absolute;
+  top: 5px;
+  right: .5em;
+  transition: all .05s ease-in-out;
+  content: '%';
+}
 </style>
 
 
