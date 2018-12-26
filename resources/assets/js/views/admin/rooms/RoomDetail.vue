@@ -67,7 +67,7 @@
                       </a>
 
                       <div v-html="room_details.description" id="description" class="panel-collapse panel-content" >
-                      
+
                       </div>
                     </v-collapse-item>
                   </div>
@@ -82,7 +82,7 @@
                       </a>
 
                       <div v-html="room_details.space" id="space" class="panel-collapse" >
-                        
+
                       </div>
                     </v-collapse-item>
                   </div>
@@ -97,7 +97,7 @@
                       </a>
 
                       <div v-html="room_details.note" id="note" class="panel-collapse panel-content" >
-                        
+
                       </div>
                     </v-collapse-item>
                   </div>
@@ -146,7 +146,7 @@
             </table>
             </div>
           </div>
-          <div class="card">
+          <!-- <div class="card">
             <div class="card-header bg-dark">
               <h6>Tiện nghi</h6>
             </div>
@@ -157,23 +157,52 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
-    
-    <div class="row">
+    <div>
+      <h3 style="margin-top: 40px; padding-left: 33px;">
+        <i class="icon-fa icon-fa-map-marker"></i>
+        Những địa điểm nổi bật được gợi ý xung quanh phòng
+      </h3>
+    </div>
+    <div class="row" style="margin-top: 30px;">
       <div class="card mr-5 ml-5">
         <div class="card-body">
-          <GmapMap 
-            :center="{lat:parseInt(room.latitude), lng:parseInt(room.longitude)}" 
-            :zoom="12"
-            style="width:1500px; height:500px"
+          <gmap-map
+            ref="map"
+            :center="center"
+            :zoom="16"
+            :options="{ minZoom:6, maxZoom:18 }"
+            style="width:1458px; height:700px"
+            @idle="onIdle"
           >
-            <gmap-marker 
-              :position="{lat:parseInt(room.latitude), lng:parseInt(room.longitude)}"
+            <gmap-marker
+              v-if="isLoaded"
+              :key="index"
+              v-for="(m, index) in markers"
+              :icon="getIcon(m)"
+              :position="m.latLng"
+              :clickable="true"
+            >
+              <gmap-info-window
+                :options="infoOptions"
+                :position="infoWindowPos[index]"
+                :opened="true"
+                @closeclick="infoWinOpen=false"
+              >
+                <div v-html="infoContent[index]"></div>
+              </gmap-info-window>
+            </gmap-marker>
+            <gmap-marker
+              label="★"
+              :position="{
+                lat:parseFloat(room.latitude),
+                lng:parseFloat(room.longitude)
+              }"
             />
-          </GmapMap>
+          </gmap-map>
         </div>
       </div>
 
@@ -242,6 +271,22 @@ export default {
         "/assets/img/demo/gallery/11.jpg",
         "/assets/img/demo/gallery/12.jpg"
       ],
+      infoOptions: {
+        pixelOffset: {
+          width: -10,
+          height: 7
+        }
+      },
+      center: {
+        lat: 21.0083069,
+        lng: 105.8182929
+      },
+      infoWindowPos:[],
+      infoContent: [],
+      infoWinOpen: false,
+      currentMidx: null,
+      markers: [],
+      isLoaded: false,
       permissions: "room.view"
     };
   },
@@ -252,25 +297,93 @@ export default {
     Lottie,
     gallery: VueGallery
   },
+  watch: {
+    isLoaded: {
+      handler(val) {
+        if(val == true) {
+          this.showInfoWindow(this.markers)
+          const bounds = new google.maps.LatLngBounds();
+          for (let m of this.markers) {
+            bounds.extend(m.latLng);
+          }
+          this.$refs.map.fitBounds(bounds);
+        }
+      }
+    }
+  },
   methods: {
+    onIdle() {
+      this.isLoaded = true;
+    },
+    showInfoWindow: function(markers) {
+      if(markers.length) {
+        markers.forEach(marker => {
+          this.infoWindowPos.push(marker.latLng);
+
+          let custominfo = this.getInfoWindowContent(marker)
+          this.infoContent.push(custominfo);
+        })
+      }
+    },
+     getInfoWindowContent: function(marker) {
+      return `
+        <div style="width:170px">
+          <a href="/admin/rooms/guidebook/${this.$route.params.roomId}" target="_blank">
+            <p style="color: #cc3300;font-size: 18px;">${marker.description}</p>
+            <p>Địa chỉ: ${marker.name}</p>
+          </a>
+        </div>
+      `;
+    },
     async getRoom() {
       try {
         const response = await axios.get(`rooms/${this.$route.params.roomId}`, {
           params: {
-            include: "details,media,comforts.details,city,district,prices,user"
+            include: "details,media,comforts.details,city,district,prices,user,places"
           }
         });
         this.room = response.data.data;
+        this.center.lat = parseFloat(response.data.data.latitude);
+        this.center.lng = parseFloat(response.data.data.longitude);
         this.room_details = response.data.data.details.data[0];
         this.room_city = response.data.data.city.data;
         this.room_prices = response.data.data.prices.data;
         this.room_comforts = response.data.data.comforts.data;
         this.loading = false;
+        if(response.data.data.places.data.length) {
+          response.data.data.places.data.forEach(place => {
+            this.markers.push({
+              id: place.id,
+              name: place.name,
+              description: place.description,
+              latLng: {
+                lat: parseFloat(place.latitude),
+                lng: parseFloat(place.longitude)
+              },
+              guidebook_category_id: place.guidebook_category_id,
+            });
+          });
+        }
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
         }
       }
+    },
+    getIcon(marker) {
+      let svg = [
+          '<?xml version="1.0"?>',
+          '<svg width="40px" height="40px" version="1.1" xmlns="http://www.w3.org/2000/svg">',
+          '<circle cx="10" cy="10" r="8" stroke="green" stroke-width="1" fill="red" />',
+          "</svg>"
+        ].join("\n");
+      let myIcon = {
+        url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
+        scaledSize: new google.maps.Size(40, 40),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(10, 10)
+      };
+      return myIcon;
     },
     openModalOptionalPrices() {
       this.$refs.optional_prices.open();
@@ -308,4 +421,5 @@ export default {
 </script>
 
 <style>
+
 </style>

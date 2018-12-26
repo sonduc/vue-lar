@@ -300,6 +300,9 @@
             <router-link to="/admin/promotions/create">
               Tạo chương trình khuyến mãi
             </router-link>
+            <router-link to="/admin/coupons/create">
+              <span @click="openCreateCoupon">Tạo phiếu giảm giá</span>
+            </router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/blogs">
@@ -343,3 +346,15 @@
     </div>
   </div>
 </template>
+<script>
+import { mapActions } from "vuex";
+export default {
+  methods: {
+    ...mapActions(["changeProId"]),
+
+    openCreateCoupon() {
+      this.changeProId(0);
+    }
+  }
+};
+</script>

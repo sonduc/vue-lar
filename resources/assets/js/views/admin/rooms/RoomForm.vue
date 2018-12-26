@@ -1179,6 +1179,7 @@ export default {
         }
       },
       set(val) {
+        this.district.data.name = null;
         this.room.city.data = val;
         this.room.city_id = val.id;
       }

@@ -24,7 +24,17 @@ export default new Vuex.Store({
       city_name: null,
       district_id: null,
       district_name: null
-    }
+    },
+    // khoảng thời gian lấy booking của room
+    room_booking_date: {
+      date_in: new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1),
+      date_out: new Date(new Date().getFullYear(), new Date().getMonth() + 2, 1),
+    },
+    // lưu lại ngày vừa thao tác với room_calendar
+    action_date_calendar: new Date(),
+    // room_calendar chưa được mở
+    status_room_calendar: 1,
+    room_calendar_id: null,
   },
   plugins: [createPersistedState()],
   getters,
