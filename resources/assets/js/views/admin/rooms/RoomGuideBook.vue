@@ -30,6 +30,7 @@
                 ? errors.first('address' + index) : ''}}
             </label>
             <input
+              v-if="guideBookList.length"
               type="text"
               :name="'address' + index"
               :id="'addressMap' + index"
@@ -46,10 +47,14 @@
               v-model="description[index]"
               class="guide-descript" placeholder="Mô tả">
             </textarea>
-            <button v-if="addressMap[index]" @click="onSubmit(category.id, index)"
+            <button v-if="addressMap[index] && checkIsUpdate(index) == false"
+              @click="createPlace(category.id, index)"
               class="btn btn-info">Thêm</button>
+            <button v-if="addressMap[index] && checkIsUpdate(index)"
+              @click="updatePlace(category.id, index)"
+              class="btn btn-info">Sửa</button>
             <button v-if="addressMap[index]" @click="clearForm(index)"
-              class="btn btn-outline-danger">Làm mới</button>
+              class="btn btn-danger">Làm mới</button>
           </div>
           <hr class="custom-hr" />
         </div>
@@ -58,10 +63,11 @@
         <gmap-map
           ref="map"
           :center="center"
-          :zoom="13"
-          :options="{ minZoom:9, maxZoom:17 }"
+          :zoom="16"
+          :options="{ minZoom:9, maxZoom:18 }"
           map-type-id="roadmap"
           style="width: 100%; height: 100%"
+          @idle="onIdle"
         >
           <gmap-marker v-for="(marker, index) in markers"
             :key="index"
@@ -97,6 +103,7 @@ import { quillEditor } from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "RoomGuideBook",
   components: {
@@ -133,6 +140,7 @@ export default {
         lat: 0,
         lng: 0
       },
+      isLoaded: false,
       room_index: 0,
       roomDetail: null,
       infoContent: "",
@@ -141,13 +149,20 @@ export default {
       autocomplete: null,
     }
   },
+  computed: {
+    ...mapGetters(['getRoomPlace']),
+  },
   watch: {
-    markers(markers) {
-      const bounds = new google.maps.LatLngBounds();
-      for (let m of markers) {
-        bounds.extend(m.position);
+    markers: {
+      handler(val) {
+        if(val && this.isLoaded) {
+          const bounds = new google.maps.LatLngBounds();
+          for (let m of val) {
+            bounds.extend(m.position);
+          }
+          this.$refs.map.fitBounds(bounds);
+        }
       }
-      this.$refs.map.fitBounds(bounds);
     },
     place: {
       handler(val) {
@@ -158,6 +173,25 @@ export default {
           this.infoWinOpen = false;
         }
       }
+    }
+  },
+  created() {
+    if(this.getRoomPlace){
+      this.markers.push({
+        position: this.getRoomPlace.latLng
+      })
+      this.addressMap[this.getRoomPlace.guidebook_category_id - 1]
+        = this.getRoomPlace.name;
+      this.description[this.getRoomPlace.guidebook_category_id - 1]
+        = this.getRoomPlace.description;
+      this.infoWindowPos = this.getRoomPlace.latLng;
+      this.infoContent = this.getRoomPlace.name;
+      this.infoWinOpen = true;
+      this.placeRecommendation.name = this.getRoomPlace.name;
+      this.placeRecommendation.description = this.getRoomPlace.description;
+      this.placeRecommendation.latitude = this.getRoomPlace.latLng.lat;
+      this.placeRecommendation.longitude = this.getRoomPlace.latLng.lng;
+      this.placeRecommendation.guidebook_category_id = this.getRoomPlace.guidebook_category_id;
     }
   },
   mounted() {
@@ -176,6 +210,11 @@ export default {
     this.geolocate();
   },
   methods: {
+    ...mapActions(["changeRoomPlace"]),
+
+    onIdle() {
+      this.isLoaded = true;
+    },
     updateCoordinates(location) {
       this.marker = {
         lat: location.latLng.lat(),
@@ -222,6 +261,19 @@ export default {
         };
       });
     },
+    checkIsUpdate(index) {
+      if(this.getRoomPlace) {
+        if((this.getRoomPlace.guidebook_category_id - 1)  == index) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
+      else {
+        return false;
+      }
+    },
     showInfoWindow: function(marker) {
       this.infoWindowPos = marker.position;
       this.infoContent = this.placeRecommendation.name;
@@ -234,6 +286,9 @@ export default {
       this.description.splice(index + 1, 1);
 
       this.place = null;
+      if(this.getRoomPlace) {
+        this.changeRoomPlace(null);
+      }
     },
     doAutocomplete(index) {
       let element = document.getElementById('addressMap'+ index)
@@ -244,18 +299,25 @@ export default {
         this.place = place;
         this.usePlace(place);
       });
-      this.addressMap = this.addressMap.filter((address, idx) => {
-        return idx == index;
+      this.addressMap.forEach((address, idx) => {
+        if(idx != index) {
+          this.addressMap.splice(idx,0,"");
+          this.description.splice(idx,0,"");
+
+          this.addressMap.splice(idx + 1, 1);
+          this.description.splice(idx + 1, 1);
+        }
       })
+
     },
-    async onSubmit(category_id, index) {
+    async createPlace(category_id, index) {
       try {
         const result = await this.$validator.validateAll();
         if(result) {
           let response = await axios
             .post(`places`, {
               name: this.placeRecommendation.name,
-              description: this.description[category_id - 1],
+              description: this.description[index],
               longitude: this.placeRecommendation.longitude,
               latitude: this.placeRecommendation.latitude,
               guidebook_category_id: category_id,
@@ -274,6 +336,42 @@ export default {
               this.$swal(
                 "Thành công",
                 "Địa điểm được thêm thành công",
+                "success"
+              );
+            });
+        }
+      } catch (error) {
+        if (error) {
+          window.toastr["error"]("There was an error", "Error");
+        }
+      }
+    },
+    async updatePlace(category_id, index) {
+      try {
+        const result = await this.$validator.validateAll();
+        if(result) {
+          let response = await axios
+            .put(`places/${this.getRoomPlace.id}`, {
+              name: this.placeRecommendation.name,
+              description: this.description[index],
+              longitude: this.placeRecommendation.longitude,
+              latitude: this.placeRecommendation.latitude,
+              guidebook_category_id: category_id,
+              room_id: this.$route.params.roomId,
+              status: this.placeRecommendation.status
+            })
+            .then(response => {
+              this.addressMap.splice(index,0,"");
+              this.description.splice(index,0,"");
+
+              this.addressMap.splice(index + 1, 1);
+              this.description.splice(index + 1, 1);
+
+              this.place = null;
+              this.changeRoomPlace(null);
+              this.$swal(
+                "Thành công",
+                "Địa điểm được cập nhật thành công",
                 "success"
               );
             });
@@ -305,8 +403,14 @@ export default {
           }
         );
         this.roomDetail = response.data.data;
-        this.center.lat = parseFloat(response.data.data.latitude);
-        this.center.lng = parseFloat(response.data.data.longitude);
+        if(this.getRoomPlace) {
+          this.center.lat = this.getRoomPlace.latLng.lat;
+          this.center.lng = this.getRoomPlace.latLng.lng;
+        }
+        else {
+          this.center.lat = parseFloat(response.data.data.latitude);
+          this.center.lng = parseFloat(response.data.data.longitude);
+        }
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");

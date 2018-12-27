@@ -33,6 +33,10 @@ let actions = {
   },
   changeRoomCalendarId({commit}, payload) {
     commit(types.ROOM_CALENDAR_ID, payload)
+  },
+  // ROOM_PLACE
+  changeRoomPlace({commit}, payload) {
+    commit(types.ROOM_PLACE, payload)
   }
 }
 

@@ -174,7 +174,7 @@
             ref="map"
             :center="center"
             :zoom="16"
-            :options="{ minZoom:6, maxZoom:18 }"
+            :options="{ minZoom:10, maxZoom:18 }"
             style="width:1458px; height:700px"
             @idle="onIdle"
           >
@@ -192,7 +192,15 @@
                 :opened="true"
                 @closeclick="infoWinOpen=false"
               >
-                <div v-html="infoContent[index]"></div>
+                <div style="width:170px">
+                  <a :href="'/admin/rooms/guidebook/'+ room.id"
+                    @click="openUpdatePlace(m)" target="_blank">
+                    <p style="color: #cc3300;font-size: 18px; text-align:center;">
+                      {{m.description}}
+                    </p>
+                    <p>Địa chỉ: {{m.name}}</p>
+                  </a>
+                </div>
               </gmap-info-window>
             </gmap-marker>
             <gmap-marker
@@ -243,6 +251,7 @@ import VueGallery from "vue-gallery";
 import * as animationData from "../../loading/material_wave_loading.json";
 import { SweetModal } from "sweet-modal-vue";
 import { format, constant, location } from "../../../helpers/mixins";
+import { mapActions } from "vuex";
 export default {
   mixins: [format, constant, location],
   data() {
@@ -282,7 +291,6 @@ export default {
         lng: 105.8182929
       },
       infoWindowPos:[],
-      infoContent: [],
       infoWinOpen: false,
       currentMidx: null,
       markers: [],
@@ -295,7 +303,7 @@ export default {
     Slide,
     SweetModal,
     Lottie,
-    gallery: VueGallery
+    gallery: VueGallery,
   },
   watch: {
     isLoaded: {
@@ -312,6 +320,8 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["changeRoomPlace"]),
+
     onIdle() {
       this.isLoaded = true;
     },
@@ -319,21 +329,8 @@ export default {
       if(markers.length) {
         markers.forEach(marker => {
           this.infoWindowPos.push(marker.latLng);
-
-          let custominfo = this.getInfoWindowContent(marker)
-          this.infoContent.push(custominfo);
         })
       }
-    },
-     getInfoWindowContent: function(marker) {
-      return `
-        <div style="width:170px">
-          <a href="/admin/rooms/guidebook/${this.$route.params.roomId}" target="_blank">
-            <p style="color: #cc3300;font-size: 18px;">${marker.description}</p>
-            <p>Địa chỉ: ${marker.name}</p>
-          </a>
-        </div>
-      `;
     },
     async getRoom() {
       try {
@@ -384,6 +381,9 @@ export default {
         anchor: new google.maps.Point(10, 10)
       };
       return myIcon;
+    },
+    openUpdatePlace(m) {
+      this.changeRoomPlace(m);
     },
     openModalOptionalPrices() {
       this.$refs.optional_prices.open();

@@ -31,6 +31,10 @@ let getters = {
   },
   getRoomCalendarId(state) {
     return state.room_calendar_id;
+  },
+  // ROOM_PLACE
+  getRoomPlace(state) {
+    return state.room_place;
   }
 }
 
