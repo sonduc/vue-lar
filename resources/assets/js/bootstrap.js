@@ -100,7 +100,7 @@ Vue.component("v-collapse-item", VCollapseItem);
 Vue.use(VueGoogleMaps, {
   load: {
     key: 'AIzaSyDAawkWY4a0cJx-Y1HzcymEP7pMNoa1GFk',
-    libraries: 'places'
+    libraries: 'places,geometry'
   }
 });
 Vue.use(VueSweetalert2);

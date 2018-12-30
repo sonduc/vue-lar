@@ -325,6 +325,11 @@ export default {
               status: this.placeRecommendation.status
             })
             .then(response => {
+              this.$swal(
+                "Thành công",
+                "Địa điểm được thêm thành công",
+                "success"
+              );
               this.addressMap.splice(index,0,"");
               this.description.splice(index,0,"");
 
@@ -332,12 +337,6 @@ export default {
               this.description.splice(index + 1, 1);
 
               this.place = null;
-
-              this.$swal(
-                "Thành công",
-                "Địa điểm được thêm thành công",
-                "success"
-              );
             });
         }
       } catch (error) {

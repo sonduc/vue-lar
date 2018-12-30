@@ -192,13 +192,14 @@
                 :opened="true"
                 @closeclick="infoWinOpen=false"
               >
-                <div style="width:170px">
+                <div style="width:190px">
                   <a :href="'/admin/rooms/guidebook/'+ room.id"
                     @click="openUpdatePlace(m)" target="_blank">
                     <p style="color: #cc3300;font-size: 18px; text-align:center;">
                       {{m.description}}
                     </p>
                     <p>Địa chỉ: {{m.name}}</p>
+                    <p>Khoảng cách tới phòng: {{distanceToRoom[index]}} km</p>
                   </a>
                 </div>
               </gmap-info-window>
@@ -290,7 +291,8 @@ export default {
         lat: 21.0083069,
         lng: 105.8182929
       },
-      infoWindowPos:[],
+      infoWindowPos: [],
+      distanceToRoom: [],
       infoWinOpen: false,
       currentMidx: null,
       markers: [],
@@ -308,7 +310,7 @@ export default {
   watch: {
     isLoaded: {
       handler(val) {
-        if(val == true) {
+        if(val == true && this.markers.length) {
           this.showInfoWindow(this.markers)
           const bounds = new google.maps.LatLngBounds();
           for (let m of this.markers) {
@@ -326,10 +328,18 @@ export default {
       this.isLoaded = true;
     },
     showInfoWindow: function(markers) {
+      let lat_room = parseFloat(this.room.latitude);
+      let lng_room = parseFloat(this.room.longitude);
       if(markers.length) {
         markers.forEach(marker => {
           this.infoWindowPos.push(marker.latLng);
+          let distance = google.maps.geometry.spherical.computeDistanceBetween(
+              new google.maps.LatLng(lat_room, lng_room),
+              new google.maps.LatLng(marker.latLng.lat,marker.latLng.lng));
+          let convertToKm = (distance/1000).toFixed(1);
+          this.distanceToRoom.push(convertToKm);
         })
+
       }
     },
     async getRoom() {
