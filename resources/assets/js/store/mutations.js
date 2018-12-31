@@ -34,10 +34,6 @@ let mutations = {
   [types.ROOM_CALENDAR_ID](state, payload) {
     state.room_calendar_id = payload;
   },
-  // ROOM_PLACE
-  [types.ROOM_PLACE](state, payload) {
-    state.room_place = payload;
-  }
 
 }
 

@@ -11,7 +11,8 @@
       </div>
       <div class="col-sm-7"
         v-for="(category, index) in guideBookList" :key="index">
-        <div class="form-group" style="padding-bottom: 20px;">
+        <div v-if="category.lang=='vi'"
+          class="form-group" style="padding-bottom: 20px;">
           <div class="row">
             <div class="col-sm-1">
               <div class="bg-icon">
@@ -23,38 +24,61 @@
             </div>
           </div>
           <div class="col-sm-7" style="margin-left: 60px;">
-            <label>Where do you go out at night ?</label><br/>
+            <!-- <label>Where do you go out at night ?</label><br/> -->
             <label
               :style="errors.has('address' + index) ? 'color:red;' : ''">
                 {{errors.has('address' + index)
                 ? errors.first('address' + index) : ''}}
             </label>
-            <input
-              v-if="guideBookList.length"
-              type="text"
-              :name="'address' + index"
-              :id="'addressMap' + index"
-              v-model="addressMap[index]"
-              class="input-search"
-              placeholder="Nhập địa điểm..."
-              v-validate="{ max:255,
-                regex:/^[\d\-a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỂưăạảấầẩẫậắằẳẵặẹẻẽềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ, ]*$/u }"
-              data-vv-as="Địa chỉ"
-              @click="doAutocomplete(index)">
+            <div class="search">
+              <span class="icon-fa icon-fa-search"></span>
+              <input
+                v-if="guideBookList.length"
+                type="text"
+                :name="'address' + index"
+                :id="'addressMap' + index"
+                v-model="addressMap[index]"
+                class="input-search"
+                placeholder="Nhập địa điểm..."
+                v-validate="{ max:255,
+                  regex:/^[\d\-a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỂưăạảấầẩẫậắằẳẵặẹẻẽềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ, ]*$/u }"
+                data-vv-as="Địa chỉ"
+                @click="doAutocomplete(index)" />
+            </div>
             <textarea
               v-if="addressMap[index]"
               rows="5" cols="51"
               v-model="description[index]"
               class="guide-descript" placeholder="Mô tả">
             </textarea>
-            <button v-if="addressMap[index] && checkIsUpdate(index) == false"
+            <button v-if="addressMap[index] && isUpdate == 0"
               @click="createPlace(category.id, index)"
               class="btn btn-info">Thêm</button>
-            <button v-if="addressMap[index] && checkIsUpdate(index)"
-              @click="updatePlace(category.id, index)"
+            <button v-if="addressMap[index] && isUpdate == 1"
+              @click="updatePlace(currentPlace.id, index)"
               class="btn btn-info">Sửa</button>
             <button v-if="addressMap[index]" @click="clearForm(index)"
               class="btn btn-danger">Làm mới</button>
+          </div>
+          <div class="form-group row wrapper-room panel-collapse custom-panel">
+            <div class="col-sm-12" style="padding-left: 90px;padding-top: 10px;">
+              <draggable
+                :options="{group:'people'}"
+                class="container-form">
+                <div class="list-form">
+                  <p v-if="place.guidebook_category_id == (index+1)"
+                    v-for="(place,idx) in placeList" :key="idx"
+                    @click="showInfoPlace(place)"
+                    class="btn btn-outline-secondary name-room"
+                    style="padding: 1px 3px; border: 1px solid #aaa; margin-right: 5px;">
+                    {{place.description}}
+                    <i @click="deletePlace(index, idx)"
+                      class="icon-fa icon-fa-times icon-room"
+                      style="padding-left: 4px;"></i>
+                  </p>
+                </div>
+              </draggable>
+            </div>
           </div>
           <hr class="custom-hr" />
         </div>
@@ -103,11 +127,12 @@ import { quillEditor } from "vue-quill-editor";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import { mapGetters, mapActions } from "vuex";
+import Draggable from 'vuedraggable';
 export default {
   name: "RoomGuideBook",
   components: {
     quillEditor,
+    Draggable,
   },
   data() {
     return {
@@ -147,10 +172,10 @@ export default {
       infoWinOpen: false,
       currentMidx: null,
       autocomplete: null,
+      placeList: null,
+      isUpdate: 0,
+      currentPlace: null,
     }
-  },
-  computed: {
-    ...mapGetters(['getRoomPlace']),
   },
   watch: {
     markers: {
@@ -175,25 +200,6 @@ export default {
       }
     }
   },
-  created() {
-    if(this.getRoomPlace){
-      this.markers.push({
-        position: this.getRoomPlace.latLng
-      })
-      this.addressMap[this.getRoomPlace.guidebook_category_id - 1]
-        = this.getRoomPlace.name;
-      this.description[this.getRoomPlace.guidebook_category_id - 1]
-        = this.getRoomPlace.description;
-      this.infoWindowPos = this.getRoomPlace.latLng;
-      this.infoContent = this.getRoomPlace.name;
-      this.infoWinOpen = true;
-      this.placeRecommendation.name = this.getRoomPlace.name;
-      this.placeRecommendation.description = this.getRoomPlace.description;
-      this.placeRecommendation.latitude = this.getRoomPlace.latLng.lat;
-      this.placeRecommendation.longitude = this.getRoomPlace.latLng.lng;
-      this.placeRecommendation.guidebook_category_id = this.getRoomPlace.guidebook_category_id;
-    }
-  },
   mounted() {
     Auth.getProfile().then(res => {
       if (res) {
@@ -210,8 +216,6 @@ export default {
     this.geolocate();
   },
   methods: {
-    ...mapActions(["changeRoomPlace"]),
-
     onIdle() {
       this.isLoaded = true;
     },
@@ -262,21 +266,37 @@ export default {
       });
     },
     checkIsUpdate(index) {
-      if(this.getRoomPlace) {
-        if((this.getRoomPlace.guidebook_category_id - 1)  == index) {
-          return true;
-        }
-        else {
-          return false;
-        }
-      }
-      else {
-        return false;
-      }
+
     },
     showInfoWindow: function(marker) {
       this.infoWindowPos = marker.position;
       this.infoContent = this.placeRecommendation.name;
+    },
+    showInfoPlace(place) {
+      this.isUpdate = 1;
+      this.currentPlace = place;
+      this.markers = [];
+      this.markers.push({
+        position: {
+          lat: parseFloat(place.latitude),
+          lng: parseFloat(place.longitude)
+        }
+      })
+      this.addressMap[place.guidebook_category_id - 1]
+        = place.name;
+      this.description[place.guidebook_category_id - 1]
+        = place.description;
+      this.infoWindowPos = {
+        lat: parseFloat(place.latitude),
+        lng: parseFloat(place.longitude)
+      },
+      this.infoContent = place.name;
+      this.infoWinOpen = true;
+      this.placeRecommendation.name = place.name;
+      this.placeRecommendation.description = place.description;
+      this.placeRecommendation.latitude = place.latitude;
+      this.placeRecommendation.longitude = place.longitude;
+      this.placeRecommendation.guidebook_category_id = place.guidebook_category_id;
     },
     clearForm(index) {
       this.addressMap.splice(index,0,"");
@@ -285,12 +305,13 @@ export default {
       this.addressMap.splice(index + 1, 1);
       this.description.splice(index + 1, 1);
 
+      this.isUpdate = 0;
       this.place = null;
-      if(this.getRoomPlace) {
-        this.changeRoomPlace(null);
-      }
     },
     doAutocomplete(index) {
+      if(this.currentPlace && (index + 1) != this.currentPlace.guidebook_category_id) {
+        this.isUpdate = 0;
+      }
       let element = document.getElementById('addressMap'+ index)
       this.autocomplete = new google.maps.places.Autocomplete(element)
       this.autocomplete.addListener('place_changed', () => {
@@ -325,11 +346,7 @@ export default {
               status: this.placeRecommendation.status
             })
             .then(response => {
-              this.$swal(
-                "Thành công",
-                "Địa điểm được thêm thành công",
-                "success"
-              );
+              console.log(response)
               this.addressMap.splice(index,0,"");
               this.description.splice(index,0,"");
 
@@ -337,6 +354,12 @@ export default {
               this.description.splice(index + 1, 1);
 
               this.place = null;
+              this.getRoomById();
+              this.$swal(
+                "Thành công",
+                "Địa điểm được thêm thành công",
+                "success"
+              );
             });
         }
       } catch (error) {
@@ -345,17 +368,17 @@ export default {
         }
       }
     },
-    async updatePlace(category_id, index) {
+    async updatePlace(place_id, index) {
       try {
         const result = await this.$validator.validateAll();
         if(result) {
           let response = await axios
-            .put(`places/${this.getRoomPlace.id}`, {
+            .put('places/'+ place_id, {
               name: this.placeRecommendation.name,
               description: this.description[index],
               longitude: this.placeRecommendation.longitude,
               latitude: this.placeRecommendation.latitude,
-              guidebook_category_id: category_id,
+              guidebook_category_id: index + 1,
               room_id: this.$route.params.roomId,
               status: this.placeRecommendation.status
             })
@@ -366,8 +389,9 @@ export default {
               this.addressMap.splice(index + 1, 1);
               this.description.splice(index + 1, 1);
 
+              this.isUpdate = 0;
               this.place = null;
-              this.changeRoomPlace(null);
+              this.getRoomById();
               this.$swal(
                 "Thành công",
                 "Địa điểm được cập nhật thành công",
@@ -379,6 +403,52 @@ export default {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
         }
+      }
+    },
+    async deletePlace(index, idx) {
+      try {
+        this.$swal({
+          title: "Bạn có muốn xóa địa điểm này không",
+          text: "",
+          type: "warning",
+          showCancelButton: true,
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          showCloseButton: false,
+          showLoaderOnConfirm: true,
+          preConfirm: async () => {
+            this.placeList.splice(idx, 1);
+            let response = await axios
+            .post('places/update-room-place', {
+              room_id: this.roomDetail.id,
+              places: this.placeList
+            })
+            .then(response => {
+              this.addressMap.splice(index,0,"");
+              this.description.splice(index,0,"");
+
+              this.addressMap.splice(index + 1, 1);
+              this.description.splice(index + 1, 1);
+
+              this.isUpdate = 0;
+              this.place = null;
+              this.getRoomById();
+              this.$swal(
+                "Thành công",
+                "Địa điểm được xóa thành công",
+                "success",
+                );
+              })
+            }
+          })
+        }
+        catch (error) {
+          this.$swal(
+            "Xin lỗi",
+            "Địa điểm chưa đưọc xóa, vui lòng thử lại",
+            "error"
+        );
       }
     },
     async getGuidebookCategories() {
@@ -397,19 +467,26 @@ export default {
           `rooms/${ this.$route.params.roomId }`,
           {
             params: {
-              include: "details"
+              include: "details,places"
             }
           }
         );
         this.roomDetail = response.data.data;
-        if(this.getRoomPlace) {
-          this.center.lat = this.getRoomPlace.latLng.lat;
-          this.center.lng = this.getRoomPlace.latLng.lng;
-        }
-        else {
-          this.center.lat = parseFloat(response.data.data.latitude);
-          this.center.lng = parseFloat(response.data.data.longitude);
-        }
+        this.placeList = [];
+        response.data.data.places.data.forEach(place => {
+          let p = {
+            id: place.id,
+            name: place.name,
+            description: place.description,
+            latitude: place.latitude,
+            longitude: place.longitude,
+            guidebook_category_id: place.guidebook_category_id
+          }
+          this.placeList.push(p);
+        })
+
+        this.center.lat = parseFloat(response.data.data.latitude);
+        this.center.lng = parseFloat(response.data.data.longitude);
       } catch (error) {
         if (error) {
           window.toastr["error"]("There was an error", "Error");
@@ -466,8 +543,16 @@ export default {
   border-radius: 2px;
   border:solid 1px #aaa;
   display: block;
-  padding: 6px 10px;
+  padding: 6px 10px 6px 33px;
   width: 100%;
   color: #484848;
+}
+.search {
+  position: relative;
+}
+.search .icon-fa-search {
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 </style>

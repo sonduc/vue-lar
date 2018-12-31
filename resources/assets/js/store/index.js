@@ -35,8 +35,6 @@ export default new Vuex.Store({
     // room_calendar chưa được mở
     status_room_calendar: 1,
     room_calendar_id: null,
-    // place in room_detail
-    room_place: null,
   },
   plugins: [createPersistedState()],
   getters,

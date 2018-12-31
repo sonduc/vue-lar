@@ -193,14 +193,11 @@
                 @closeclick="infoWinOpen=false"
               >
                 <div style="width:190px">
-                  <a :href="'/admin/rooms/guidebook/'+ room.id"
-                    @click="openUpdatePlace(m)" target="_blank">
-                    <p style="color: #cc3300;font-size: 18px; text-align:center;">
-                      {{m.description}}
-                    </p>
-                    <p>Địa chỉ: {{m.name}}</p>
-                    <p>Khoảng cách tới phòng: {{distanceToRoom[index]}} km</p>
-                  </a>
+                  <p style="color: #cc3300;font-size: 18px; text-align:center;">
+                    {{m.description}}
+                  </p>
+                  <p>Địa chỉ: {{m.name}}</p>
+                  <p>Khoảng cách tới phòng: {{distanceToRoom[index]}} km</p>
                 </div>
               </gmap-info-window>
             </gmap-marker>
@@ -322,8 +319,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["changeRoomPlace"]),
-
     onIdle() {
       this.isLoaded = true;
     },
@@ -391,9 +386,6 @@ export default {
         anchor: new google.maps.Point(10, 10)
       };
       return myIcon;
-    },
-    openUpdatePlace(m) {
-      this.changeRoomPlace(m);
     },
     openModalOptionalPrices() {
       this.$refs.optional_prices.open();

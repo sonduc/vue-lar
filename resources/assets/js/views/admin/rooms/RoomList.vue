@@ -232,6 +232,11 @@
                     <i class="icon-fa icon-fa-trash"/>
                     &ensp; Dọn dẹp: {{ room.cleaning_fee | formatNumber }}
                   </div>
+                  <div class="content-subject mb-3">
+                    <button @click="openGuideBook(room.id)" class="btn btn-primary btn-sm">
+                      Địa điểm xung quanh phòng
+                    </button>
+                  </div>
                 </div>
               </td>
               <td>
@@ -716,6 +721,14 @@ export default {
     closeOptionalPricesModal() {
       this.room_prices = [];
       this.$refs.optional_prices.close();
+    },
+    openGuideBook(room_id) {
+      this.$router.push({
+        name: "room.guidebook",
+        params: {
+          roomId: room_id
+        }
+      });
     },
     async updateHostConfirm() {
       let response = await axios
