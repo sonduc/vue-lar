@@ -71,7 +71,7 @@
                     @click="showInfoPlace(place)"
                     class="btn btn-outline-secondary name-room"
                     style="padding: 1px 3px; border: 1px solid #aaa; margin-right: 5px;">
-                    {{place.description}}
+                    {{place.tag}}
                     <i @click="deletePlace(index, idx)"
                       class="icon-fa icon-fa-times icon-room"
                       style="padding-left: 4px;"></i>
@@ -175,6 +175,7 @@ export default {
       placeList: null,
       isUpdate: 0,
       currentPlace: null,
+      currentAddress: null
     }
   },
   watch: {
@@ -242,7 +243,7 @@ export default {
         this.infoWinOpen = true;
         this.placeRecommendation.latitude = this.place.geometry.location.lat();
         this.placeRecommendation.longitude = this.place.geometry.location.lng();
-        this.placeRecommendation.name = this.place.formatted_address;
+        this.placeRecommendation.name = this.currentAddress;
       }
     },
     getIcon(marker) {
@@ -265,9 +266,6 @@ export default {
         };
       });
     },
-    checkIsUpdate(index) {
-
-    },
     showInfoWindow: function(marker) {
       this.infoWindowPos = marker.position;
       this.infoContent = this.placeRecommendation.name;
@@ -283,7 +281,16 @@ export default {
         }
       })
       this.addressMap[place.guidebook_category_id - 1]
-        = place.name;
+        = this.currentPlace.name;
+      this.addressMap.forEach((address, idx) => {
+        if(idx != (place.guidebook_category_id - 1)) {
+          this.addressMap.splice(idx,0,"");
+          this.description.splice(idx,0,"");
+
+          this.addressMap.splice(idx + 1, 1);
+          this.description.splice(idx + 1, 1);
+        }
+      })
       this.description[place.guidebook_category_id - 1]
         = place.description;
       this.infoWindowPos = {
@@ -292,7 +299,7 @@ export default {
       },
       this.infoContent = place.name;
       this.infoWinOpen = true;
-      this.placeRecommendation.name = place.name;
+      this.placeRecommendation.name = this.currentAddress;
       this.placeRecommendation.description = place.description;
       this.placeRecommendation.latitude = place.latitude;
       this.placeRecommendation.longitude = place.longitude;
@@ -314,9 +321,21 @@ export default {
       }
       let element = document.getElementById('addressMap'+ index)
       this.autocomplete = new google.maps.places.Autocomplete(element)
+      this.autocomplete.setComponentRestrictions(
+            {'country': ['vn']});
       this.autocomplete.addListener('place_changed', () => {
         let place = this.autocomplete.getPlace();
-        this.addressMap[index] = place.formatted_address;
+        let address = "";
+        let place_name = place.name.split("-")[0].trim();
+        let place_formated = place.formatted_address.split(",")[0].trim();
+        if(place_name !== place_formated) {
+          address += (place_name + ', ' + place.formatted_address);
+        }
+        else {
+          address = place.formatted_address;
+        }
+        this.currentAddress = address;
+        this.addressMap[index] = address;
         this.place = place;
         this.usePlace(place);
       });
@@ -346,7 +365,6 @@ export default {
               status: this.placeRecommendation.status
             })
             .then(response => {
-              console.log(response)
               this.addressMap.splice(index,0,"");
               this.description.splice(index,0,"");
 
@@ -474,9 +492,11 @@ export default {
         this.roomDetail = response.data.data;
         this.placeList = [];
         response.data.data.places.data.forEach(place => {
+          let tag_place = place.name.split(",");
           let p = {
             id: place.id,
             name: place.name,
+            tag: tag_place[0],
             description: place.description,
             latitude: place.latitude,
             longitude: place.longitude,

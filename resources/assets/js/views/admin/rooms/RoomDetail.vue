@@ -167,6 +167,24 @@
         Những địa điểm nổi bật được gợi ý xung quanh phòng
       </h3>
     </div>
+    <div>
+      <table class="table" style="width:93%; margin-left: 57px;">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Địa chỉ</th>
+              <th style="text-align:center;">Khoảng cách tới phòng</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(m, index) in markers" :key="index">
+              <td>{{ index+1 }}</td>
+              <td>{{m.name}}</td>
+              <td style="text-align:center;">{{distanceToRoom[index]}} km</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
     <div class="row" style="margin-top: 30px;">
       <div class="card mr-5 ml-5">
         <div class="card-body">
@@ -193,10 +211,8 @@
                 @closeclick="infoWinOpen=false"
               >
                 <div style="width:190px">
-                  <p style="color: #cc3300;font-size: 18px; text-align:center;">
-                    {{m.description}}
-                  </p>
                   <p>Địa chỉ: {{m.name}}</p>
+                  <p>Mô tả: {{m.description}}</p>
                   <p>Khoảng cách tới phòng: {{distanceToRoom[index]}} km</p>
                 </div>
               </gmap-info-window>

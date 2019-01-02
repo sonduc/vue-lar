@@ -99,8 +99,10 @@ Vue.component("v-collapse", VCollapse);
 Vue.component("v-collapse-item", VCollapseItem);
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyDAawkWY4a0cJx-Y1HzcymEP7pMNoa1GFk',
-    libraries: 'places,geometry'
+    // key: 'AIzaSyDAawkWY4a0cJx-Y1HzcymEP7pMNoa1GFk',
+    key: 'AIzaSyC-GkUhSv8QnqfJd5P4ZJJeKL4kQGPuZ5U',
+    libraries: 'places,geometry',
+    language:'en'
   }
 });
 Vue.use(VueSweetalert2);
