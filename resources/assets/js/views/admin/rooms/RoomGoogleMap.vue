@@ -205,6 +205,12 @@ export default {
         this.checkChangeCity = 0;
         this.city.id = val.id;
         this.city.name = val.name;
+        if(this.getSearchMapStatus == 0) {
+          this.districtRoom = {
+            id: "",
+            name: ""
+          }
+        }
       }
     },
     districtRoom: {
@@ -332,7 +338,7 @@ export default {
       let price_hour = this.formatNumber(marker.price_hour);
       if (marker.rent_type == 1) {
         return `<div class="row" style="margin:0px;">
-            <a href="http://laraspace-admin.nhat/admin/rooms/detail/${
+            <a href="/admin/rooms/detail/${
               marker.id
             }"
               target="_blank">
@@ -348,7 +354,7 @@ export default {
           </div>`;
       } else if (marker.rent_type == 2) {
         return `<div class="row" style="margin:0px;">
-            <a href="http://laraspace-admin.nhat/admin/rooms/detail/${
+            <a href="/admin/rooms/detail/${
               marker.id
             }"
               target="_blank">
@@ -363,7 +369,7 @@ export default {
           </div>`;
       } else {
         return `<div class="row" style="margin:0px;">
-            <a href="http://laraspace-admin.nhat/admin/rooms/detail/${
+            <a href="/admin/rooms/detail/${
               marker.id
             }"
               target="_blank">
@@ -409,7 +415,7 @@ export default {
         });
         this.rooms = response.data.data;
         let paginate = response.data.meta.pagination;
-        this.count = paginate.total;
+        this.count = paginate.count;
         this.markers = [];
         response.data.data.forEach(room => {
           if (room.latitude != 0 && room.longtitue != 0) {
@@ -434,16 +440,16 @@ export default {
     },
     async getAllRoom() {
       try {
-        const response = await axios.post(
-          `rooms/room-lat-long?include=details`,
-          {
-            lat_min: this.areaBounds.lat_min,
-            lat_max: this.areaBounds.lat_max,
-            long_min: this.areaBounds.long_min,
-            long_max: this.areaBounds.long_max
-          }
-        );
-        console.log(this.areaBounds);
+        const response = await axios.get(`rooms/room-lat-long`, {
+            params: {
+              limit: 70,
+              include: "details",
+              lat_min: this.areaBounds.lat_min,
+              lat_max: this.areaBounds.lat_max,
+              long_min: this.areaBounds.long_min,
+              long_max: this.areaBounds.long_max
+            }
+        });
         let roomSearch;
         if (this.getSearchMapStatus) {
           this.q = this.getInfoSearchRoom.name;
@@ -460,7 +466,7 @@ export default {
           this.rooms = response.data.data;
           roomSearch = response.data.data;
           let paginate = response.data.meta.pagination;
-          this.count = paginate.total;
+          this.count = paginate.count;
         }
         this.markers = [];
         this.changeSearchMapStatus(0);

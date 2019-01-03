@@ -72,7 +72,7 @@
                   <multiselect
                     id="inputUserName"
                     v-model="room_type"
-                    label="value"
+                    label="name"
                     :options="room_type_list"
                     :searchable="true"
                     :show-labels="false"
@@ -232,6 +232,11 @@
                     <i class="icon-fa icon-fa-trash"/>
                     &ensp; Dọn dẹp: {{ room.cleaning_fee | formatNumber }}
                   </div>
+                  <div class="content-subject mb-3">
+                    <button @click="openGuideBook(room.id)" class="btn btn-primary btn-sm">
+                      Địa điểm xung quanh phòng
+                    </button>
+                  </div>
                 </div>
               </td>
               <td>
@@ -381,7 +386,7 @@
           data-dismiss="modal"
           @click="closeUpdateHostModal"
         >Close</button>
-        
+
         <button
           slot="button"
           type="button"
@@ -526,6 +531,14 @@ export default {
         this.disabledCheckout.to = val;
       },
       deep: true
+    },
+    city: {
+      handler(val) {
+        this.district = {
+          id: "",
+          name: ""
+        }
+      },
     }
   },
   mounted() {
@@ -548,7 +561,9 @@ export default {
       "searchRoomGoogleMap",
       "changeCountRoomGMap",
       "changeSearchMapStatus",
-      "changeInfoSearchRoom"
+      "changeInfoSearchRoom",
+      "changeRoomCalendarId",
+      "changeStatusRoomCalendar"
     ]),
 
     async getMerchants() {
@@ -618,7 +633,7 @@ export default {
         const response = await axios.get(`rooms`, {
           params: {
             include: "details",
-            limit: 50,
+            limit: 70,
             name: this.q,
             type_room: this.room_type.id,
             rent_type: this.rent_type.id,
@@ -635,7 +650,7 @@ export default {
           }
         });
         let paginate = response.data.meta.pagination;
-        this.changeCountRoomGMap(paginate.total);
+        this.changeCountRoomGMap(paginate.count);
         this.searchRoomGoogleMap(response.data.data);
         this.changeInfoSearchRoom({
           name: this.q,
@@ -673,6 +688,8 @@ export default {
       });
     },
     openBookingCalendar(roomId) {
+      this.changeRoomCalendarId(roomId);
+      this.changeStatusRoomCalendar(1);
       this.$router.push({
         name: "room.calendar",
         params: {
@@ -704,6 +721,14 @@ export default {
     closeOptionalPricesModal() {
       this.room_prices = [];
       this.$refs.optional_prices.close();
+    },
+    openGuideBook(room_id) {
+      this.$router.push({
+        name: "room.guidebook",
+        params: {
+          roomId: room_id
+        }
+      });
     },
     async updateHostConfirm() {
       let response = await axios

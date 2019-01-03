@@ -655,6 +655,49 @@
                 </div>
               </div><br/>
 
+              <div class="form-group row" v-if="promotionId == 0">
+                <label for="pasword" class="col-sm-3 col-form-label"
+                  style="padding-top: 35px;">
+                  Áp dụng trong khoảng thời gian:
+                </label>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Bắt đầu</label>
+                    <datepicker
+                      name="start_booking_create"
+                      :format="format"
+                      v-model="couponCreate.start"
+                      input-class="form-control"
+                      :disabled-dates="disabledCouponCreateStart"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Kết thúc</label>
+                    <datepicker
+                      name="end_booking_create"
+                      :format="format"
+                      v-model="couponCreate.end"
+                      input-class="form-control"
+                      :disabled-dates="disabledCouponCreateEnd"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="col-sm-1 custom-checkbox-all custom-control custom-checkbox"
+                  style="padding-top: 38px;">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    value="coupon_create"
+                    v-model="coupons.settings.bind"
+                    id="coupon_create">
+                  <label class="custom-control-label style-checkbox"
+                    for="coupon_create">
+                  </label>
+                </div>
+              </div><br/>
               <div class="form-group row">
                 <label for="pasword" class="col-sm-3 col-form-label"
                   style="padding-top: 35px;">
@@ -795,14 +838,16 @@
         disabledBookingCreateEnd: {
           to: ""
         },
-        bookingCreate: {
-          start: "",
-          end: ""
-        },
         disabledBookingStayStart: {
           to: new Date()
         },
         disabledBookingStayEnd: {
+          to: ""
+        },
+        disabledCouponCreateStart: {
+          to: new Date()
+        },
+        disabledCouponCreateEnd: {
           to: ""
         },
         bookingCreate: {
@@ -810,6 +855,10 @@
           end: ""
         },
         bookingStay: {
+          start: "",
+          end: ""
+        },
+        couponCreate: {
           start: "",
           end: ""
         },
@@ -836,6 +885,7 @@
             min_price: 0,
           }
         },
+        promotionId: 0,
         promotion:null,
         isAllRoom: 0,
         roomlist: [],
@@ -869,6 +919,8 @@
             this.bookingCreate.end = "";
             this.bookingStay.start = "";
             this.bookingStay.end = "";
+            this.couponCreate.start = "";
+            this.couponCreate.end = "";
           }
         }
       },
@@ -1027,6 +1079,8 @@
             let endBCreate;
             let startBStay;
             let endBStay;
+            let startCCreate;
+            let endCCreate;
             if(this.coupons.settings.days.length) {
               this.coupons.settings.days.forEach(date => {
                 let day = this.addDay(date);
@@ -1047,6 +1101,13 @@
 
               let end = new Date(this.bookingStay.end);
               endBStay = end.toISOString().substring(0, 10);
+            }
+            if(this.couponCreate.start && this.couponCreate.end){
+              let start = new Date(this.couponCreate.start);
+              startCCreate = start.toISOString().substring(0, 10);
+
+              let end = new Date(this.couponCreate.end);
+              endCCreate = end.toISOString().substring(0, 10);
             }
             if(this.coupons.settings.rooms.length) {
               arrRoomId = this.coupons.settings.rooms.map(room => room.id);
@@ -1097,7 +1158,7 @@
                     usable: this.coupons.usable,
                     used: this.coupons.used,
                     all_day: this.isAllRoom,
-                    promotion_id: this.coupons.promotion_id,
+                    promotion_id: promotionId !=0 ? promotionId : null,
                     status: this.coupons.status,
                     settings: {
                       bind: this.isAllRoom == 0 ? this.coupons.settings.bind : [],
@@ -1110,6 +1171,8 @@
                       booking_type: this.isAllRoom == 0 ? arrBookingTypeId : [],
                       booking_create: this.isAllRoom == 0 ?
                         [startBCreate, endBCreate] : [],
+                      coupon_create: (this.isAllRoom == 0 && this.promotionId == 1) ?
+                        [startCCreate, endCCreate] : [],
                       booking_stay: this.isAllRoom == 0 ?
                         [startBStay, endBStay] : [],
                       days_of_week: this.isAllRoom == 0 ? arrWeekdayId : [],
@@ -1158,7 +1221,7 @@
                     usable: this.coupons.usable,
                     used: this.coupons.used,
                     all_day: this.isAllRoom,
-                    promotion_id: this.getPromotionId,
+                    promotion_id: promotionId != 0 ? promotionId : null,
                     status: this.coupons.status,
                     settings: {
                       bind: this.isAllRoom == 0 ? this.coupons.settings.bind : [],
@@ -1171,6 +1234,8 @@
                       room_type: this.isAllRoom == 0 ? arrRoomTypeId : [],
                       booking_create: this.isAllRoom == 0 ?
                         [startBCreate, endBCreate] : [],
+                      coupon_create: (this.isAllRoom == 0 && this.promotionId == 1) ?
+                        [startCCreate, endCCreate] : [],
                       booking_stay: this.isAllRoom == 0 ?
                         [startBStay, endBStay] : [],
                       days_of_week: this.isAllRoom == 0 ? arrWeekdayId : [],
@@ -1216,6 +1281,7 @@
       this.disabledDay.to = new Date(this.getPromotionDay.startDay.substring(0,10));
       let disabledEnd = this.minusDay(this.getPromotionDay.endDay.substring(0,10));
       this.disabledDay.from = new Date(disabledEnd);
+      this.promotionId = this.getPromotionId;
     },
     mounted() {
       if(this.type === "Create"){
