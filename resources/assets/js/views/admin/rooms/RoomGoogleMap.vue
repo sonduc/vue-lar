@@ -1,11 +1,15 @@
 <template>
   <div class="main-content">
     <div class="card">
+      <div class="card-header">
+        <h6>Bộ lọc</h6>
+      </div>
       <div class="card-body">
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-6">
             <div class="form-group row">
-              <div class="col-sm-12">
+              <label for="firstName" class="col-sm-2 col-form-label">Tên phòng</label>
+              <div class="col-sm-4">
                 <input
                   v-model="q"
                   id="firstName"
@@ -14,50 +18,65 @@
                   placeholder="Nhập vào tên phòng"
                 >
               </div>
+              <label for="email" class="col-sm-2 col-form-label">Thuê theo</label>
+              <div class="col-sm-4">
+                <multiselect
+                  v-model="rent_type"
+                  label="value"
+                  :options="rent_type_list"
+                  :searchable="true"
+                  :show-labels="false"
+                />
+              </div>
             </div>
           </div>
-          <div class="col-md-9">
+          <div class="col-md-6">
             <div class="form-group row">
               <label for="firstName" class="col-sm-2 col-form-label">Khoảng giá</label>
-              <div class="col-sm-3 mt-2" style="margin-left: -58px; margin-right: 58px;">
+              <div class="col-sm-4 mt-2">
                 <vue-slider v-model="price_range" formatter="{value} Đ" :min="0" :max="10000000"></vue-slider>
               </div>
 
-              <label
-                for="city"
-                class="col-sm-1 col-form-label"
-                style="padding-left: inherit;"
-              >Thành phố</label>
-              <div class="col-sm-2">
+              <label for="lastName" class="col-sm-2 col-form-label">Phòng</label>
+              <div class="col-sm-4">
                 <multiselect
-                  v-model="cityRoom"
+                  id="inputUserName"
+                  v-model="room_type"
                   label="name"
-                  :options="cities"
-                  :searchable="true"
-                  :show-labels="false"
-                />
-              </div>
-              <label for="district" style="padding-left: 33px;" class="col-sm-1 col-form-label">Quận</label>
-              <div class="col-sm-3">
-                <multiselect
-                  :disabled="city == null"
-                  v-model="districtRoom"
-                  label="name"
-                  :options="filteredDistrict"
+                  :options="room_type_list"
                   :searchable="true"
                   :show-labels="false"
                 />
               </div>
             </div>
+            <div class="form-group row">
+              <!-- <div class="col-md-12">
+              <div class="form-group row">-->
+              <label for="lastName" class="col-sm-2 col-form-label">Từ</label>
+              <div class="col-sm-4">
+                <datepicker v-model="date_start" :format="format" input-class="form-control"/>
+              </div>
+              <label for="lastName" class="col-sm-2 col-form-label">Đến</label>
+              <div class="col-sm-4">
+                <datepicker
+                  :disabled-dates="disabledCheckout"
+                  v-model="date_end"
+                  :format="format"
+                  input-class="form-control"
+                />
+              </div>
+              <!-- </div> -->
+              <!-- </div> -->
+            </div>
           </div>
         </div>
-        <button @click="applyFilter" class="btn btn-success btn-sm">Tìm phòng</button>
+        <button @click="applyFilter" class="btn btn-success btn-sm">Áp dụng</button>
         <button @click="resetFilter" class="btn btn-info btn-sm">Làm mới</button>
-        <div class="resultSearch">
-          Kết quả tìm kiếm có
-          <span style="color:red;">{{count}} phòng</span>.
-          Để xem thêm kết quả, phóng to hoặc di chuyển sau đó nhấp vào nút trên bản đồ.
-        </div>
+      </div>
+      <div class="resultSearch">
+        Kết quả tìm kiếm có
+        <span style="color:red;">{{count}} phòng</span>.
+        Để xem thêm kết quả, phóng to hoặc di chuyển sau đó nhấp vào nút trên bản đồ.
       </div>
     </div>
     <div class="row">
@@ -99,33 +118,31 @@
 </template>
 
 <script>
-import { format, location } from "../../../helpers/mixins";
+import { format, location, constant } from "../../../helpers/mixins";
 import Multiselect from "vue-multiselect";
 import VueSlider from "vue-slider-component";
 import { mapGetters, mapActions } from "vuex";
 import Auth from "../../../services/auth";
 import { loaded } from "vue2-google-maps";
 import GmapCluster from "vue2-google-maps/dist/components/cluster";
+import Datepicker from "vuejs-datepicker";
+
 export default {
   name: "RoomGoogleMap",
-  mixins: [format, location],
+  mixins: [format, location, constant],
   components: {
     Multiselect,
     VueSlider,
-    GmapCluster
+    GmapCluster,
+    Datepicker
   },
   data() {
     return {
       q: "",
-      city: {
-        id: "",
-        name: ""
-      },
-      district: {
-        id: "",
-        name: ""
-      },
-      checkChangeCity: 0,
+
+      date_start: null,
+      date_end: null,
+      format: "yyyy-MM-dd",
       isLoaded: false,
       count: null,
       checkTypeSearch: 0,
@@ -133,6 +150,15 @@ export default {
       center: {
         lat: 14.542312,
         lng: 107.923343
+      },
+      room_type: {
+        id: ""
+      },
+      rent_type: {
+        id: ""
+      },
+      status: {
+        id: ""
       },
       markers: [],
       currentPlace: null,
@@ -156,6 +182,9 @@ export default {
           height: -15
         },
         disableAutoPan: true
+      },
+      disabledCheckout: {
+        to: ""
       }
     };
   },
@@ -170,6 +199,12 @@ export default {
           this.$refs.map.fitBounds(bounds);
         }
       }
+    },
+    date_start: {
+      handler(val) {
+        this.disabledCheckout.to = val;
+      },
+      deep: true
     }
   },
   computed: {
@@ -178,64 +213,7 @@ export default {
       "getCountRoomGMap",
       "getSearchMapStatus",
       "getInfoSearchRoom"
-    ]),
-
-    filteredDistrict() {
-      let self = this;
-      return this.districts.filter(function(item) {
-        return item.city_id == self.city.id;
-      });
-    },
-    cityRoom: {
-      get: function() {
-        if (this.getInfoSearchRoom.city_id == null) {
-          return null;
-        } else if (this.checkChangeCity == 1) {
-          return {
-            id: this.getInfoSearchRoom.city_id,
-            name: this.getInfoSearchRoom.city_name
-          };
-        } else {
-          return {
-            id: this.city.id,
-            name: this.city.name
-          };
-        }
-      },
-      set: function(val) {
-        this.checkChangeCity = 0;
-        this.city.id = val.id;
-        this.city.name = val.name;
-        if(this.getSearchMapStatus == 0) {
-          this.districtRoom = {
-            id: "",
-            name: ""
-          }
-        }
-      }
-    },
-    districtRoom: {
-      get: function() {
-        if (this.getInfoSearchRoom.district_id == null) {
-          return null;
-        } else if (this.checkChangeCity == 1) {
-          return {
-            id: this.getInfoSearchRoom.district_id,
-            name: this.getInfoSearchRoom.district_name
-          };
-        } else {
-          return {
-            id: this.district.id,
-            name: this.district.name
-          };
-        }
-      },
-      set: function(val) {
-        this.checkChangeCity = 0;
-        this.district.id = val.id;
-        this.district.name = val.name;
-      }
-    }
+    ])
   },
   mounted() {
     Auth.getProfile().then(res => {
@@ -339,9 +317,7 @@ export default {
       let price_hour = this.formatNumber(marker.price_hour);
       if (marker.rent_type == 1) {
         return `<div class="row" style="margin:0px;">
-            <a href="/admin/rooms/detail/${
-              marker.id
-            }"
+            <a href="/admin/rooms/detail/${marker.id}"
               target="_blank">
               <div class="card" style="width:300px;cursor:pointer">
                 <img class="card-img-top" src="https://c1.momondo.net/assets/photos/cards/card_hotels_001.jpg?q=60&h=400" alt="Card image cap">
@@ -355,9 +331,7 @@ export default {
           </div>`;
       } else if (marker.rent_type == 2) {
         return `<div class="row" style="margin:0px;">
-            <a href="/admin/rooms/detail/${
-              marker.id
-            }"
+            <a href="/admin/rooms/detail/${marker.id}"
               target="_blank">
               <div class="card" style="width:300px;cursor:pointer">
                 <img class="card-img-top" src="https://c1.momondo.net/assets/photos/cards/card_hotels_001.jpg?q=60&h=400" alt="Card image cap">
@@ -370,9 +344,7 @@ export default {
           </div>`;
       } else {
         return `<div class="row" style="margin:0px;">
-            <a href="/admin/rooms/detail/${
-              marker.id
-            }"
+            <a href="/admin/rooms/detail/${marker.id}"
               target="_blank">
               <div class="card" style="width:300px;cursor:pointer">
                 <img class="card-img-top" src="https://c1.momondo.net/assets/photos/cards/card_hotels_001.jpg?q=60&h=400" alt="Card image cap">
@@ -398,20 +370,40 @@ export default {
       this.district = {
         id: ""
       };
+      this.rent_type = {
+        id: ""
+      };
+      this.date_start = null;
+      this.date_end = null;
+      this.room_type = {
+        id: ""
+      };
       this.price_range = [0, 10000000];
-      this.getRoomSearch();
+      // this.getRoomSearch();
     },
     async getRoomSearch() {
+      let date_start =
+        this.date_start !== null
+          ? this.date_start.toISOString().substr(0, 10)
+          : "";
+      let date_end =
+        this.date_end !== null ? this.date_end.toISOString().substr(0, 10) : "";
       try {
-        const response = await axios.get(`rooms`, {
+        const response = await axios.get(`rooms/room-lat-long`, {
           params: {
             include: "details",
             limit: 70,
             name: this.q.trim(),
-            city_id: this.city.id,
-            price_day_from : this.price_range[0],
+            price_day_from: this.price_range[0],
             price_day_to: this.price_range[1],
-            district_id: this.district.id
+            checkin: date_start,
+            checkout: date_end,
+            type_room: this.room_type.id,
+            rent_type: this.rent_type.id,
+            lat_min: this.areaBounds.lat_min,
+            lat_max: this.areaBounds.lat_max,
+            long_min: this.areaBounds.long_min,
+            long_max: this.areaBounds.long_max
           }
         });
         this.rooms = response.data.data;
@@ -443,16 +435,29 @@ export default {
       }
     },
     async getAllRoom() {
+      let date_start =
+        this.date_start !== null
+          ? this.date_start.toISOString().substr(0, 10)
+          : "";
+      let date_end =
+        this.date_end !== null ? this.date_end.toISOString().substr(0, 10) : "";
       try {
         const response = await axios.get(`rooms/room-lat-long`, {
-            params: {
-              limit: 70,
-              include: "details",
-              lat_min: this.areaBounds.lat_min,
-              lat_max: this.areaBounds.lat_max,
-              long_min: this.areaBounds.long_min,
-              long_max: this.areaBounds.long_max
-            }
+          params: {
+            include: "details",
+            limit: 70,
+            name: this.q.trim(),
+            price_day_from: this.price_range[0],
+            price_day_to: this.price_range[1],
+            checkin: date_start,
+            checkout: date_end,
+            type_room: this.room_type.id,
+            rent_type: this.rent_type.id,
+            lat_min: this.areaBounds.lat_min,
+            lat_max: this.areaBounds.lat_max,
+            long_min: this.areaBounds.long_min,
+            long_max: this.areaBounds.long_max
+          }
         });
         let roomSearch;
         if (this.getSearchMapStatus) {
@@ -461,7 +466,6 @@ export default {
           this.district.id = this.getInfoSearchRoom.district_id;
           this.price_range = this.getInfoSearchRoom.price_range;
           this.checkTypeSearch = 1;
-          this.checkChangeCity = 1;
           this.rooms = this.getRoomGoogleMap;
           roomSearch = this.getRoomGoogleMap;
           this.count = this.getCountRoomGMap;

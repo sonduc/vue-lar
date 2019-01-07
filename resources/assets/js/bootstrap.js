@@ -103,7 +103,7 @@ Vue.use(VueGoogleMaps, {
     // key: 'AIzaSyDAawkWY4a0cJx-Y1HzcymEP7pMNoa1GFk',
     key: 'AIzaSyC-GkUhSv8QnqfJd5P4ZJJeKL4kQGPuZ5U',
     libraries: 'places,geometry',
-    language:'vi'
+    language: 'vi'
   }
 });
 Vue.use(VueSweetalert2);

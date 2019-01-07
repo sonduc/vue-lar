@@ -100,6 +100,7 @@ import PromotionDetail from './views/admin/promotions/PromotionDetail.vue'
 // Coupons
 import CouponUpdate from './views/admin/coupons/CouponUpdate.vue'
 import CouponCreate from './views/admin/coupons/CouponCreate.vue'
+import CouponList from './views/admin/coupons/CouponList.vue'
 
 // Blogs
 import BlogList from './views/admin/blogs/BlogList.vue'
@@ -487,6 +488,11 @@ const routes = [
         path: 'coupons/create',
         name: 'coupon.create',
         component: CouponCreate
+      },
+      {
+        path: 'coupons/list',
+        name: 'coupon.list',
+        component: CouponList
       },
 
       // Blogs

@@ -9,17 +9,11 @@
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link to="/admin/dashboard/basic">
-              Basic
-            </router-link>
+            <router-link to="/admin/dashboard/basic">Basic</router-link>
 
-            <router-link to="/admin/dashboard/ecommerce">
-              Ecommerce
-            </router-link>
+            <router-link to="/admin/dashboard/ecommerce">Ecommerce</router-link>
 
-            <router-link to="/admin/dashboard/finance">
-              Finance
-            </router-link>
+            <router-link to="/admin/dashboard/finance">Finance</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/layouts">
@@ -28,17 +22,11 @@
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link to="/admin/layouts/sidebar">
-              Sidebar
-            </router-link>
+            <router-link to="/admin/layouts/sidebar">Sidebar</router-link>
 
-            <router-link to="/admin/layouts/horizontal">
-              Horizontal
-            </router-link>
+            <router-link to="/admin/layouts/horizontal">Horizontal</router-link>
 
-            <router-link to="/admin/layouts/icons-sidebar">
-              Icon Sidebar
-            </router-link>
+            <router-link to="/admin/layouts/icons-sidebar">Icon Sidebar</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/basic-ui">
@@ -47,25 +35,15 @@
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link to="/admin/basic-ui/buttons">
-              Buttons
-            </router-link>
+            <router-link to="/admin/basic-ui/buttons">Buttons</router-link>
 
-            <router-link to="/admin/basic-ui/cards">
-              Cards
-            </router-link>
+            <router-link to="/admin/basic-ui/cards">Cards</router-link>
 
-            <router-link to="/admin/basic-ui/typography">
-              Typography
-            </router-link>
+            <router-link to="/admin/basic-ui/typography">Typography</router-link>
 
-            <router-link to="/admin/basic-ui/tables">
-              Tables
-            </router-link>
+            <router-link to="/admin/basic-ui/tables">Tables</router-link>
 
-            <router-link to="/admin/basic-ui/progress-bars">
-              Progress Bars
-            </router-link>
+            <router-link to="/admin/basic-ui/progress-bars">Progress Bars</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/components">
@@ -74,37 +52,21 @@
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link to="/admin/components/notifications">
-              Notifications
-            </router-link>
+            <router-link to="/admin/components/notifications">Notifications</router-link>
 
-            <router-link to="/admin/components/sweet-modals">
-              Sweet Modals
-            </router-link>
+            <router-link to="/admin/components/sweet-modals">Sweet Modals</router-link>
 
-            <router-link to="/admin/components/vue-carousel">
-              Vue Carousel
-            </router-link>
+            <router-link to="/admin/components/vue-carousel">Vue Carousel</router-link>
 
-            <router-link to="/admin/components/vue-dropzone">
-              Vue Dropzone
-            </router-link>
+            <router-link to="/admin/components/vue-dropzone">Vue Dropzone</router-link>
 
-            <router-link to="/admin/components/vue-tables">
-              Vue DataTables
-            </router-link>
+            <router-link to="/admin/components/vue-tables">Vue DataTables</router-link>
 
-            <router-link to="/admin/components/vue-tabs">
-              Vue Tabs
-            </router-link>
+            <router-link to="/admin/components/vue-tabs">Vue Tabs</router-link>
 
-            <router-link to="/admin/components/vue-collapse">
-              Vue Collapse
-            </router-link>
+            <router-link to="/admin/components/vue-collapse">Vue Collapse</router-link>
 
-            <router-link to="/admin/components/tooltips">
-              Vue Tooltips
-            </router-link>
+            <router-link to="/admin/components/tooltips">Vue Tooltips</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/chart">
@@ -113,13 +75,9 @@
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link to="/admin/charts/chartjs">
-              Chart JS
-            </router-link>
+            <router-link to="/admin/charts/chartjs">Chart JS</router-link>
 
-            <router-link to="/admin/charts/gauges">
-              Gauge Charts
-            </router-link>
+            <router-link to="/admin/charts/gauges">Gauge Charts</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/icons">
@@ -128,26 +86,15 @@
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link to="/admin/icons/icomoon">
-              IcoMoon
-            </router-link>
+            <router-link to="/admin/icons/icomoon">IcoMoon</router-link>
 
-            <router-link to="/admin/icons/meteo">
-              Meteo Icons
-            </router-link>
+            <router-link to="/admin/icons/meteo">Meteo Icons</router-link>
 
-            <router-link to="/admin/icons/line">
-              Line Icons
-            </router-link>
+            <router-link to="/admin/icons/line">Line Icons</router-link>
 
-            <router-link to="/admin/icons/fpsline">
-              FPS Line
-            </router-link>
+            <router-link to="/admin/icons/fpsline">FPS Line</router-link>
 
-            <router-link to="/admin/icons/fontawesome">
-              Font Awesome
-            </router-link>
-
+            <router-link to="/admin/icons/fontawesome">Font Awesome</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/forms">
@@ -156,30 +103,17 @@
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link to="/admin/forms/general">
-              General Elements
-            </router-link>
+            <router-link to="/admin/forms/general">General Elements</router-link>
 
-            <router-link to="/admin/forms/advanced">
-              Advanced Elements
-            </router-link>
+            <router-link to="/admin/forms/advanced">Advanced Elements</router-link>
 
-            <router-link to="/admin/forms/layouts">
-              Form Layouts
-            </router-link>
+            <router-link to="/admin/forms/layouts">Form Layouts</router-link>
 
+            <router-link to="/admin/forms/wizard">Form Wizard</router-link>
 
-            <router-link to="/admin/forms/wizard">
-              Form Wizard
-            </router-link>
+            <router-link to="/admin/forms/vuelidate">Vuelidate</router-link>
 
-            <router-link to="/admin/forms/vuelidate">
-              Vuelidate
-            </router-link>
-
-            <router-link to="/admin/forms/vee-validate">
-              Vee Validate
-            </router-link>
+            <router-link to="/admin/forms/vee-validate">Vee Validate</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/gallery">
@@ -188,45 +122,28 @@
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link to="/admin/gallery/image">
-              Image Gallery
-            </router-link>
+            <router-link to="/admin/gallery/image">Image Gallery</router-link>
 
-            <router-link to="/admin/gallery/video">
-              Video Gallery
-            </router-link>
+            <router-link to="/admin/gallery/video">Video Gallery</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/pages">
-            <a slot="item-title" href="#"
-            >
+            <a slot="item-title" href="#">
               <i class="icon-fa icon-fa-file"/>Pages
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link to="/admin/pages/login">
-              Login
-            </router-link>
+            <router-link to="/admin/pages/login">Login</router-link>
 
-            <router-link to="/admin/pages/login-2">
-              Login 2
-            </router-link>
+            <router-link to="/admin/pages/login-2">Login 2</router-link>
 
-            <router-link to="/admin/pages/login-3">
-              Login 3
-            </router-link>
+            <router-link to="/admin/pages/login-3">Login 3</router-link>
 
-            <router-link to="/admin/pages/register">
-              Register
-            </router-link>
+            <router-link to="/admin/pages/register">Register</router-link>
 
-            <router-link to="/admin/pages/register-2">
-              Register 2
-            </router-link>
+            <router-link to="/admin/pages/register-2">Register 2</router-link>
 
-            <router-link to="/admin/pages/register-3">
-              Register 3
-            </router-link>
+            <router-link to="/admin/pages/register-3">Register 3</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/users">
@@ -235,15 +152,9 @@
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link to="/admin/users/customers">
-              Khách hàng
-            </router-link>
-            <router-link to="/admin/users/merchants">
-              Chủ nhà
-            </router-link>
-            <router-link to="/admin/users/admins">
-              Admin
-            </router-link>
+            <router-link to="/admin/users/customers">Khách hàng</router-link>
+            <router-link to="/admin/users/merchants">Chủ nhà</router-link>
+            <router-link to="/admin/users/admins">Admin</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/bookings">
@@ -251,9 +162,7 @@
               <i class="icon-fa icon-fa-book"/>Booking
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
-            <router-link to="/admin/bookings/list">
-              Danh sách Booking
-            </router-link>
+            <router-link to="/admin/bookings/list">Danh sách Booking</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/roles">
@@ -261,9 +170,7 @@
               <i class="icon-fa icon-fa-key"/>Phân Quyền
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
-            <router-link to="/admin/roles/list">
-              Danh sách quyền
-            </router-link>
+            <router-link to="/admin/roles/list">Danh sách quyền</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/collections">
@@ -271,12 +178,8 @@
               <i class="icon-fa icon-fa-qrcode"/>Bộ sưu tập
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
-            <router-link to="/admin/collections/list">
-              Danh sách bộ sưu tập
-            </router-link>
-            <router-link to="/admin/collections/create">
-              Tạo bộ sưu tập
-            </router-link>
+            <router-link to="/admin/collections/list">Danh sách bộ sưu tập</router-link>
+            <router-link to="/admin/collections/create">Tạo bộ sưu tập</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/rooms">
@@ -284,9 +187,7 @@
               <i class="icon-fa icon-fa-home"/>Phòng
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
-            <router-link to="/admin/rooms/list">
-              Danh sách phòng
-            </router-link>
+            <router-link to="/admin/rooms/list">Danh sách phòng</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/promotions">
@@ -294,12 +195,9 @@
               <i class="icon-fa icon-fa-gift"/> Khuyến mãi
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
-            <router-link to="/admin/promotions/list">
-              Chương trình khuyến mãi
-            </router-link>
-            <router-link to="/admin/promotions/create">
-              Tạo chương trình khuyến mãi
-            </router-link>
+            <router-link to="/admin/promotions/list">Chương trình khuyến mãi</router-link>
+            <router-link to="/admin/promotions/create">Tạo chương trình khuyến mãi</router-link>
+            <router-link to="/admin/coupons/list">Danh sách phiếu giảm giá</router-link>
             <router-link to="/admin/coupons/create">
               <span @click="openCreateCoupon">Tạo phiếu giảm giá</span>
             </router-link>
@@ -310,12 +208,8 @@
               <i class="icon-fa icon-fa-newspaper-o"/>Bài viết
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
-            <router-link to="/admin/blogs/list">
-              Danh sách Bài viết
-            </router-link>
-            <router-link to="/admin/blogs/create">
-              Đăng bài viết
-            </router-link>
+            <router-link to="/admin/blogs/list">Danh sách Bài viết</router-link>
+            <router-link to="/admin/blogs/create">Đăng bài viết</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/apps">
@@ -324,20 +218,13 @@
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link
-              to="/admin/apps/mailbox">
-              Mailbox
-            </router-link>
+            <router-link to="/admin/apps/mailbox">Mailbox</router-link>
 
-            <router-link to="/admin/apps/todos">
-              Todos
-            </router-link>
+            <router-link to="/admin/apps/todos">Todos</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/settings">
-            <router-link
-              slot="item-title"
-              to="/admin/settings">
+            <router-link slot="item-title" to="/admin/settings">
               <i class="icon-fa icon-fa-cogs"/>Settings
             </router-link>
           </v-collapse-item>
