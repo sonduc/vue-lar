@@ -354,7 +354,10 @@ export default {
         }
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu danh sách tên phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -410,7 +413,10 @@ export default {
           });
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu collection này hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -449,7 +455,7 @@ export default {
             });
         } catch (error) {
           if (error) {
-            window.toastr["error"]("There was an error", "Error");
+            window.toastr["error"]("Cập nhật thất bại", "Error");
           }
         }
       } else {

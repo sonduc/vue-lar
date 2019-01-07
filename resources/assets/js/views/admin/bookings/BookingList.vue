@@ -262,7 +262,7 @@
           data-dismiss="modal"
           @click="resetFilter(1)"
         >Làm mới</button>
-        
+
         <button slot="button" type="button" class="btn btn-primary" @click="applyFilter(1)">Áp dụng</button>
       </sweet-modal>
       <sweet-modal ref="update_modal" overlay-theme="dark">
@@ -540,7 +540,10 @@ export default {
         this.merchants = response.data.data;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu danh sách quản lý phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -554,7 +557,10 @@ export default {
         this.cities = response.data.data;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu danh sách tỉnh/thành phố hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -568,7 +574,10 @@ export default {
         this.districts = response.data.data;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu danh sách quận/huyện hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -603,7 +612,10 @@ export default {
         this.loading = false;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu danh sách booking hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -621,7 +633,10 @@ export default {
         // console.log(response.data.data);
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu booking payment hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -744,7 +759,10 @@ export default {
         window.toastr["success"]("Cập nhật thành công", "Success");
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Cập nhật thất bại, làm ơn kiểm tra lại thông tin",
+            "Error"
+          );
         }
       }
     },
@@ -763,7 +781,10 @@ export default {
         window.toastr["success"]("Cập nhật thành công", "Success");
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Cập nhật thất bại, làm ơn kiểm tra lại thông tin",
+            "Error"
+          );
         }
       }
     },
@@ -785,7 +806,10 @@ export default {
         window.toastr["success"]("Cập nhật thành công", "Success");
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Cập nhật thất bại, làm ơn kiểm tra lại thông tin",
+            "Error"
+          );
         }
       }
     },
@@ -805,7 +829,10 @@ export default {
         window.toastr["success"]("Cập nhật thành công", "Success");
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Cập nhật thất bại, làm ơn kiểm tra lại thông tin",
+            "Error"
+          );
         }
       }
     }

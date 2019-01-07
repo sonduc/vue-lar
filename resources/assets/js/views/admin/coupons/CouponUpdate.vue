@@ -23,7 +23,10 @@ export default {
         this.couponDetail = response.data.data;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu phiếu giảm giá này hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     }

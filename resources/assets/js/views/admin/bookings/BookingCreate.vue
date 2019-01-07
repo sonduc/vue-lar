@@ -716,7 +716,10 @@ export default {
         this.blocked_dates = [];
         this.blocked_dates = response.data.data.blocks;
       } catch (error) {
-        window.toastr["error"]("There was an error", "Error");
+        window.toastr["error"](
+            "Dữ liệu ngày khóa phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
       }
     },
     async getRoom() {
@@ -732,7 +735,10 @@ export default {
         return (this.room = response.data.data);
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },

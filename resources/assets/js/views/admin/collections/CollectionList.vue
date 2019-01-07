@@ -308,7 +308,10 @@ export default {
         };
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu danh sách collection hiện thời chưa có sẵn, vui lòng thử lại",
+            "Error"
+          );
         }
       }
     },

@@ -168,7 +168,7 @@
       </h3>
     </div>
     <div>
-      <table class="table" style="width:93%; margin-left: 57px;">
+      <table v-if="markers.length" class="table" style="width:93%; margin-left: 57px;">
           <thead>
             <tr>
               <th>#</th>
@@ -298,7 +298,8 @@ export default {
         pixelOffset: {
           width: -10,
           height: 7
-        }
+        },
+        disableAutoPan: true
       },
       center: {
         lat: 21.0083069,
@@ -384,7 +385,10 @@ export default {
         }
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },

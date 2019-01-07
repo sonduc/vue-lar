@@ -116,7 +116,10 @@ export default{
         this.listPermission = response.data;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu danh sách quyền hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -126,7 +129,6 @@ export default{
     },
     async submitForm(){
       this.formatPermissions();
-      // console.log(this.role);
       try {
         const response = await axios.post(`roles`,{
           name:this.role.name,
@@ -139,8 +141,11 @@ export default{
         });
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
-          console.log(error)
+          this.$swal(
+            "Xin lỗi",
+            "Thêm mới thất bại, làm ơn kiểm tra lại thông tin",
+            "error"
+          );
         }
       }
     },

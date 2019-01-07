@@ -144,7 +144,6 @@ export default {
         this.totalPages = paginate.total_pages;
         this.count = paginate.count;
         this.roles = response.data.data;
-        // console.log(response.data.data)
         return {
           data: response.data.data,
           pagination: {
@@ -155,7 +154,10 @@ export default {
         };
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+           window.toastr["error"](
+            "Dữ liệu danh sách quyền hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -168,10 +170,12 @@ export default {
           }
         });
         this.role = response.data.data
-        // console.log(response.data.data)
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+         window.toastr["error"](
+            "Dữ liệu quyền hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },

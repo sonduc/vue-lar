@@ -1033,7 +1033,10 @@
           this.merchantlist = response.data.data;
         } catch (error) {
           if (error) {
-            window.toastr["error"]("There was an error", "Error");
+            window.toastr["error"](
+            "Dữ liệu danh sách quản lý phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
           }
         }
       },
@@ -1048,7 +1051,10 @@
           this.userlist = response.data.data;
         } catch (error) {
           if (error) {
-            window.toastr["error"]("There was an error", "Error");
+            window.toastr["error"](
+            "Dữ liệu danh sách user hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
           }
         }
       },
@@ -1058,7 +1064,10 @@
           this.roomlist = response.data.data;
         } catch (error) {
           if (error) {
-            window.toastr["error"]("There was an error", "Error");
+            window.toastr["error"](
+            "Dữ liệu danh sách tên phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
           }
         }
       },
