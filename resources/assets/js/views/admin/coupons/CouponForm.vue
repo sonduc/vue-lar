@@ -1240,8 +1240,14 @@ export default {
                       users: this.isAllRoom == 0 ? arrUserId : [],
                       days_of_week: this.isAllRoom == 0 ? arrWeekdayId : [],
                       room_type: this.isAllRoom == 0 ? arrRoomTypeId : [],
-                      date_start: this.promotionId == 0 ? startCCreate : null,
-                      date_end: this.promotionId == 0 ? endCCreate : null,
+                      date_start:
+                        this.promotionId == 0 && this.isAllRoom == 0
+                          ? startCCreate
+                          : null,
+                      date_end:
+                        this.promotionId == 0 && this.isAllRoom == 0
+                          ? endCCreate
+                          : null,
                       min_price: this.coupons.settings.min_price
                     }
                   })
@@ -1310,8 +1316,14 @@ export default {
                       days_of_week: this.isAllRoom == 0 ? arrWeekdayId : [],
                       days: this.isAllRoom == 0 ? arrDays : [],
                       min_price: this.coupons.settings.min_price,
-                      date_start: this.promotionId == 0 ? startCCreate : null,
-                      date_end: this.promotionId == 0 ? endCCreate : null
+                      date_start:
+                        this.promotionId == 0 && this.isAllRoom == 0
+                          ? startCCreate
+                          : null,
+                      date_end:
+                        this.promotionId == 0 && this.isAllRoom == 0
+                          ? endCCreate
+                          : null
                     }
                   })
                   .then(response => {
@@ -1347,7 +1359,11 @@ export default {
     }
   },
   created() {
-    if (!(this.dataCoupon === null) && this.setInitData()) {
+    !(this.dataCoupon === null) && this.setInitData();
+    if (
+      this.getPromotionDay.startDay != null &&
+      this.getPromotionDay.endDay != null
+    ) {
       this.disabledDay.to = new Date(
         this.getPromotionDay.startDay.substring(0, 10)
       );
@@ -1355,9 +1371,9 @@ export default {
         this.getPromotionDay.endDay.substring(0, 10)
       );
       this.disabledDay.from = new Date(disabledEnd);
-      // console.log(this.getPromotionId());
-      this.promotionId = this.getPromotionId;
     }
+    // console.log(this.getPromotionId());
+    this.promotionId = this.getPromotionId;
   },
   mounted() {
     if (this.type === "Create") {

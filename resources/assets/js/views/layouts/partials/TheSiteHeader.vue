@@ -14,11 +14,7 @@
         class="d-md-none"
       >
     </a>
-    <a
-      href="#"
-      class="nav-toggle"
-      @click="onNavToggle"
-    >
+    <a href="#" class="nav-toggle" @click="onNavToggle">
       <div class="hamburger hamburger--arrowturn">
         <div class="hamburger-box">
           <div class="hamburger-inner"/>
@@ -26,29 +22,6 @@
       </div>
     </a>
     <ul class="action-list">
-      <li>
-        <v-dropdown :show-arrow="false">
-          <a slot="activator" href="#">
-            <i class="icon-fa icon-fa-plus"/>
-          </a>
-          <v-dropdown-item>
-            <a href="#">
-              <i class="icon-fa icon-fa-edit"/> New Post
-            </a>
-          </v-dropdown-item>
-          <v-dropdown-item>
-            <a href="#">
-              <i class="icon-fa icon-fa-tag"/> New Category
-            </a>
-          </v-dropdown-item>
-          <v-dropdown-divider/>
-          <v-dropdown-item>
-            <a href="#">
-              <i class="icon-fa icon-fa-star"/> Separated link
-            </a>
-          </v-dropdown-item>
-        </v-dropdown>
-      </li>
       <li>
         <v-dropdown :show-arrow="false">
           <a
@@ -61,9 +34,7 @@
             <i class="icon-fa icon-fa-bell"/>
           </a>
           <div class="notification-dropdown">
-            <h6 class="dropdown-header">
-              Notifications
-            </h6>
+            <h6 class="dropdown-header">Notifications</h6>
             <v-dropdown-item>
               <a class="dropdown-item" href="#">
                 <i class="icon-fa icon-fa-user"/> New User was Registered
@@ -95,11 +66,7 @@
             </router-link>
           </v-dropdown-item>
           <v-dropdown-item>
-            <a
-              href="#"
-              class="dropdown-item"
-              @click.prevent="logout"
-            >
+            <a href="#" class="dropdown-item" @click.prevent="logout">
               <i class="icon-fa icon-fa-sign-out"/> Logout
             </a>
           </v-dropdown-item>
@@ -109,18 +76,18 @@
   </header>
 </template>
 <script type="text/babel">
-import Auth from '../../../services/auth'
+import Auth from "../../../services/auth";
 
 export default {
   methods: {
-    onNavToggle () {
-      this.$utils.toggleSidebar()
+    onNavToggle() {
+      this.$utils.toggleSidebar();
     },
-    logout () {
+    logout() {
       Auth.logout().then(() => {
-        this.$router.replace('/login')
-      })
+        this.$router.replace("/login");
+      });
     }
   }
-}
+};
 </script>
