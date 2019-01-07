@@ -408,7 +408,7 @@
                             mode="multiple"
                             v-model="specialDays"
                             show-caps
-                            :input-props='{ class: "form-control", placeholder: "Please choose days", readonly: true }'
+                            :input-props="{ class: "form-control", placeholder: "Please choose days", readonly: true }"
                           ></v-date-picker>
                         </div>
                       </div>
@@ -630,21 +630,17 @@
                   <div class="card-body">
                     <div class="row">
                       <div class="col-md-4 row">
-                        <label for="cancel" class="col-sm-5 col-form-label">
-                          Cho phép hủy booking:</label>
+                        <label for="cancel" class="col-sm-5 col-form-label">Cho phép hủy booking:</label>
                         <div class="col-sm-7 mt-2 ml-0">
-                          <div class="form-check form-check-inline"
-                            style="margin-right: 50px;">
+                          <div class="form-check form-check-inline" style="margin-right: 50px;">
                             <input
                               id="inlineCheckbox1"
                               v-model="room.settings.no_booking_cancel"
                               class="form-check-input"
                               type="radio"
                               :value="1"
-                              >
-                            <label class="form-check-label" for="inlineCheckbox1">
-                              Không
-                            </label>
+                            >
+                            <label class="form-check-label" for="inlineCheckbox1">Không</label>
                           </div>
                           <div class="form-check form-check-inline">
                             <input
@@ -652,40 +648,44 @@
                               v-model="room.settings.no_booking_cancel"
                               class="form-check-input"
                               type="radio"
-                              :value="0">
-                            <label class="form-check-label" for="inlineCheckbox2">
-                              Có
-                            </label>
+                              :value="0"
+                            >
+                            <label class="form-check-label" for="inlineCheckbox2">Có</label>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-5">
-                        <div class="form-group row"
-                          v-if="room.settings.no_booking_cancel == 0">
-                          <label class="col-sm-4 col-form-label" for="firstName"
-                            :style="errors.has('room.cancelDay') ? 'color:red;' : ''">
+                        <div class="form-group row" v-if="room.settings.no_booking_cancel == 0">
+                          <label
+                            class="col-sm-4 col-form-label"
+                            for="firstName"
+                            :style="errors.has('room.cancelDay') ? 'color:red;' : ''"
+                          >
                             {{ errors.has('room.cancelDay')
                             ? errors.first('room.cancelDay') : 'Chỉ được hủy trước:'}}
                           </label>
                           <div class="col-sm-8 pr-0 cancel-day">
-                            <input id="firstName"
+                            <input
+                              id="firstName"
                               name="room.cancelDay"
                               v-validate="step==1 ? 'required|numeric|min_value:1':''"
                               data-vv-as="Ngày hủy trước"
                               v-model.number="room.settings.refunds[0].days"
-                              type="text" class="form-control">
+                              type="text"
+                              class="form-control"
+                            >
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-3"
-                        v-if="room.settings.no_booking_cancel == 0">
+                      <div class="col-md-3" v-if="room.settings.no_booking_cancel == 0">
                         <div class="form-group row">
-                          <label for="firstName" class="col-sm-4 col-form-label"
-                            style="text-align: center;">
-                            Hoàn tiền:</label>
+                          <label
+                            for="firstName"
+                            class="col-sm-4 col-form-label"
+                            style="text-align: center;"
+                          >Hoàn tiền:</label>
                           <div class="col-sm-8 pr-0 percent">
-                            <input disabled="true" value="100"
-                              type="text" class="form-control">
+                            <input disabled="true" value="100" type="text" class="form-control">
                           </div>
                         </div>
                       </div>
@@ -772,26 +772,21 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-group">
-                        <label>
-                          Địa chỉ *
-                        </label>
+                        <label>Địa chỉ *</label>
                         <GmapAutocomplete
                           type="text"
                           name="detail.address"
                           @place_changed="setPlace"
                           data-vv-as="Địa chỉ phòng"
                           class="form-control"
-                        >
-                        </GmapAutocomplete>
+                        ></GmapAutocomplete>
                       </div>
                     </div>
                     <div class="col-sm-12">
                       <div class="row">
                         <div class="col-lg-6">
                           <div class="form-group">
-                            <label>
-                              Tỉnh thành *
-                            </label>
+                            <label>Tỉnh thành *</label>
                             <multiselect
                               :disabled="true"
                               id="inputUserName"
@@ -808,9 +803,7 @@
                         </div>
                         <div class="col-lg-6">
                           <div class="form-group">
-                            <label>
-                              Quận huyện *
-                            </label>
+                            <label>Quận huyện *</label>
                             <multiselect
                               :disabled="true"
                               id="inputUserName"
@@ -891,7 +884,7 @@ import Multiselect from "vue-multiselect";
 import SelectWeekDay from "./SelectWeekDay";
 import Datepicker from "vuejs-datepicker";
 import { map } from "lodash";
-import {gmapApi} from "vue2-google-maps";
+import { gmapApi } from "vue2-google-maps";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
@@ -1038,7 +1031,7 @@ export default {
               amount: 100
             }
           ]
-        },
+        }
       },
       room_type: [],
       rent_type: [],
@@ -1100,7 +1093,7 @@ export default {
           price_after_hour: 0,
           status: 0
         }
-      ],
+      ]
     };
   },
   computed: {
@@ -1218,7 +1211,7 @@ export default {
         return this.weekdays;
       }
     },
-    google: gmapApi,
+    google: gmapApi
   },
   watch: {
     specialDays: {
@@ -1245,13 +1238,13 @@ export default {
         }
       },
       deep: true
-    },
+    }
   },
   methods: {
     updateCoordinates(location) {
       this.marker = {
-          lat: location.latLng.lat(),
-          lng: location.latLng.lng(),
+        lat: location.latLng.lat(),
+        lng: location.latLng.lng()
       };
     },
     setInitData() {
@@ -1288,7 +1281,7 @@ export default {
         });
       }
       this.room = JSON.parse(JSON.stringify({ ...this.room, ...dataRoom }));
-      if(dataRoom.settings.no_booking_cancel == 1) {
+      if (dataRoom.settings.no_booking_cancel == 1) {
         this.room.settings = {
           no_booking_cancel: 1,
           refunds: [
@@ -1297,7 +1290,7 @@ export default {
               amount: 100
             }
           ]
-        }
+        };
       }
       if (dataRoom.media.data.length) {
         dataRoom.media.data.forEach(item => {
@@ -1414,7 +1407,7 @@ export default {
     async onSubmit() {
       const result = await this.$validator.validateAll();
       if (result) {
-        if(this.room.details.data[0].address){
+        if (this.room.details.data[0].address) {
           try {
             if (this.type == "Update") {
               this.$swal({
@@ -1467,11 +1460,7 @@ export default {
             }
           }
         } else {
-          this.$swal(
-            "Xin lỗi",
-            "Địa chỉ không được bỏ trống",
-            "danger"
-          );
+          this.$swal("Xin lỗi", "Địa chỉ không được bỏ trống", "danger");
         }
       }
     },
@@ -1530,7 +1519,7 @@ export default {
         this.comforts = response.data.data;
       } catch (error) {
         if (error) {
-         window.toastr["error"](
+          window.toastr["error"](
             "Dữ liệu tiện ích phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
             "Error"
           );
@@ -1573,18 +1562,18 @@ export default {
       this.room.details.data.splice(index, 1);
     },
     setPlace(place) {
-      this.place = place
-      if(place) {
+      this.place = place;
+      if (place) {
         place.address_components.forEach(item => {
-          if(item.types[0] === "administrative_area_level_2") {
+          if (item.types[0] === "administrative_area_level_2") {
             this.room.district.data.name = item.long_name;
             this.districtsList.forEach(element => {
-              if(element.name.includes(item.long_name)) {
+              if (element.name.includes(item.long_name)) {
                 this.room.district_id = element.id;
               }
-            })
+            });
           }
-          if(item.types[0] === "administrative_area_level_1") {
+          if (item.types[0] === "administrative_area_level_1") {
             this.room.city.data.name = item.long_name;
           }
         });
@@ -1595,8 +1584,8 @@ export default {
       if (this.place) {
         this.marker = {
           lat: this.place.geometry.location.lat(),
-          lng: this.place.geometry.location.lng(),
-        }
+          lng: this.place.geometry.location.lng()
+        };
         this.room.latitude = this.place.geometry.location.lat();
         this.room.longitude = this.place.geometry.location.lng();
 
@@ -1604,35 +1593,38 @@ export default {
           element.address = this.place.formatted_address;
         });
         this.citiesList.forEach(element => {
-          let nameCity = this.changeAlias(element.name)
+          let nameCity = this.changeAlias(element.name);
           let convertCity = this.removeSpaceString(nameCity);
 
-          let chooseCity = this.changeAlias(this.room.city.data.name)
+          let chooseCity = this.changeAlias(this.room.city.data.name);
           let convertChooseCity = this.removeSpaceString(chooseCity);
 
-          if(convertChooseCity === convertCity) {
-            this.room.city_id = element.id
+          if (convertChooseCity === convertCity) {
+            this.room.city_id = element.id;
           }
         });
         this.filteredDistrict.forEach(element => {
-          if(this.room.district.name === element.name) {
-            this.room.district_id = element.id
+          if (this.room.district.name === element.name) {
+            this.room.district_id = element.id;
           }
-        })
+        });
       }
     },
     changeAlias(alias) {
       let str = alias;
       str = str.toLowerCase();
-      str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a");
-      str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e");
-      str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i");
-      str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o");
-      str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u");
-      str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y");
-      str = str.replace(/đ/g,"d");
-      str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
-      str = str.replace(/ + /g," ");
+      str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+      str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+      str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+      str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+      str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+      str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+      str = str.replace(/đ/g, "d");
+      str = str.replace(
+        /!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
+        " "
+      );
+      str = str.replace(/ + /g, " ");
       str = str.trim();
       return str;
     },
@@ -1641,9 +1633,9 @@ export default {
       let arr = str.split(" ");
       arr.forEach(item => {
         newStr += item;
-      })
+      });
       return newStr;
-    },
+    }
   },
   created() {
     !(this.dataRoom === null) && this.setInitData();
@@ -1677,23 +1669,24 @@ export default {
 </script>
 
 <style>
-.cancel-day, .percent {
+.cancel-day,
+.percent {
   display: inline-block;
   position: relative;
 }
 .cancel-day::after {
   position: absolute;
   top: 5px;
-  right: .5em;
-  transition: all .05s ease-in-out;
-  content: 'ngày';
+  right: 0.5em;
+  transition: all 0.05s ease-in-out;
+  content: "ngày";
 }
 .percent::after {
   position: absolute;
   top: 5px;
-  right: .5em;
-  transition: all .05s ease-in-out;
-  content: '%';
+  right: 0.5em;
+  transition: all 0.05s ease-in-out;
+  content: "%";
 }
 </style>
 
