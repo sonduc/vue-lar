@@ -169,7 +169,6 @@ export default {
         this.collection.en = dataCollection.details.data[0];
         this.collection.vi = dataCollection.details.data[1];
       }
-      // console.log(this.collection)
     },
     async getCollection() {
       try {
@@ -183,11 +182,12 @@ export default {
         );
 
         this.setInitData(response.data.data);
-        // console.log(response.data.data)
       } catch (error) {
         if (error) {
-          // console.log(error);
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu danh sách collection hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },

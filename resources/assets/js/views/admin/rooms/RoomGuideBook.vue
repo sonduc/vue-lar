@@ -61,7 +61,8 @@
               class="btn btn-danger">Làm mới</button>
           </div>
           <div class="form-group row wrapper-room panel-collapse custom-panel">
-            <div class="col-sm-12" style="padding-left: 90px;padding-top: 10px;">
+            <div class="col-sm-8"
+              style="padding-left: 90px;padding-top: 10px;padding-right: 30px;">
               <draggable
                 :options="{group:'people'}"
                 class="container-form">
@@ -151,7 +152,8 @@ export default {
         pixelOffset: {
           width: 0,
           height: -30
-        }
+        },
+        disableAutoPan: true
       },
       placeRecommendation: {
         name: "",
@@ -348,7 +350,6 @@ export default {
           this.description.splice(idx + 1, 1);
         }
       })
-
     },
     async createPlace(category_id, index) {
       try {
@@ -382,7 +383,11 @@ export default {
         }
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          this.$swal(
+            "Xin lỗi",
+            "Địa điểm chưa được thêm, làm ơn kiểm tra lại thông tin",
+            "error"
+          );
         }
       }
     },
@@ -419,7 +424,11 @@ export default {
         }
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          this.$swal(
+            "Xin lỗi",
+            "Địa điểm chưa được cập nhật, làm ơn kiểm tra lại thông tin",
+            "error"
+          );
         }
       }
     },
@@ -475,7 +484,10 @@ export default {
         this.guideBookList = response.data.data;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu danh sách địa điểm hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -509,7 +521,10 @@ export default {
         this.center.lng = parseFloat(response.data.data.longitude);
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     }

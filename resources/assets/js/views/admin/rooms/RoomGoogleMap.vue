@@ -154,7 +154,8 @@ export default {
         pixelOffset: {
           width: 0,
           height: -15
-        }
+        },
+        disableAutoPan: true
       }
     };
   },
@@ -408,8 +409,8 @@ export default {
             limit: 70,
             name: this.q.trim(),
             city_id: this.city.id,
-            price_range_start: this.price_range[0],
-            price_range_end: this.price_range[1],
+            price_day_from : this.price_range[0],
+            price_day_to: this.price_range[1],
             district_id: this.district.id
           }
         });
@@ -434,7 +435,10 @@ export default {
         });
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Tìm kiếm phòng gặp lỗi, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -487,7 +491,10 @@ export default {
         });
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     }

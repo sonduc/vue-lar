@@ -770,29 +770,19 @@
                 </div>
                 <div class="card-body">
                   <div class="row">
-                    <div class="col-sm-11">
+                    <div class="col-sm-12">
                       <div class="form-group">
                         <label>
                           Địa chỉ *
                         </label>
                         <GmapAutocomplete
                           type="text"
-                          :disabled="lockPlace"
                           name="detail.address"
                           @place_changed="setPlace"
                           data-vv-as="Địa chỉ phòng"
                           class="form-control"
                         >
                         </GmapAutocomplete>
-                      </div>
-                    </div>
-                    <div class="col-sm-1" style="padding-top: 30px;">
-                      <div class="form-group">
-                        <button class="btn btn-success" v-if="!lockPlace"
-                        @click="usePlace" style="padding: 6px 28px;">Khóa</button>
-                        <button class="btn btn-danger" v-else
-                        style="padding: 6px 28px;"
-                        @click="lockPlace = !lockPlace" >Thay đổi</button>
                       </div>
                     </div>
                     <div class="col-sm-12">
@@ -803,7 +793,7 @@
                               Tỉnh thành *
                             </label>
                             <multiselect
-                              :disabled="lockPlace"
+                              :disabled="true"
                               id="inputUserName"
                               v-model="city"
                               name="room.city"
@@ -822,7 +812,7 @@
                               Quận huyện *
                             </label>
                             <multiselect
-                              :disabled="lockPlace"
+                              :disabled="true"
                               id="inputUserName"
                               name="room.district"
                               v-model="district"
@@ -847,7 +837,6 @@
                       >
                         <GmapMarker
                           v-if="place"
-                          :draggable="!lockPlace"
                           @drag="updateCoordinates"
                           label="★"
                           :position="{
@@ -1112,7 +1101,6 @@ export default {
           status: 0
         }
       ],
-      lockPlace: false
     };
   },
   computed: {
@@ -1493,9 +1481,10 @@ export default {
         this.room_type = response.data;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
-        }
-        {
+          window.toastr["error"](
+            "Dữ liệu loại phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -1505,9 +1494,10 @@ export default {
         this.rent_type = response.data;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
-        }
-        {
+          window.toastr["error"](
+            "Dữ liệu loại thuê phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -1522,7 +1512,10 @@ export default {
         this.merchants = response.data.data;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu quản lý phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -1537,7 +1530,10 @@ export default {
         this.comforts = response.data.data;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+         window.toastr["error"](
+            "Dữ liệu tiện ích phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -1547,7 +1543,10 @@ export default {
         this.status = response.data;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu loại phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -1590,9 +1589,9 @@ export default {
           }
         });
       }
+      this.usePlace(place);
     },
     usePlace(place) {
-      this.lockPlace = !this.lockPlace;
       if (this.place) {
         this.marker = {
           lat: this.place.geometry.location.lat(),
@@ -1604,22 +1603,47 @@ export default {
         this.room.details.data.forEach(element => {
           element.address = this.place.formatted_address;
         });
-
         this.citiesList.forEach(element => {
-          if(this.room.city.data.name === element.name) {
+          let nameCity = this.changeAlias(element.name)
+          let convertCity = this.removeSpaceString(nameCity);
+
+          let chooseCity = this.changeAlias(this.room.city.data.name)
+          let convertChooseCity = this.removeSpaceString(chooseCity);
+
+          if(convertChooseCity === convertCity) {
             this.room.city_id = element.id
           }
         });
-
         this.filteredDistrict.forEach(element => {
           if(this.room.district.name === element.name) {
             this.room.district_id = element.id
           }
         })
-
       }
-
-    }
+    },
+    changeAlias(alias) {
+      let str = alias;
+      str = str.toLowerCase();
+      str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a");
+      str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e");
+      str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i");
+      str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o");
+      str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u");
+      str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y");
+      str = str.replace(/đ/g,"d");
+      str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+      str = str.replace(/ + /g," ");
+      str = str.trim();
+      return str;
+    },
+    removeSpaceString(str) {
+      let newStr = "";
+      let arr = str.split(" ");
+      arr.forEach(item => {
+        newStr += item;
+      })
+      return newStr;
+    },
   },
   created() {
     !(this.dataRoom === null) && this.setInitData();

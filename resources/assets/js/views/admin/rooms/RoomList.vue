@@ -618,7 +618,10 @@ export default {
         this.loading = false;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -664,7 +667,10 @@ export default {
         this.changeSearchMapStatus(1);
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Tìm kiếm phòng gặp lỗi, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },

@@ -709,7 +709,10 @@ export default {
         this.prices = response.data.data.prices.data;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -742,7 +745,10 @@ export default {
         this.loading = false;
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu danh sách booking hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -761,7 +767,10 @@ export default {
         this.initBlockDay(this.blockRoom);
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu các ngày khóa phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -777,7 +786,10 @@ export default {
         });
       } catch (error) {
         if (error) {
-          window.toastr["error"]("There was an error", "Error");
+          window.toastr["error"](
+            "Dữ liệu các ngày khóa phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Error"
+          );
         }
       }
     },
@@ -832,8 +844,6 @@ export default {
             room_time_blocks: this.blockRoom
           })
           .then(response => {
-            //localStorage.store_Date = this.dateSelected.endDate;
-            //this.changeActionDateCalendar(this.dateSelected.endDate);
             this.dateSelected.startDate = null;
             this.dateSelected.endDate = null;
           });

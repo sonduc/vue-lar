@@ -45,7 +45,8 @@ global.Vue = require("vue");
  */
 
 global.axios = require("axios");
-global.axios.defaults.baseURL = "http://ws-api.nhat/api/";
+// global.axios.defaults.baseURL = "http://ws-api.nhat/api/";
+global.axios.defaults.baseURL = "https://somethingapi.club/api/";
 global.axios.defaults.headers.common = {
   "X-Requested-With": "XMLHttpRequest"
 };
@@ -102,7 +103,7 @@ Vue.use(VueGoogleMaps, {
     // key: 'AIzaSyDAawkWY4a0cJx-Y1HzcymEP7pMNoa1GFk',
     key: 'AIzaSyC-GkUhSv8QnqfJd5P4ZJJeKL4kQGPuZ5U',
     libraries: 'places,geometry',
-    language:'en'
+    language:'vi'
   }
 });
 Vue.use(VueSweetalert2);
