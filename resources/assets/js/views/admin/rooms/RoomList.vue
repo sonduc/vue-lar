@@ -599,6 +599,8 @@ export default {
             rent_type: this.rent_type.id,
             city_id: this.city.id,
             status: this.status.id,
+            checkin: date_start,
+            checkout: date_end,
             price_day_from: this.price_range[0],
             price_day_to: this.price_range[1],
             district_id: this.district.id,
