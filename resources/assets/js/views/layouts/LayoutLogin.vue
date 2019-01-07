@@ -9,10 +9,7 @@
         </div>
         <router-view/>
         <div class="page-copyright">
-          <p>Powered by
-            <a href="http://bytefury.com" target="_blank">Bytefury</a>
-          </p>
-          <p>Laraspace © 2016</p>
+          
         </div>
       </div>
     </div>

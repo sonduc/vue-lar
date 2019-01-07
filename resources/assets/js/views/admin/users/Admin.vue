@@ -3,13 +3,17 @@
     <div class="page-header">
       <h4 class="page-title">Quản lý Admin</h4>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
-        <li class="breadcrumb-item"><a href="#">Người dùng</a></li>
+        <li class="breadcrumb-item">
+          <a href="#">Trang chủ</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="#">Người dùng</a>
+        </li>
         <li class="breadcrumb-item active">Admin</li>
       </ol>
       <div class="page-actions">
         <a @click="$refs.create_user.open()" style="color:white" class="btn btn-primary">
-          <i class="icon-fa icon-fa-plus" /> Tạo mới
+          <i class="icon-fa icon-fa-plus"/> Tạo mới
         </a>
       </div>
     </div>
@@ -18,36 +22,47 @@
         <div class="card">
           <div class="card-header">
             <h6>Danh sách người dùng</h6>
-            <div class="card-actions" />
+            <div class="card-actions"/>
           </div>
           <div class="card-body">
-            <table-component :data="getUsers" sort-by="row.name" ref="table" sort-order="desc" table-class="table">
-              <table-column show="id" label="ID" />
-              <table-column show="name" label="Tên" />
-              <table-column show="email" label="Email" />
-              <table-column show="type_txt" label="Quyền," />
+            <table-component
+              :data="getUsers"
+              sort-by="row.name"
+              ref="table"
+              sort-order="desc"
+              table-class="table"
+            >
+              <table-column show="id" label="ID"/>
+              <table-column show="name" label="Tên"/>
+              <table-column show="email" label="Email"/>
+              <table-column show="type_txt" label="Quyền,"/>
               <table-column label="Status" :sortable="false" :filterable="false">
-                  <template slot-scope="row">
-                      <button :class="row.status == 0 ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'">
-                        {{row.status_txt}}
-                      </button>
-                  </template>
+                <template slot-scope="row">
+                  <button
+                    :class="row.status == 0 ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'"
+                  >{{row.status_txt}}</button>
+                </template>
               </table-column>
               <table-column :sortable="true" :filterable="true" label="Actions">
                 <template slot-scope="row">
                   <div class="table__actions">
                     <router-link :to="{ name: 'user.profile', params: { userId: row.id }}">
                       <a class="btn btn-default btn-sm">
-                        <i class="icon-fa icon-fa-search" /> Chi Tiết
+                        <i class="icon-fa icon-fa-search"/> Chi Tiết
                       </a>
                     </router-link>
                     <router-link :to="{ name: 'user.edit', params: { userId: row.id }}">
                       <a class="btn btn-default btn-sm">
-                        <i class="icon-fa icon-fa-search" /> Sửa
+                        <i class="icon-fa icon-fa-search"/> Sửa
                       </a>
                     </router-link>
-                    <a class="btn btn-default btn-sm" data-delete data-confirmation="notie" @click="deleteUser(row.id)">
-                      <i class="icon-fa icon-fa-trash" /> Xoá
+                    <a
+                      class="btn btn-default btn-sm"
+                      data-delete
+                      data-confirmation="notie"
+                      @click="deleteUser(row.id)"
+                    >
+                      <i class="icon-fa icon-fa-trash"/> Xoá
                     </a>
                   </div>
                 </template>
@@ -64,55 +79,116 @@
         <div class="col-sm-12">
           <form @submit.prevent="createUser">
             <div class="form-group row">
-              <label for="firstName" style="errors.has('name') ? 'color:red;' : ''" class="col-sm-3 col-form-label">{{errors.has('name')
-                ? errors.first('name') : 'Name *'}}</label>
+              <label
+                for="firstName"
+                style="errors.has('name') ? 'color:red;' : ''"
+                class="col-sm-3 col-form-label"
+              >
+                {{errors.has('name')
+                ? errors.first('name') : 'Name *'}}
+              </label>
               <div class="col-sm-9">
-                <input v-model="user.name" id="firstName" v-validate="'required'" type="text" name="name" data-vv-as="Tên"
-                  class="form-control" placeholder="Full name">
+                <input
+                  v-model="user.name"
+                  id="firstName"
+                  v-validate="'required'"
+                  type="text"
+                  name="name"
+                  data-vv-as="Tên"
+                  class="form-control"
+                  placeholder="Full name"
+                >
               </div>
             </div>
             <div class="form-group row">
-              <label for="email" style="errors.has('email') ? 'color:red;' : ''" class="col-sm-3 col-form-label">{{errors.has('email')
-                ? errors.first('email') : 'Email *'}}</label>
+              <label
+                for="email"
+                style="errors.has('email') ? 'color:red;' : ''"
+                class="col-sm-3 col-form-label"
+              >
+                {{errors.has('email')
+                ? errors.first('email') : 'Email *'}}
+              </label>
               <div class="col-sm-9">
-                <input v-model="user.email" v-validate="'required|email'" id="email" type="email" class="form-control"
-                  name="email" data-vv-as="Email" placeholder="Email">
+                <input
+                  v-model="user.email"
+                  v-validate="'required|email'"
+                  id="email"
+                  type="email"
+                  class="form-control"
+                  name="email"
+                  data-vv-as="Email"
+                  placeholder="Email"
+                >
               </div>
             </div>
             <div class="form-group row">
-              <label for="lastName" style="errors.has('password') ? 'color:red;' : ''" class="col-sm-3 col-form-label">{{errors.has('password')
-                ? errors.first('password') : 'Password *'}}</label>
+              <label
+                for="lastName"
+                style="errors.has('password') ? 'color:red;' : ''"
+                class="col-sm-3 col-form-label"
+              >
+                {{errors.has('password')
+                ? errors.first('password') : 'Password *'}}
+              </label>
               <div class="col-sm-9">
-                <input v-validate="'required'" data-vv-as="Mật khẩu" name="password" v-model="user.password" type="password"
-                  class="form-control" placeholder="Mật khẩu">
+                <input
+                  v-validate="'required'"
+                  data-vv-as="Mật khẩu"
+                  name="password"
+                  v-model="user.password"
+                  type="password"
+                  class="form-control"
+                  placeholder="Mật khẩu"
+                >
               </div>
             </div>
-            <div class="form-group row">
+            <!-- <div class="form-group row">
               <label for="lastName" style="errors.has('password_confirm') ? 'color:red;' : ''" class="col-sm-3 col-form-label">{{errors.has('password_confirm')
                 ? errors.first('password_confirm') : 'Password Confirm *'}}</label>
               <div class="col-sm-9">
                 <input v-validate="'required|confirmed:password'" name="password_confirm" data-vv-as="Nhập lại mật khẩu"
                   v-model="user.password_confirmation" type="password" class="form-control" placeholder="Nhập lại mật khẩu">
               </div>
-            </div>
+            </div>-->
             <div class="form-group row">
-              <label for="lastName" style="errors.has('role') ? 'color:red;' : ''" class="col-sm-3 col-form-label">{{errors.has('role')
-                ? errors.first('role') : 'Phân Quyền *'}}</label>
+              <label
+                for="lastName"
+                style="errors.has('role') ? 'color:red;' : ''"
+                class="col-sm-3 col-form-label"
+              >
+                {{errors.has('role')
+                ? errors.first('role') : 'Phân Quyền *'}}
+              </label>
               <div class="col-sm-9">
-                <multiselect :allow-empty="true" name="role" data-vv-as="Phân quyền" v-model="roles" label="name"
-                  :options="role_list" :searchable="true" track-by="id" :multiple="true" :close-on-select="false"
-                  :clear-on-select="false" />
+                <multiselect
+                  :allow-empty="true"
+                  name="role"
+                  data-vv-as="Phân quyền"
+                  v-model="roles"
+                  label="name"
+                  :options="role_list"
+                  :searchable="true"
+                  track-by="id"
+                  :multiple="true"
+                  :close-on-select="false"
+                  :clear-on-select="false"
+                />
               </div>
             </div>
             <div class="form-group row">
               <label for="lastName" class="col-sm-3 col-form-label">Loại người dùng</label>
               <div class="col-sm-9">
                 <div class="custom-control custom-checkbox">
-                  <input v-model.number="user.type" id="customControlValidation1" type="checkbox" class="custom-control-input"
-                    :true-value="2" required>
-                  <label class="custom-control-label" for="customControlValidation1">
-                    Admin
-                  </label>
+                  <input
+                    v-model.number="user.type"
+                    id="customControlValidation1"
+                    type="checkbox"
+                    class="custom-control-input"
+                    :true-value="2"
+                    required
+                  >
+                  <label class="custom-control-label" for="customControlValidation1">Admin</label>
                 </div>
               </div>
             </div>
@@ -236,8 +312,16 @@ export default {
                     "error"
                   );
                 } else {
-                  axios.post("users", this.user).then(response => {
-                    if (response) {
+                  axios
+                    .post("users", {
+                      name: this.user.name,
+                      email: this.user.email,
+                      password: this.user.password,
+                      password_confirmation: this.user.password,
+                      type: 2,
+                      roles: this.user.role
+                    })
+                    .then(response => {
                       this.$swal({
                         title: "Thành công",
                         text: "Đã tạo người dùng mới",
@@ -253,10 +337,16 @@ export default {
                         this.$refs.create_user.close();
                         this.$refs.table.refresh();
                       });
-                    } else {
-                      this.$swal("Failed", "Some errors", "error");
-                    }
-                  });
+                    })
+                    .catch(error => {
+                      let err = error.response.data.data.errors;
+                      let err_array = Object.values(err);
+                      let err_txt = "";
+                      err_array.forEach(function(element) {
+                        err_txt += element + "; ";
+                      });
+                      window.toastr["error"](err_txt, "Error");
+                    });
                 }
               });
             }

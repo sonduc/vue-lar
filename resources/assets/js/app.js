@@ -6,7 +6,7 @@
 import router from './router.js'
 import utils from './helpers/utilities'
 import ThemeSwitcher from './components/ThemeSwitcher'
-import index from  './store/index.js'
+import index from './store/index.js'
 
 require('./bootstrap')
 
