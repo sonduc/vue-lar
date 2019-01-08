@@ -1,20 +1,20 @@
 <template>
-<room-form :titleHeader="titleHeader" />
+  <room-form :titleHeader="titleHeader"/>
 </template>
 <script>
-import RoomForm from './RoomForm';
+import RoomForm from "./RoomForm";
 import Auth from "../../../services/auth";
 
 export default {
-  name: 'RoomCreate',
+  name: "RoomCreate",
   components: {
     RoomForm
   },
-  data(){
+  data() {
     return {
-      titleHeader:"Chào mừng bạn đến với chức năng tạo phòng mới",
-      permissions:"room.create",
+      titleHeader: "Chào mừng bạn đến với chức năng tạo phòng mới",
+      permissions: "room.create"
     };
-  },
+  }
 };
 </script>

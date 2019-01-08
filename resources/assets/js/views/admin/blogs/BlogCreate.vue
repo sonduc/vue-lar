@@ -3,8 +3,12 @@
     <div class="page-header">
       <h3 class="page-title">Bài viết</h3>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
-        <li class="breadcrumb-item"><a href="#">Bài viết</a></li>
+        <li class="breadcrumb-item">
+          <a href="#">Trang chủ</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="#">Bài viết</a>
+        </li>
       </ol>
     </div>
     <div class="row">
@@ -15,56 +19,99 @@
               <div class="col-xl-12 mb-3">
                 <h5 class="section-semi-title">Đăng bài viết mới</h5>
                 <tabs class="tabs-default">
-                  <tab :id="`basic-home-${index}`" :name="lang.lang === 'vi' ? 'Tiếng Việt' : 'Tiếng Anh'" v-for="(lang,index) in blog.details.data"
-                    :key="index">
+                  <tab name="Tiếng Việt">
                     <div class="col-lg-12">
                       <div class="form-group">
-                        <label :style="errors.has('title') ? 'color:red;' : ''">{{errors.has('title')
-                          ? errors.first('title') : 'Tiêu đề *'}}</label>
-                        <input v-model="blog.details.data[index].title" name="title" data-vv-as="Tiêu đề" v-validate="'required|max:150|min:10'"
-                          type="text" class="form-control">
+                        <label :style="errors.has('title') ? 'color:red;' : ''">
+                          {{errors.has('title')
+                          ? errors.first('title') : 'Tiêu đề *'}}
+                        </label>
+                        <input
+                          v-model="blog.title"
+                          name="title"
+                          data-vv-as="Tiêu đề"
+                          v-validate="'required|max:150|min:10'"
+                          type="text"
+                          class="form-control"
+                        >
                       </div>
+
                       <div class="form-group">
-                        <label :style="errors.has('category') ? 'color:red;' : ''">{{errors.has('category')
-                          ? errors.first('category') : 'Danh mục *'}}</label>
-                        <multiselect 
-                          :allow-empty="false" 
+                        <label :style="errors.has('description') ? 'color:red;' : ''">
+                          {{errors.has('description')
+                          ? errors.first('description') : 'Mô tả *'}}
+                        </label>
+                        <textarea
+                          rows="4"
+                          v-model="blog.description"
+                          name="description"
+                          data-vv-as="Mô tả"
+                          v-validate="'required|min:10'"
+                          type="text"
+                          class="form-control"
+                        ></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <label :style="errors.has('category') ? 'color:red;' : ''">
+                          {{errors.has('category')
+                          ? errors.first('category') : 'Danh mục *'}}
+                        </label>
+                        <multiselect
+                          :allow-empty="false"
                           name="category"
-                          label="name" 
-                          v-model="category" 
+                          label="name"
+                          v-model="category"
                           v-validate="'required'"
-                          data-vv-as="Danh mục" 
-                          :options="listCategory" 
-                          :searchable="true" 
-                          :show-labels="false" 
-                          />
+                          data-vv-as="Danh mục"
+                          :options="listCategory"
+                          :searchable="true"
+                          :show-labels="false"
+                        />
                       </div>
                       <div class="form-group">
-                        <label :style="errors.has('content') ? 'color:red;' : ''">{{errors.has('content')
-                          ? errors.first('content') : 'Nội dung *'}}</label>
-                        <quill-editor data-vv-as="Nội dung" name="content" v-model="blog.details.data[index].content" v-validate="'required'" style="height:300px"></quill-editor>
+                        <label :style="errors.has('content') ? 'color:red;' : ''">
+                          {{errors.has('content')
+                          ? errors.first('content') : 'Nội dung *'}}
+                        </label>
+                        <quill-editor
+                          data-vv-as="Nội dung"
+                          name="content"
+                          v-model="blog.content"
+                          v-validate="'required'"
+                          style="height:300px"
+                        ></quill-editor>
                       </div>
                     </div>
-                    <br />
+                    <br>
                   </tab>
                 </tabs>
                 <div class="col-xl-12 mb-3">
-                    <label>Tags bài viết</label>
-                    <input-tag :addTagOnBlur="true" :addTagOnKeys="[13]" :tags.sync="tagsArray" class="form-control"></input-tag>
+                  <label>Tags bài viết</label>
+                  <input-tag
+                    :addTagOnBlur="true"
+                    :addTagOnKeys="[13]"
+                    :tags.sync="tagsArray"
+                    class="form-control"
+                  ></input-tag>
                 </div>
                 <div class="col-xl-12 mb-3">
-                    <label>Ảnh đại diện</label>
-                    <vue-dropzone @vdropzone-file-added="showFile" id="dropzone" @vdropzone-mounted="initImages" ref="myVueDropzone" :options="dropzoneOptions"
-                    @vdropzone-complete="afterComplete" @vdropzone-removed-file="remove" />
+                  <label>Ảnh đại diện</label>
+                  <vue-dropzone
+                    @vdropzone-file-added="showFile"
+                    id="dropzone"
+                    @vdropzone-mounted="initImages"
+                    ref="myVueDropzone"
+                    :options="dropzoneOptions"
+                    @vdropzone-complete="afterComplete"
+                    @vdropzone-removed-file="remove"
+                  />
                 </div>
               </div>
-              
             </div>
             <button @click="createBlog" class="btn btn-primary">Lưu bài viết</button>
           </div>
-          <div class="card-footer">
-
-          </div>
+          <div class="card-footer"></div>
         </div>
       </div>
     </div>
@@ -93,12 +140,15 @@ export default {
   data() {
     return {
       dropzoneOptions: {
-        url: "https://httpbin.org/post",
-        maxFilesize: 2,
-        maxFiles: 5,
+        url: "http://ws-api.lc/api/upload-blog-image",
+        maxFilesize: 5,
+        maxFiles: 1,
         addRemoveLinks: true,
         thumbnailWidth: 150,
         thumbnailHeight: 150,
+        acceptedFiles: "image/*",
+        uploadMultiple: false,
+        autoProcessQueue: true,
         dictCancelUpload: "Remove File"
       },
       tagsArray: [],
@@ -108,15 +158,10 @@ export default {
         hot: 0,
         new: 0,
         category_id: null,
-        details: {
-          data: [
-            {
-              title: null,
-              lang: "vi",
-              content: null
-            }
-          ]
-        },
+        content: null,
+        title: null,
+        description: null,
+        type: 1,
         tags: {
           data: [
             {
@@ -156,44 +201,7 @@ export default {
   },
   methods: {
     initImages() {
-      let files = [
-        {
-          file: {
-            size: 49314,
-            name: "img1",
-            type: "image"
-          },
-          url:
-            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
-        },
-        {
-          file: {
-            size: 49314,
-            name: "img2",
-            type: "image"
-          },
-          url:
-            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
-        },
-        {
-          file: {
-            size: 49314,
-            name: "img3",
-            type: "image"
-          },
-          url:
-            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
-        },
-        {
-          file: {
-            size: 49314,
-            name: "img4",
-            type: "image"
-          },
-          url:
-            "https://images.pexels.com/photos/34950/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
-        }
-      ];
+      let files = [];
       files.forEach(element => {
         this.$refs.myVueDropzone.manuallyAddFile(element.file, element.url);
       });

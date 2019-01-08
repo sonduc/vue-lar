@@ -3,16 +3,11 @@
     <a href="#" class="brand-main">
       <img
         id="logo-desk"
-        src="/assets/img/logo-desk.png"
+        src="/assets/img/logo2.jpg"
         alt="Laraspace Logo"
         class="d-none d-md-inline"
       >
-      <img
-        id="logo-mobile"
-        src="/assets/img/logo-mobile.png"
-        alt="Laraspace Logo"
-        class="d-md-none"
-      >
+      <img id="logo-mobile" src="/assets/img/ws_mobile.jpg" alt="Laraspace Logo" class="d-md-none">
     </a>
     <a href="#" class="nav-toggle" @click="onNavToggle">
       <div class="hamburger hamburger--arrowturn">

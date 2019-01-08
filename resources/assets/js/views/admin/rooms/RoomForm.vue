@@ -408,7 +408,7 @@
                             mode="multiple"
                             v-model="specialDays"
                             show-caps
-                            :input-props="{ class: "form-control", placeholder: "Please choose days", readonly: true }"
+                            :input-props="{ class: 'form-control', placeholder: 'Please choose days', readonly: true }"
                           ></v-date-picker>
                         </div>
                       </div>

@@ -139,7 +139,12 @@ export default {
   data() {
     return {
       q: "",
-
+      city: {
+        id: ""
+      },
+      district: {
+        id: ""
+      },
       date_start: null,
       date_end: null,
       format: "yyyy-MM-dd",
@@ -476,6 +481,7 @@ export default {
           let paginate = response.data.meta.pagination;
           this.count = paginate.count;
         }
+        // console.log('asdf' + roomSearch);
         this.markers = [];
         this.changeSearchMapStatus(0);
         roomSearch.forEach(room => {
@@ -495,6 +501,7 @@ export default {
         });
       } catch (error) {
         if (error) {
+          // console.log(error);
           window.toastr["error"](
             "Dữ liệu phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
             "Error"

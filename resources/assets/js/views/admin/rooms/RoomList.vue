@@ -155,6 +155,7 @@
               </div>
             </div>
             <div class="col-md-6">
+              <!-- <div class="form-group row" v-if="rent_type.id == 2 || rent_type.id == 3"> -->
               <div class="form-group row">
                 <label for="lastName" class="col-sm-1 col-form-label">Từ</label>
                 <div class="col-sm-5">
@@ -170,6 +171,36 @@
                   />
                 </div>
               </div>
+              <!-- <div class="form-group row" v-else>
+                <label for="lastName" class="col-sm-1 col-form-label">Từ</label>
+                <div class="col-sm-3">
+                  <multiselect
+                    :allow-empty="true"
+                    name="checkin_by_hour"
+                    v-model="checkin_by_hour"
+                    data-vv-as="Giờ checkin"
+                    :options="hoursData"
+                    :searchable="true"
+                    :show-labels="false"
+                  />
+                </div>
+                <label for="lastName" class="col-sm-1 col-form-label">Đến</label>
+                <div class="col-sm-3">
+                  <multiselect
+                    :allow-empty="true"
+                    name="checkout_by_hour"
+                    v-model="checkout_by_hour"
+                    data-vv-as="Giờ checkout"
+                    :options="hoursData"
+                    :searchable="true"
+                    :show-labels="false"
+                  />
+                </div>
+                <label for="lastName" class="col-sm-1 col-form-label">Ngày</label>
+                <div class="col-sm-3">
+                  <datepicker v-model="date_start" :format="format" input-class="form-control"/>
+                </div>
+              </div> -->
             </div>
           </div>
           <button @click="applyFilter(1)" class="btn btn-success btn-sm">Áp dụng</button>
@@ -198,7 +229,7 @@
               <td>{{index+1}}</td>
               <td>
                 <img
-                  :src="room.media.data.type == 1 ? room.media.data.image : ''"
+                  :src="room.media.data[1] ? room.media.data[1].image : ''"
                   height="150px"
                   width="150px"
                 >
@@ -233,9 +264,10 @@
                     &ensp; Dọn dẹp: {{ room.cleaning_fee | formatNumber }}
                   </div>
                   <div class="content-subject mb-3">
-                    <button @click="openGuideBook(room.id)" class="btn btn-primary btn-sm">
-                      Địa điểm xung quanh phòng
-                    </button>
+                    <button
+                      @click="openGuideBook(room.id)"
+                      class="btn btn-primary btn-sm"
+                    >Địa điểm xung quanh phòng</button>
                   </div>
                 </div>
               </td>
@@ -386,7 +418,7 @@
           data-dismiss="modal"
           @click="closeUpdateHostModal"
         >Close</button>
-
+        
         <button
           slot="button"
           type="button"
@@ -429,9 +461,9 @@ import VueSlider from "vue-slider-component";
 import Lottie from "vue-lottie";
 import * as animationData from "../../loading/material_wave_loading.json";
 import Pagination from "../../../components/paginate/ServerPagination";
-import { format, constant, location } from "../../../helpers/mixins";
+import { format, constant, location, hoursList } from "../../../helpers/mixins";
 export default {
-  mixins: [format, constant, location],
+  mixins: [format, constant, location, hoursList],
   components: {
     Pagination,
     Multiselect,
@@ -537,8 +569,8 @@ export default {
         this.district = {
           id: "",
           name: ""
-        }
-      },
+        };
+      }
     }
   },
   mounted() {

@@ -56,6 +56,7 @@ import CouponList from './views/admin/coupons/CouponList.vue'
 import BlogList from './views/admin/blogs/BlogList.vue'
 import BlogDetail from './views/admin/blogs/BlogDetail.vue'
 import BlogCreate from './views/admin/blogs/BlogCreate.vue'
+import BlogUpdate from './views/admin/blogs/BlogUpdate.vue'
 
 // Collection
 import CollectionList from './views/admin/collections/CollectionList.vue'
@@ -110,13 +111,29 @@ const routes = [
 
   {
     path: '/',
-    component: LayoutFront,
+    component: LayoutLogin,
     children: [{
-      path: '/',
-      component: Home,
-      name: 'home'
-    }]
+        path: '/',
+        component: Login,
+        name: 'login'
+      },
+      {
+        path: 'login',
+        component: Login,
+        name: 'login'
+      }
+    ]
   },
+
+  // {
+  //   path: '/',
+  //   component: LayoutFront,
+  //   children: [{
+  //     path: '/',
+  //     component: Home,
+  //     name: 'home'
+  //   }]
+  // },
 
   /*
    |--------------------------------------------------------------------------
@@ -310,6 +327,11 @@ const routes = [
         path: 'blogs/create',
         name: 'blog.create',
         component: BlogCreate
+      },
+      {
+        path: 'blogs/update/:blogId',
+        name: 'blog.update',
+        component: BlogUpdate
       },
 
       //  Settings
