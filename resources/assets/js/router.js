@@ -111,6 +111,8 @@ import CollectionCreate from './views/admin/collections/CollectionCreate.vue'
 import CollectionUpdate from './views/admin/collections/CollectionUpdate.vue'
 import CollectionDetail from './views/admin/collections/CollectionDetail.vue'
 
+// Statistical
+import StatisticalList from './views/admin/statistical/StatisticalList.vue'
 /*
  |--------------------------------------------------------------------------
  | Other
@@ -498,6 +500,13 @@ const routes = [
         path: 'blogs/create',
         name: 'blog.create',
         component: BlogCreate
+      },
+
+      // Statistical
+      {
+        path: 'statistical/list',
+        name: 'statistical.list',
+        component: StatisticalList
       },
 
       //  Apps
