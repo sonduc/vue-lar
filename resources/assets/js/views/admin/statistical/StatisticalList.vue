@@ -90,9 +90,9 @@
                         <h5 class="section-semi-title">
                            Biểu đồ thống kê số lượng booking theo trạng thái
                         </h5>
-                        <stacked-clustered-column-chart 
+                        <<!-- stacked-clustered-column-chart 
                            :values="booking_status"
-                        />
+                        /> -->
                      </div>
                      <div class="mb-4">
                         <h5 class="section-semi-title">
@@ -104,27 +104,35 @@
                      </div>
                      <div class="mb-4">
                         <h5 class="section-semi-title">
+                           Biểu đồ thống kê số lượng booking theo quận huyện
+                        </h5>
+                        <!-- <stacked-column-chart 
+                           :values="booking_district"
+                        />
+ -->                     </div>
+                     <div class="mb-4">
+                        <h5 class="section-semi-title">
                            Biểu đồ thống kê doanh thu của booking theo trạng thái thanh toán và trạng thái booking
                         </h5>
-                        <stacked-clustered-column-chart 
+                        <!-- <stacked-clustered-column-chart 
                            :values="booking_revenue"
-                        />
+                        /> -->
                      </div>
                      <div class="mb-4">
                         <h5 class="section-semi-title">
                            Biểu đồ thống kê Top phòng có booking nhiều nhất
                         </h5>
-                        <pie-chart-with-legend 
+                        <!-- <pie-chart-with-legend 
                            :values="room_top_booking"
-                        />
+                        /> -->
                      </div>
                      <div class="mb-4">
                         <h5 class="section-semi-title">
                            Biểu đồ thống kê Top phòng có booking nhiều nhất theo loại phòng
                         </h5>
-                        <pie-chart-with-legend 
+                        <!-- <pie-chart-with-legend 
                            :values="room_type_top_booking"
-                        />
+                        /> -->
                      </div>
                   </div>
                </div>
@@ -155,15 +163,16 @@
       data () {
          return {
             permission: "statistical.view",
-            date_start: '2018-02-12',
-            date_end: '2018-03-12',
-            view:"week",
+            date_start: '2018-09-12',
+            date_end: '2018-12-12',
+            view:"month",
             format: "yyyy-MM-dd",
             disabledDateEnd: {
               to: ""
             },
             booking_status:null,
             booking_city:null,
+            booking_district:null,
             booking_revenue:null,
             room_top_booking:null,
             room_type_top_booking:null,
@@ -176,11 +185,12 @@
                if (!response) {
                   this.$router.push("/permission-denied-403");
                } else {
-                     this.getBookingStatus({});
+                     // this.getBookingStatus({});
                      this.getBookingCity({});
-                     this.getBookingRevenue({});
-                     this.getRoomTopBooking({});
-                     this.getRoomTypeTopBooking({});
+                     // this.getBookingDistrict({});
+                     // this.getBookingRevenue({});
+                     // this.getRoomTopBooking({});
+                     // this.getRoomTypeTopBooking({});
                   }
                });
             }
@@ -197,8 +207,12 @@
             };
          },
          applyFilter(){
-            this.getBookingStatus({});
+            // this.getBookingStatus({});
             this.getBookingCity({});
+            // this.getBookingDistrict({});
+            // this.getBookingRevenue({});
+            // this.getRoomTopBooking({});
+            // this.getRoomTypeTopBooking({});
          },
          resetFilter() {
             this.date_start = null;
@@ -242,6 +256,22 @@
                   }
                });
                this.booking_city = response.data.data;
+            } catch (error) {
+               if (error) {
+                  window.toastr["error"]("There was an error", "Error");
+               }
+            }
+         },
+         async getBookingDistrict({}) {
+            try {
+               const response = await axios.get(`statisticals/booking-district`,{
+                  params:{
+                     date_start:this.date_start,
+                     date_end:this.date_end,
+                     view:this.view,
+                  }
+               });
+               this.booking_district = response.data.data;
             } catch (error) {
                if (error) {
                   window.toastr["error"]("There was an error", "Error");
