@@ -1,8 +1,14 @@
 {
-    "/pdfmake.js": "/pdfmake.js?id=d0a6da29476e4de28e6b",
-    "/xlsx.js": "/xlsx.js?id=9680554139ac684129d5",
-    "/canvg.js": "/canvg.js?id=c23a6632fb849a7f8646",
-    "/responsivedefaults.js": "/responsivedefaults.js?id=7fae740820b4b9fa7b63",
-    "/assets/js/app.js": "/assets/js/app.js?id=5feae6983fbde0ab1808",
-    "/assets/css/laraspace.css": "/assets/css/laraspace.css?id=437609d6fa40b5818caf"
+    "/pdfmake.js": "/pdfmake.js",
+    "/pdfmake.js.map": "/pdfmake.js.map",
+    "/xlsx.js": "/xlsx.js",
+    "/xlsx.js.map": "/xlsx.js.map",
+    "/canvg.js": "/canvg.js",
+    "/canvg.js.map": "/canvg.js.map",
+    "/responsivedefaults.js": "/responsivedefaults.js",
+    "/responsivedefaults.js.map": "/responsivedefaults.js.map",
+    "/assets/js/app.js": "/assets/js/app.js",
+    "/assets/css/laraspace.css": "/assets/css/laraspace.css",
+    "/assets/js/app.js.map": "/assets/js/app.js.map",
+    "/assets/css/laraspace.css.map": "/assets/css/laraspace.css.map"
 }

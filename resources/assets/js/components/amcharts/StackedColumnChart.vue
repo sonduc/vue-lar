@@ -39,7 +39,7 @@
                   chart.data.push(e);
                });
             });
-            // console.log(chart.data);
+            console.log(chart.data);
             // Create axes
             let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
             categoryAxis.dataFields.category = "createdAt";
@@ -58,13 +58,13 @@
                series.name = name;
                series.dataFields.valueY = field;
                series.dataFields.categoryX = "createdAt";
-               series.sequencedInterpolation = false;
+               series.sequencedInterpolation = true;
 
                // Make it stacked
                series.stacked = true;
 
                // Configure columns
-               series.columns.template.width = am4core.percent(60);
+               series.columns.template.width = am4core.percent(75);
                series.columns.template.tooltipText = "[bold]{name}[/]\n[font-size:14px]{categoryX}: {valueY}";
 
                // Add label
@@ -81,6 +81,7 @@
                data_arr = [...data_arr, ...Object.keys(element)];
             });
 
+            // console.log(data_arr);
             // Remove createdAt keys
             var remain_field = _.remove(data_arr, function(n) {
                return n !== "createdAt";
@@ -88,11 +89,13 @@
 
             //Unique City name keys
             let city_field = _.intersection(remain_field);
-            console.log(city_field)
+            // console.log(city_field)
             //Create series
             city_field.forEach(element => {
                createSeries(element, element);
             });
+
+            // console.log(city_field)
             // Legend
             chart.legend = new am4charts.Legend();
          }
@@ -109,6 +112,6 @@
 <style scoped>
 .hello {
    width: 100%;
-   height: 1000px;
+   height: 500px;
 }
 </style>
