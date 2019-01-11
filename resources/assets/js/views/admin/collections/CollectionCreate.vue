@@ -104,13 +104,16 @@
 
                   <div class="col-md-6 row">
                     <div class="form-group col-md-12">
-                      <label>Ảnh</label>
+                      <label v-if="collection.image.length">Ảnh *</label>
+                      <label v-else style="color: red;">Ảnh là bắt buộc *</label>
                       <vue-dropzone
                         id="dropzone"
                         ref="myVueDropzone"
                         :options="dropzoneOptions"
+                        @vdropzone-canceled
                         @vdropzone-complete="afterComplete"
-                        @vdropzone-removed-file="remove">
+                        @vdropzone-removed-file="remove"
+                        :duplicateCheck="true">
                       </vue-dropzone>
                     </div>
                   </div>
@@ -211,6 +214,7 @@
                 </div>
                 <button
                   type="submit"
+                  :disabled="collection.image.length == 0"
                   class="btn btn-primary"
                   style="margin-top: 2.2em;">
                   Thêm mới
@@ -248,7 +252,7 @@ export default {
     return {
       language: 0,
       collection: {
-        image: null,
+        image: [],
         hot: 0,
         status: 0,
         new: 0,
@@ -296,6 +300,14 @@ export default {
     this.hideSidebarOnMobile();
   },
   methods: {
+    afterCompleteImageAvatar(file) {
+      if (file.dataURL) {
+        this.collection.image = file.dataURL;
+      }
+    },
+    removedImageInDropzone(file, error, xhr) {
+      this.collection.image = null;
+    },
     selectRoom(selectedOption, id) {
       let objectRoom = {
         id: selectedOption.id,

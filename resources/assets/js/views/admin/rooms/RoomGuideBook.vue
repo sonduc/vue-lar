@@ -32,6 +32,8 @@
             </label>
             <div class="search">
               <span class="icon-fa icon-fa-search"></span>
+               <!-- v-validate="{ max:255,
+                  regex:/^[\d\-a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỂưăạảấầẩẫậắằẳẵặẹẻẽềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ, ]*$/u }" -->
               <input
                 v-if="guideBookList.length"
                 type="text"
@@ -40,8 +42,7 @@
                 v-model="addressMap[index]"
                 class="input-search"
                 placeholder="Nhập địa điểm..."
-                v-validate="{ max:255,
-                  regex:/^[\d\-a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỂưăạảấầẩẫậắằẳẵặẹẻẽềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ, ]*$/u }"
+                v-validate="'max:255'"
                 data-vv-as="Địa chỉ"
                 @click="doAutocomplete(index)" />
             </div>

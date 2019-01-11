@@ -196,9 +196,18 @@
           <tbody>
             <tr v-for="(room,index) in filteredRooms" :key="index" :class="{'read' : room.status }">
               <td>{{index+1}}</td>
-              <td>
+              <td v-if="room.media.data.length">
+                <img v-for="(item,index) in room.media.data" :key="index"
+                  v-if="item.type == 4"
+                  :src="'https://s3-ap-southeast-1.amazonaws.com/d-beauty/'+item.image"
+                  height="150px"
+                  width="150px"
+                >
+              </td>
+              <td v-else>
                 <img
-                  :src="room.media.data.type == 1 ? room.media.data.image : ''"
+                  alt="Ảnh phòng hiện tại chưa có"
+                  src="https://via.placeholder.com/150"
                   height="150px"
                   width="150px"
                 >
