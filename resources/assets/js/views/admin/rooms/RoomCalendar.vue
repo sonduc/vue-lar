@@ -746,7 +746,7 @@ export default {
       } catch (error) {
         if (error) {
           window.toastr["error"](
-            "Dữ liệu danh sách booking hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Danh sách booking hiện thời chưa có sẵn, vui lòng thử lại sau",
             "Error"
           );
         }
@@ -768,7 +768,7 @@ export default {
       } catch (error) {
         if (error) {
           window.toastr["error"](
-            "Dữ liệu các ngày khóa phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Danh sách ngày khóa phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
             "Error"
           );
         }
@@ -787,7 +787,7 @@ export default {
       } catch (error) {
         if (error) {
           window.toastr["error"](
-            "Dữ liệu các ngày khóa phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Danh sách ngày khóa phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
             "Error"
           );
         }

@@ -15,7 +15,7 @@
     </div>
     <form>
       <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12" v-if="checkLoadedImage()">
           <div class="card">
             <div class="card-body">
               <div class="container">
@@ -96,7 +96,7 @@
                     >Tạm dừng</button>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom: 85px;">
                   <label
                     :style="errors.has('promotions.description')
                     ? 'color:red;' : ''"
@@ -105,7 +105,7 @@
                     ? errors.first('promotions.description') : 'Mô tả chi tiết*'}}
                   </label>
                   <quill-editor
-                    style="height:auto"
+                    style="height: 300px;"
                     name="promotions.description"
                     data-vv-as="Mô tả chương trình khuyến mãi"
                     v-validate="'required'"
@@ -113,19 +113,21 @@
                   ></quill-editor>
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputEmail">Upload ảnh banner</label>
+                  <label v-if="images.length">Upload ảnh *</label>
+                  <label v-else style="color: red;">Upload ảnh là bắt buộc *</label>
                   <vue-dropzone
                     id="dropzone"
                     ref="myVueDropzone"
-                    :options="imagePost"
+                    :options="imagePromotion"
                     @vdropzone-canceled
                     @vdropzone-removed-file="removedImageInDropzone"
-                    @vdropzone-mounted="vmountedPost"
-                    @vdropzone-complete="afterCompleteImagePost"
+                    @vdropzone-mounted="vmountedPromotion"
+                    @vdropzone-complete="afterCompleteImagePromotion"
                   />
                 </div>
                 <div class="btn-center">
                   <button
+                    :disabled="images.length < 1"
                     v-if="type === 'Update' ? checkAllowUpdate(promotions.date_start) : true"
                     @click.prevent="onSubmit"
                     style="margin-right: 10px;"
@@ -196,7 +198,7 @@ export default {
         image: "",
         status: 1
       },
-      imagePost: {
+      imagePromotion: {
         url: "https://httpbin.org/post",
         maxFilesize: 3,
         maxFiles: 1,
@@ -207,7 +209,9 @@ export default {
         dictDefaultMessage:
           "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
         headers: { "My-Awesome-Header": "header value" }
-      }
+      },
+      images: [],
+      loadedImages: false
     };
   },
   watch: {
@@ -225,6 +229,30 @@ export default {
       this.promotions = JSON.parse(
         JSON.stringify({ ...this.promotions, ...dataPromotion })
       );
+
+      if(dataPromotion.image != null) {
+        async function getBase64ImageFromUrl(imageUrl) {
+          let res = await fetch(imageUrl);
+          let blob = await res.blob();
+          return new Promise((resolve, reject) => {
+            let reader  = new FileReader();
+            reader.addEventListener("load", function () {
+                resolve(reader.result);
+            }, false);
+            reader.onerror = () => {
+              return reject(this);
+            };
+            reader.readAsDataURL(blob);
+          })
+        }
+        getBase64ImageFromUrl(
+          "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+ dataPromotion.image)
+        .then(result => {
+          this.images.push(result);
+          this.loadedImages = true;
+         })
+        .catch(err => console.error(err));
+      }
     },
     selectRoom(selectedOption, id) {
       let objectRoom = {
@@ -233,22 +261,44 @@ export default {
       };
       this.coupons.settings.rooms.push(objectRoom);
     },
-    vmountedPost() {
-      if (this.promotions.image !== "") {
-        let file = { name: this.promotions.image, size: 12356, type: "image" };
-        let url = this.promotions.image;
+    vmountedPromotion() {
+      this.images.forEach(item => {
+        let file = { name: "Ảnh chương trình khuyến mãi", size: 12345, type: "image" };
+        let url = item;
         this.$refs.myVueDropzone.manuallyAddFile(file, url);
-      }
+      });
     },
-    afterCompleteImagePost(file) {
-      let source = null;
+    afterCompleteImagePromotion(file) {
       if (file.dataURL) {
-        source = file.dataURL;
-        this.promotions.image = source;
+        this.images= [];
+        this.images.push(file.dataURL);
       }
     },
     removedImageInDropzone(file, error, xhr) {
-      this.promotions.image = "";
+      if(file.name === "Ảnh chương trình khuyến mãi"){
+        this.images.pop();
+      }
+      else {
+        let index = this.images.findIndex(
+          item => item === file.dataURL
+        );
+        if(index > -1) {
+          this.images.splice(index, 1);
+        }
+      }
+    },
+    checkLoadedImage() {
+      if(this.type === "Update") {
+        if(this.loadedImages){
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
+      else {
+        return true;
+      }
     },
     updateStatus(status) {
       if (status == 1) {
@@ -331,8 +381,7 @@ export default {
                     description: this.promotions.description,
                     date_start: start_Day,
                     date_end: end_Day,
-                    // cập nhật khi hệ thống cho phép upload ảnh
-                    //images: this.promotions.images,
+                    image: this.images[0],
                     status: this.promotions.status
                   })
                   .then(response => {
@@ -372,7 +421,7 @@ export default {
                     description: this.promotions.description,
                     date_start: startDay,
                     date_end: endDay,
-                    image: this.promotions.image,
+                    image: this.images[0],
                     status: this.promotions.status
                   })
                   .then(response => {

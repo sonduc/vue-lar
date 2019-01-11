@@ -102,13 +102,15 @@
 
                   <div class="col-md-6 row">
                     <div
+                      v-if="checkLoadedImage()"
                       class="form-group col-md-12">
-                      <label>Ảnh</label>
+                      <label v-if="collection.image.length">Upload ảnh *</label>
+                      <label v-else style="color: red;">Upload ảnh là bắt buộc *</label>
                       <vue-dropzone
-                        v-if="isLoaded"
-                        id="dropzone2"
-                        ref="myVueDropzone2"
-                        :options="imagePost"
+                        id="dropzone"
+                        ref="myVueDropzone"
+                        :options="imageAvatar"
+                        @vdropzone-canceled
                         @vdropzone-removed-file="removedImageInDropzone"
                         @vdropzone-mounted="vmountedCollection"
                         @vdropzone-complete="afterComplete"
@@ -207,9 +209,10 @@
                   </div>
                 </div>
                 <button
+                  :disabled="collection.image.length == 0"
                   type="submit"
                   class="btn btn-primary"
-                  style="margin-top: 2.2em;">
+                  style="margin-top: 2.2em;margin-top: 2.2em;margin-right: 44px;">
                   Cập nhật
                 </button>
               </form>
@@ -246,7 +249,7 @@ export default {
       isLoaded: false,
       language: 0,
       collection: {
-        image: "",
+        image: [],
         hot: 0,
         status: 0,
         new: 0,
@@ -261,16 +264,8 @@ export default {
           lang: "en"
         }
       },
+      loadedImages: false,
       permission: "collection.update",
-      // allRoom:[
-      //   { name: 'Thành Công Hotel - Luxury Apartment', id:'3143' },
-      //   { name: 'Thành Công Hotel - Excutive Suite Room', id:'3142' },
-      //   { name: 'Thành Công Hotel - Deluxe Suite Triple Room', id:'3141' },
-      //   { name: 'Thành Công Hotel - Deluxe Suite Twin Ocean View Room', id:'3140' },
-      //   { name: 'Thành Công Hotel - Deluxe Twin Ocean View Room', id:'3139' },
-      //   { name: 'Thành Công Hotel - Superior Twin Room', id:'3138' },
-      //   { name: 'Thành Công Hotel - Standard Double Room', id:'3137' },
-      // ],
       allRoom: [],
       rooms: [],
       room: {},
@@ -283,10 +278,9 @@ export default {
         thumbnailHeight: 150,
         dictCancelUpload: "Remove File"
       },
-      // test image
-      imagePost: {
+      imageAvatar: {
         url: "https://httpbin.org/post",
-        maxFilesize: 5,
+        maxFilesize: 3,
         maxFiles: 1,
         addRemoveLinks: true,
         thumbnailWidth: 150,
@@ -323,18 +317,37 @@ export default {
       }
       this.rooms = valueRooms;
     },
-    // test image
     removedImageInDropzone(file, error, xhr) {
-      this.collection.image = null;
+      if(file.name === "Ảnh bộ sưu tập"){
+        this.collection.image.pop();
+      }
+      else {
+        let index = this.collection.image.findIndex(
+          item => item === file.dataURL
+        );
+        if(index > -1) {
+          this.collection.image.splice(index, 1);
+        }
+      }
     },
     vmountedCollection() {
-      let file = { name: this.collection.image, size: 50000, type: "image" };
-      let url = this.collection.image;
-      this.$refs.myVueDropzone2.manuallyAddFile(file, url);
+      this.collection.image.forEach(item => {
+        let file = { name: "Ảnh bộ sưu tập", size: 12345, type: "image" };
+        let url = item;
+        this.$refs.myVueDropzone.manuallyAddFile(file, url);
+      });
     },
     afterComplete(file) {
       if (file.dataURL) {
-        this.collection.image = file.dataURL;
+        this.collection.image.push(file.dataURL);
+      }
+    },
+    checkLoadedImage() {
+      if(this.loadedImages){
+        return true;
+      }
+      else {
+        return false;
       }
     },
     async getNameRooms() {
@@ -376,7 +389,29 @@ export default {
           }
         }
       }
-      this.collection.image = dataCollection.image;
+      async function getBase64ImageFromUrl(imageUrl) {
+        let res = await fetch(imageUrl);
+        let blob = await res.blob();
+        return new Promise((resolve, reject) => {
+          let reader  = new FileReader();
+          reader.addEventListener("load", function () {
+              resolve(reader.result);
+          }, false);
+          reader.onerror = () => {
+            return reject(this);
+          };
+          reader.readAsDataURL(blob);
+        })
+      }
+      if(dataCollection.image != null) {
+        getBase64ImageFromUrl(
+          "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+ dataCollection.image)
+        .then(result => {
+          this.collection.image.push(result);
+          this.loadedImages = true;
+         })
+        .catch(err => console.error(err));
+      }
       this.collection.hot = dataCollection.hot;
       this.collection.status = dataCollection.status;
       this.collection.new = dataCollection.new;
@@ -388,17 +423,6 @@ export default {
         this.collection.vi = dataCollection.details.data[1];
       }
       this.isLoaded = !this.isLoaded;
-    },
-
-    AddFile() {
-      let file = { size: 123, name: "Icon" };
-      let url = "/assets/img/demo/gallery/" + this.count + ".jpg";
-      this.$refs.myVueDropzone.manuallyAddFile(file, url);
-      if (this.count !== 12) {
-        this.count = this.count + 1;
-      } else {
-        this.count = 12;
-      }
     },
     async getCollection() {
       try {
@@ -442,7 +466,7 @@ export default {
         try {
           const response = await axios
             .put(`collections/${this.$route.params.collectionId}`, {
-              image: this.collection.image,
+              image: this.collection.image[0],
               hot: this.collection.hot,
               new: this.collection.new,
               status: this.collection.status,

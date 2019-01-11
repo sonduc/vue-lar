@@ -408,7 +408,7 @@
                             mode="multiple"
                             v-model="specialDays"
                             show-caps
-                            :input-props="{ class: "form-control", placeholder: "Please choose days", readonly: true }"
+                            :input-props="{ class: 'form-control', placeholder: 'Please choose days', readonly: true }"
                           ></v-date-picker>
                         </div>
                       </div>
@@ -727,8 +727,7 @@
                 </div>
                 <div class="card-body">
                   <div class="row mt-4">
-                    <div class="col-sm-12">
-                      <!-- Vì data trong DB trùng nhau nên chưa để :duplicateCheck="true" được -->
+                    <div class="col-sm-12" v-if="checkLoadedImage()">
                       <vue-dropzone
                         id="dropzone1"
                         ref="myVueDropzone1"
@@ -736,7 +735,8 @@
                         @vdropzone-mounted="vmountedAvatar"
                         @vdropzone-complete="afterCompleteImageAvatar"
                         @vdropzone-canceled
-                        @vdropzone-removed-file="removedImageInDropzone"
+                        @vdropzone-removed-file="removedImageAvatar"
+                        :duplicateCheck="true"
                       />
                     </div>
                   </div>
@@ -748,15 +748,16 @@
                 </div>
                 <div class="card-body">
                   <div class="row mt-4">
-                    <div class="col-sm-12">
+                    <div class="col-sm-12" v-if="checkLoadedImage()">
                       <vue-dropzone
                         id="dropzone2"
                         ref="myVueDropzone2"
                         :options="imagePost"
                         @vdropzone-canceled
-                        @vdropzone-removed-file="removedImageInDropzone"
+                        @vdropzone-removed-file="removedImagePost"
                         @vdropzone-mounted="vmountedPost"
                         @vdropzone-complete="afterCompleteImagePost"
+                        :duplicateCheck="true"
                       />
                     </div>
                   </div>
@@ -772,25 +773,35 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-group">
-                        <label>Địa chỉ *</label>
-                        <GmapAutocomplete
+                        <label
+                          :style="errors.has('detail.address') ? 'color:red;' : ''">
+                          {{errors.has('detail.address')
+                            ? errors.first('detail.address') : 'Địa chỉ *'}}
+                        </label>
+                        <input
                           type="text"
+                          id="addressMap"
                           name="detail.address"
-                          @place_changed="setPlace"
-                          data-vv-as="Địa chỉ phòng"
+                          v-model="addressMap"
                           class="form-control"
-                        ></GmapAutocomplete>
+                          placeholder="Nhập địa điểm..."
+                          @click="doAutocomplete()"
+                        />
                       </div>
                     </div>
                     <div class="col-sm-12">
                       <div class="row">
                         <div class="col-lg-6">
                           <div class="form-group">
-                            <label>Tỉnh thành *</label>
+                            <label :style="errors.has('room.city') ? 'color:red;' : ''">
+                              {{errors.has('room.city')
+                              ? errors.first('room.city') : 'Tỉnh thành *'}}
+                            </label>
                             <multiselect
-                              :disabled="true"
-                              id="inputUserName"
+                              id="inputCity"
                               v-model="city"
+                              v-validate="step==4 ? 'required':''"
+                              data-vv-as="Tỉnh thành"
                               name="room.city"
                               label="name"
                               :options="cities"
@@ -803,12 +814,16 @@
                         </div>
                         <div class="col-lg-6">
                           <div class="form-group">
-                            <label>Quận huyện *</label>
+                             <label :style="errors.has('room.district') ? 'color:red;' : ''">
+                              {{errors.has('room.district')
+                              ? errors.first('room.district') : 'Quận huyện *'}}
+                            </label>
                             <multiselect
-                              :disabled="true"
-                              id="inputUserName"
+                              id="inputDistrict"
                               name="room.district"
                               v-model="district"
+                              v-validate="step==4 ? 'required':''"
+                              data-vv-as="Quận huyện"
                               label="name"
                               :options="filteredDistrict"
                               :searchable="true"
@@ -819,25 +834,23 @@
                         </div>
                       </div>
 
-                      <GmapMap
-                        :center="{
-                            lat: this.place != null ? this.place.geometry.location.lat() : 21.0083069,
-                            lng: this.place != null ? this.place.geometry.location.lng() : 105.8182929,
-                          }"
+                      <gmap-map
+                        :center="center"
                         :zoom="17"
                         map-type-id="terrain"
                         style="width: 1500px; height: 300px"
                       >
-                        <GmapMarker
-                          v-if="place"
-                          @drag="updateCoordinates"
+                        <gmap-marker
+                          v-if="dataRoom"
                           label="★"
-                          :position="{
-                            lat: this.place.geometry.location.lat(),
-                            lng: this.place.geometry.location.lng(),
-                          }"
+                          :position="center"
                         />
-                      </GmapMap>
+                        <gmap-marker
+                          v-else
+                          label="★"
+                          :position="center"
+                        />
+                      </gmap-map>
                     </div>
                   </div>
                 </div>
@@ -1093,7 +1106,17 @@ export default {
           price_after_hour: 0,
           status: 0
         }
-      ]
+      ],
+      addressMap: null,
+      center: {
+        lat: 21.027895,
+        lng: 105.833896,
+      },
+      infoWindowPos: {
+        lat: 0,
+        lng: 0
+      },
+      loadedImages: false,
     };
   },
   computed: {
@@ -1160,7 +1183,7 @@ export default {
         }
       },
       set(val) {
-        this.district.data.name = null;
+        this.room.district.name = null;
         this.room.city.data = val;
         this.room.city_id = val.id;
       }
@@ -1238,15 +1261,19 @@ export default {
         }
       },
       deep: true
-    }
+    },
+    place: {
+      handler(val) {
+        if(val) {
+          this.center = {
+            lat: val.geometry.location.lat(),
+            lng: val.geometry.location.lng()
+          }
+        }
+      }
+    },
   },
   methods: {
-    updateCoordinates(location) {
-      this.marker = {
-        lat: location.latLng.lat(),
-        lng: location.latLng.lng()
-      };
-    },
     setInitData() {
       let dataRoom = { ...this.dataRoom };
       if (dataRoom.prices.data.length) {
@@ -1281,6 +1308,10 @@ export default {
         });
       }
       this.room = JSON.parse(JSON.stringify({ ...this.room, ...dataRoom }));
+
+      this.center.lat = parseFloat(dataRoom.latitude);
+      this.center.lng = parseFloat(dataRoom.longitude);
+      this.addressMap = dataRoom.details.data[0].address;
       if (dataRoom.settings.no_booking_cancel == 1) {
         this.room.settings = {
           no_booking_cancel: 1,
@@ -1292,11 +1323,30 @@ export default {
           ]
         };
       }
-      if (dataRoom.media.data.length) {
+      if(dataRoom.media.data.length){
+        this.room.images = [];
+        let countImg = 0;
         dataRoom.media.data.forEach(item => {
-          this.room.images.push({ source: item.image, type: item.type });
+          this.getBase64ImageFromUrl(
+            "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+item.image)
+          .then(result => {
+            let img = { source:null, type:null };
+            img.source = result;
+            img.type = item.type;
+            this.room.images.push(img);
+            this.room.images = JSON.parse(JSON.stringify(this.room.images));
+            countImg ++;
+            if(countImg == dataRoom.media.data.length) {
+               this.loadedImages = true;
+            }
+           })
+          .catch(err => console.error(err));
         });
       }
+      else {
+        this.loadedImages = true;
+      }
+
       if (this.room.comforts.data.length) {
         let arr = this.room.comforts.data.map(item => item.id);
         this.room.comforts = arr;
@@ -1304,21 +1354,41 @@ export default {
         this.room.comforts = [];
       }
     },
+    async getBase64ImageFromUrl(imageUrl) {
+      let res = await fetch(imageUrl);
+      let blob = await res.blob();
+      return new Promise((resolve, reject) => {
+        let reader  = new FileReader();
+        reader.addEventListener("load", function () {
+            resolve(reader.result);
+        }, false);
+        reader.onerror = () => {
+          return reject(this);
+        };
+        reader.readAsDataURL(blob);
+      })
+    },
     vmountedPost() {
-      this.room.images.forEach(item => {
+      let arrImage = this.room.images;
+      let i = 1;
+      arrImage.forEach(item => {
         if (item.type == 1) {
-          let file = { name: item.source, size: 12356, type: "image" };
+          let file = { name: "Ảnh bài viết "+ i, size: 12356, type: "image",dataURL: item.source };
           let url = item.source;
           this.$refs.myVueDropzone2.manuallyAddFile(file, url);
+          i++;
         }
       });
     },
     vmountedAvatar() {
-      this.room.images.forEach(item => {
+      let arrImage = this.room.images;
+      let i = 1;
+      arrImage.forEach(item => {
         if (item.type == 4) {
-          let file = { name: item.source, size: 12356, type: "image" };
+          let file = { name: "Ảnh đại diện "+ i, size: 12356, type: "image",dataURL: item.source };
           let url = item.source;
           this.$refs.myVueDropzone1.manuallyAddFile(file, url);
+          i++;
         }
       });
     },
@@ -1351,7 +1421,7 @@ export default {
         source: null,
         type: 4
       };
-      if (file.dataURL) {
+      if (file.accepted == true) {
         picture.source = file.dataURL;
         this.room.images.push(picture);
       }
@@ -1361,16 +1431,64 @@ export default {
         source: null,
         type: 1
       };
-      if (file.dataURL) {
+      if (file.accepted == true) {
         picture.source = file.dataURL;
         this.room.images.push(picture);
       }
     },
-    removedImageInDropzone(file, error, xhr) {
-      let index = this.room.images.findIndex(
-        item => item.dataURL === file.dataURL
-      );
-      this.room.images.splice(index, 1);
+    removedImageAvatar(file, error, xhr) {
+      this.room.images.forEach((item,index) => {
+        if (item.source === file.dataURL) {
+          this.room.images.splice(index, 1);
+        }
+      })
+    },
+    removedImagePost(file, error, xhr) {
+      this.room.images.forEach((item,index) => {
+        if (item.source === file.dataURL) {
+          this.room.images.splice(index, 1);
+        }
+      })
+    },
+    doAutocomplete() {
+      let element = document.getElementById('addressMap')
+      this.autocomplete = new google.maps.places.Autocomplete(element)
+      this.autocomplete.setComponentRestrictions(
+            {'country': ['vn']});
+      this.autocomplete.addListener('place_changed', () => {
+        let place = this.autocomplete.getPlace();
+        let address = "";
+        let place_name = place.name.split("-")[0].trim();
+        let place_formated = place.formatted_address.split(",")[0].trim();
+        if(place_name !== place_formated) {
+          address += (place_name + ', ' + place.formatted_address);
+        }
+        else {
+          address = place.formatted_address;
+        }
+        this.addressMap = address;
+
+        this.place = place;
+        this.room.latitude = this.place.geometry.location.lat();
+        this.room.longitude = this.place.geometry.location.lng();
+
+        this.room.details.data.forEach(element => {
+          element.address = address;
+        });
+      });
+    },
+    checkLoadedImage() {
+      if(this.type == "Create") {
+        return true;
+      }
+      else {
+        if(this.loadedImages){
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
     },
     async getBase64ImageFromUrl(imageUrl) {
       let res = await fetch(imageUrl);
@@ -1385,7 +1503,6 @@ export default {
           },
           false
         );
-
         reader.onerror = () => {
           return reject(this);
         };
@@ -1452,6 +1569,7 @@ export default {
             }
           } catch (error) {
             if (error) {
+              console.log(error)
               this.$swal(
                 "Xin lỗi",
                 "Phòng chưa đưọc lưu, làm ơn kiểm tra lại thông tin",
@@ -1520,7 +1638,7 @@ export default {
       } catch (error) {
         if (error) {
           window.toastr["error"](
-            "Dữ liệu tiện ích phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Danh sách tiện ích phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
             "Error"
           );
         }
@@ -1533,7 +1651,7 @@ export default {
       } catch (error) {
         if (error) {
           window.toastr["error"](
-            "Dữ liệu loại phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Dữ liệu trạng thái phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
             "Error"
           );
         }
@@ -1550,7 +1668,7 @@ export default {
     addNewLangEnglishForm() {
       this.room.details.data.push({
         name: "",
-        address: "",
+        address: this.room.details.data[0].address,
         description: "",
         lang: "en",
         space: "",
@@ -1561,81 +1679,6 @@ export default {
       let index = this.room.details.data.findIndex(x => x.lang == "en");
       this.room.details.data.splice(index, 1);
     },
-    setPlace(place) {
-      this.place = place;
-      if (place) {
-        place.address_components.forEach(item => {
-          if (item.types[0] === "administrative_area_level_2") {
-            this.room.district.data.name = item.long_name;
-            this.districtsList.forEach(element => {
-              if (element.name.includes(item.long_name)) {
-                this.room.district_id = element.id;
-              }
-            });
-          }
-          if (item.types[0] === "administrative_area_level_1") {
-            this.room.city.data.name = item.long_name;
-          }
-        });
-      }
-      this.usePlace(place);
-    },
-    usePlace(place) {
-      if (this.place) {
-        this.marker = {
-          lat: this.place.geometry.location.lat(),
-          lng: this.place.geometry.location.lng()
-        };
-        this.room.latitude = this.place.geometry.location.lat();
-        this.room.longitude = this.place.geometry.location.lng();
-
-        this.room.details.data.forEach(element => {
-          element.address = this.place.formatted_address;
-        });
-        this.citiesList.forEach(element => {
-          let nameCity = this.changeAlias(element.name);
-          let convertCity = this.removeSpaceString(nameCity);
-
-          let chooseCity = this.changeAlias(this.room.city.data.name);
-          let convertChooseCity = this.removeSpaceString(chooseCity);
-
-          if (convertChooseCity === convertCity) {
-            this.room.city_id = element.id;
-          }
-        });
-        this.filteredDistrict.forEach(element => {
-          if (this.room.district.name === element.name) {
-            this.room.district_id = element.id;
-          }
-        });
-      }
-    },
-    changeAlias(alias) {
-      let str = alias;
-      str = str.toLowerCase();
-      str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
-      str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
-      str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
-      str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
-      str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
-      str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
-      str = str.replace(/đ/g, "d");
-      str = str.replace(
-        /!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
-        " "
-      );
-      str = str.replace(/ + /g, " ");
-      str = str.trim();
-      return str;
-    },
-    removeSpaceString(str) {
-      let newStr = "";
-      let arr = str.split(" ");
-      arr.forEach(item => {
-        newStr += item;
-      });
-      return newStr;
-    }
   },
   created() {
     !(this.dataRoom === null) && this.setInitData();

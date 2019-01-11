@@ -495,6 +495,7 @@ export default {
         });
       } catch (error) {
         if (error) {
+          console.log(error)
           window.toastr["error"](
             "Dữ liệu phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
             "Error"
