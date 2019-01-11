@@ -4,7 +4,7 @@
       <div class="login-box">
         <div class="logo-main">
           <a href="/admin">
-            <img src="/assets/img/logo-large.png" alt="Laraspace Logo">
+            <img src="/assets/img/logo2.jpg" alt="Laraspace Logo">
           </a>
         </div>
         <router-view/>

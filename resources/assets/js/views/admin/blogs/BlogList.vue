@@ -3,28 +3,34 @@
     <div class="page-header">
       <h3 class="page-title">Bài viết</h3>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item">
+          <a href="#">Trang chủ</a>
+        </li>
         <li class="breadcrumb-item active">Danh sách bài viết</li>
       </ol>
       <div class="page-actions">
         <router-link class="btn btn-primary" :to="{ name: 'blog.create'}">
-          <i class="icon-fa icon-fa-plus" /> Viết bài
+          <i class="icon-fa icon-fa-plus"/> Viết bài
         </router-link>
       </div>
     </div>
-    
+
     <div class="mailbox">
       <div class="card">
-        <div class="card-header">
-          Bộ lọc
-        </div>
+        <div class="card-header">Bộ lọc</div>
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
               <div class="form-group row">
                 <label for="firstName" class="col-sm-2 col-form-label">Tìm kiếm</label>
                 <div class="col-sm-10">
-                  <input v-model="tags" id="firstName" type="text" class="form-control" placeholder="Nhập vào tên bài viết,tags...">
+                  <input
+                    v-model="tags"
+                    id="firstName"
+                    type="text"
+                    class="form-control"
+                    placeholder="Nhập vào tên bài viết,tags..."
+                  >
                 </div>
               </div>
             </div>
@@ -32,11 +38,25 @@
               <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label">Người viết</label>
                 <div class="col-sm-4">
-                  <multiselect id="inputUserName" v-model="user" label="name" :options="users" :searchable="true" :show-labels="false" />
+                  <multiselect
+                    id="inputUserName"
+                    v-model="user"
+                    label="name"
+                    :options="users"
+                    :searchable="true"
+                    :show-labels="false"
+                  />
                 </div>
                 <label for="email" class="col-sm-2 col-form-label">Bộ sưu tập</label>
                 <div class="col-sm-4">
-                  <multiselect id="inputUserName" v-model="category" label="name" :options="list_categories" :searchable="true" :show-labels="false" />
+                  <multiselect
+                    id="inputUserName"
+                    v-model="category"
+                    label="name"
+                    :options="list_categories"
+                    :searchable="true"
+                    :show-labels="false"
+                  />
                 </div>
               </div>
             </div>
@@ -45,34 +65,34 @@
                 <label for="email" class="col-sm-2 col-form-label">Hiển thị</label>
                 <div class="col-sm-10 mt-2">
                   <div class="form-check form-check-inline">
-                    <input 
-                      id="inlineCheckbox1" 
-                      class="form-check-input" 
-                      type="checkbox" 
+                    <input
+                      id="inlineCheckbox1"
+                      class="form-check-input"
+                      type="checkbox"
                       v-model.number="hot_blog"
-                      true-value="1"     
+                      true-value="1"
                       false-value="0"
-                      >
+                    >
                     <label class="form-check-label" for="inlineCheckbox1">Hot</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input 
-                      id="inlineCheckbox2" 
-                      class="form-check-input" 
-                      type="checkbox" 
+                    <input
+                      id="inlineCheckbox2"
+                      class="form-check-input"
+                      type="checkbox"
                       v-model.number="new_blog"
-                      true-value="1" 
+                      true-value="1"
                       false-value="0"
-                      >
+                    >
                     <label class="form-check-label" for="inlineCheckbox2">New</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input 
-                      id="inlineCheckbox3" 
-                      class="form-check-input" 
-                      type="checkbox" 
+                    <input
+                      id="inlineCheckbox3"
+                      class="form-check-input"
+                      type="checkbox"
                       v-model.number="status_blog"
-                      true-value="1" 
+                      true-value="1"
                       false-value="0"
                     >
                     <label class="form-check-label" for="inlineCheckbox3">Status</label>
@@ -82,13 +102,18 @@
             </div>
             <div class="col-md-6">
               <div class="form-group row">
-                <label for="lastName" class="col-sm-1 col-form-label"> Từ </label>
+                <label for="lastName" class="col-sm-1 col-form-label">Từ</label>
                 <div class="col-sm-5">
-                  <datepicker v-model="date_start" :format="format" input-class="form-control" />
+                  <datepicker v-model="date_start" :format="format" input-class="form-control"/>
                 </div>
-                <label for="lastName" class="col-sm-1 col-form-label"> Đến </label>
+                <label for="lastName" class="col-sm-1 col-form-label">Đến</label>
                 <div class="col-sm-5">
-                  <datepicker :disabled-dates="disabledDate" v-model="date_end" :format="format" input-class="form-control" />
+                  <datepicker
+                    :disabled-dates="disabledDate"
+                    v-model="date_end"
+                    :format="format"
+                    input-class="form-control"
+                  />
                 </div>
               </div>
             </div>
@@ -114,73 +139,103 @@
             <tr v-for="(blog,index) in blogs" :key="index" :class="{'read' : blog.status }">
               <td>{{index + 1}}</td>
               <td class="cell-content" width="160">
-                <img :src="blog.image" height="150px" width="150px"/>
+                <img :src="blog.image" height="150px" width="150px">
               </td>
               <td class="cell-content">
                 <div class="content">
                   <div class="content-name mb-2">
-                    <p>{{blog.details.data[0].title}}</p>
+                    <p>{{blog.title}}</p>
                   </div>
                   <div class="content-subject mb-2">
-                    <i class="icon-fa icon-fa-user" />&ensp; Người đăng: {{ blog.user.data.name }}
+                    <i class="icon-fa icon-fa-user"/>
+                    &ensp; Người đăng: {{ blog.user.data.name }}
                   </div>
                 </div>
               </td>
               <td width="15%" class="cell-content">
-                  <div class="content-subject mb-2" v-for="category in blog.categories.data" :key="category.details.data[0].slug">
-                    <i class="icon-fa icon-fa-tasks" />&ensp;{{ category.details.data[0].name }}
-                  </div>
+                <div
+                  class="content-subject mb-2"
+                  v-for="category in blog.categories.data"
+                  :key="category.details.data[0].slug"
+                >
+                  <i class="icon-fa icon-fa-tasks"/>
+                  &ensp;{{ category.details.data[0].name }}
+                </div>
               </td>
               <td width="10%">
-                <div class="mb-3">
-                  Bài mới
-                </div>
-                <div class="mb-3">
-                  Bài hot
-                </div>
-                <div class="mb-3">
-                  Trạng thái
-                </div>
+                <div class="mb-3">Bài mới</div>
+                <div class="mb-3">Bài hot</div>
+                <div class="mb-3">Trạng thái</div>
               </td>
               <td class="cell-fav">
                 <div class="content-subject mb-3">
-                  <button @click="updateMinorBlog('new',blog)" type="button" :class="blog.new == 1 ? 'btn btn-xs btn-icon btn-success mailbox-action' :'btn btn-xs btn-icon btn-light mailbox-action'"><i
-                      :class="blog.new == 1 ? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                  <button
+                    @click="updateMinorBlog('new',blog)"
+                    type="button"
+                    :class="blog.new == 1 ? 'btn btn-xs btn-icon btn-success mailbox-action' :'btn btn-xs btn-icon btn-light mailbox-action'"
+                  >
+                    <i :class="blog.new == 1 ? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i>
+                  </button>
                 </div>
                 <div class="content-subject mb-3">
-                  <button @click="updateMinorBlog('hot',blog)" type="button" :class="blog.hot == 1 ? 'btn btn-xs btn-icon btn-success mailbox-action' :'btn btn-xs btn-icon btn-light mailbox-action'"><i
-                      :class="blog.hot == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                  <button
+                    @click="updateMinorBlog('hot',blog)"
+                    type="button"
+                    :class="blog.hot == 1 ? 'btn btn-xs btn-icon btn-success mailbox-action' :'btn btn-xs btn-icon btn-light mailbox-action'"
+                  >
+                    <i :class="blog.hot == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i>
+                  </button>
                 </div>
                 <div class="content-subject mb-3">
-                  <button type="button" :class="blog.status == 1 ? 'btn btn-xs btn-icon btn-success mailbox-action' :'btn btn-xs btn-icon btn-danger mailbox-action'"><i
-                      :class="blog.status == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i></button>
+                  <button
+                    type="button"
+                    :class="blog.status == 1 ? 'btn btn-xs btn-icon btn-success mailbox-action' :'btn btn-xs btn-icon btn-danger mailbox-action'"
+                  >
+                    <i :class="blog.status == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i>
+                  </button>
                 </div>
               </td>
               <td width="10%" style="text-align:center">
                 <div class="btn-group mb-3" role="group" aria-label="First group">
-                  <button v-tooltip.top-center="'Chi tiết'" type="button" class="btn btn-sm btn-icon btn-outline-info">
-                    <i class="icon-fa icon-fa-search" />
+                  <button
+                    v-tooltip.top-center="'Chi tiết'"
+                    type="button"
+                    class="btn btn-sm btn-icon btn-outline-info"
+                  >
+                    <i class="icon-fa icon-fa-search"/>
                   </button>
-                  <button @click="openUpdateHostModal(blog)" v-tooltip.top-center="'Chỉnh sửa'" type="button"
-                    class="btn btn-sm btn-icon btn-outline-info">
-                    <i class="icon-fa icon-fa-pencil" />
+                  <button
+                    @click="openUpdateBlogModal(blog.id)"
+                    v-tooltip.top-center="'Chỉnh sửa'"
+                    type="button"
+                    class="btn btn-sm btn-icon btn-outline-info"
+                  >
+                    <i class="icon-fa icon-fa-pencil"/>
                   </button>
-                  <button v-tooltip.top-center="'Xóa'" type="button" class="btn btn-sm btn-icon btn-outline-info">
-                    <i class="icon-fa icon-fa-times" />
+                  <button
+                    v-tooltip.top-center="'Xóa'"
+                    type="button"
+                    class="btn btn-sm btn-icon btn-outline-info"
+                  >
+                    <i class="icon-fa icon-fa-times"/>
                   </button>
                 </div>
 
-                <button  @click="updateMinorBlog('status',blog)" v-if="blog.status == 0" class="btn btn-success btn-sm">
-                  Duyệt bài
-                </button>
-                <button @click="updateMinorBlog('status',blog)" v-else class="btn btn-danger btn-sm">
-                  Ẩn bài viết
-                </button>
+                <button
+                  @click="updateMinorBlog('status',blog)"
+                  v-if="blog.status == 0"
+                  class="btn btn-success btn-sm"
+                >Duyệt bài</button>
+                <button
+                  @click="updateMinorBlog('status',blog)"
+                  v-else
+                  class="btn btn-danger btn-sm"
+                >Ẩn bài viết</button>
               </td>
             </tr>
           </tbody>
         </table>
-        <pagination @clicked="reloadData" :total-pages="totalPages" :current-page="currentPage" />
+        <pagination @clicked="reloadData" :total-pages="totalPages" :current-page="currentPage"/>
       </div>
     </div>
   </div>
@@ -245,7 +300,7 @@ export default {
       try {
         const response = await axios.get(`blogs`, {
           params: {
-            include: "user,details,categories.details,tags",
+            include: "user,categories.details,tags",
             page: page,
             limit: 5,
             date_start: date_start,
@@ -345,6 +400,14 @@ export default {
             }
           });
       }
+    },
+    openUpdateBlogModal(blog_id) {
+      this.$router.push({
+        name: "blog.update",
+        params: {
+          blogId: blog_id
+        }
+      });
     },
     reloadData(page) {
       this.getBlogs({

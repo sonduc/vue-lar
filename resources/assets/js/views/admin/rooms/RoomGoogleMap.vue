@@ -139,7 +139,12 @@ export default {
   data() {
     return {
       q: "",
-
+      city: {
+        id: ""
+      },
+      district: {
+        id: ""
+      },
       date_start: null,
       date_end: null,
       format: "yyyy-MM-dd",
@@ -476,6 +481,7 @@ export default {
           let paginate = response.data.meta.pagination;
           this.count = paginate.count;
         }
+        // console.log('asdf' + roomSearch);
         this.markers = [];
         this.changeSearchMapStatus(0);
         roomSearch.forEach(room => {
