@@ -86,13 +86,13 @@
             <div class="col-sm-12">
                <div class="card">
                   <div class="card-body">
-                     <div class="mb-4">
+                     <!-- <div class="mb-4">
                         <h5 class="section-semi-title">
                            Biểu đồ thống kê số lượng booking theo trạng thái
                         </h5>
-                        <<!-- stacked-clustered-column-chart 
+                        <stacked-clustered-column-chart 
                            :values="booking_status"
-                        /> -->
+                        />
                      </div>
                      <div class="mb-4">
                         <h5 class="section-semi-title">
@@ -106,33 +106,113 @@
                         <h5 class="section-semi-title">
                            Biểu đồ thống kê số lượng booking theo quận huyện
                         </h5>
-                        <!-- <stacked-column-chart 
+                        <stacked-column-chart 
                            :values="booking_district"
                         />
- -->                     </div>
+                     </div>
+                     <div class="mb-4">
+                        <h5 class="section-semi-title">
+                           Biểu đồ thống kê số lượng booking theo ngày giờ
+                        </h5>
+                        <stacked-column-chart 
+                           :values="booking_type"
+                        />
+                     </div>
                      <div class="mb-4">
                         <h5 class="section-semi-title">
                            Biểu đồ thống kê doanh thu của booking theo trạng thái thanh toán và trạng thái booking
                         </h5>
-                        <!-- <stacked-clustered-column-chart 
+                        <stacked-clustered-column-chart 
                            :values="booking_revenue"
-                        /> -->
+                        />
+                     </div>
+                     <div class="mb-4">
+                        <h5 class="section-semi-title">
+                           Biểu đồ thống kê số lượng booking theo kiểu phòng
+                        </h5>
+                        <stacked-column-chart 
+                           :values="booking_room_type"
+                        />
+                     </div>
+                     <div class="mb-4">
+                        <h5 class="section-semi-title">
+                           Biểu đồ thống kê số lượng booking theo giới tính
+                        </h5>
+                        <stacked-column-chart 
+                           :values="booking_sex"
+                        />
+                     </div>
+                     <div class="mb-4">
+                        <h5 class="section-semi-title">
+                           Biểu đồ thống kê số lượng booking theo khoảng giá
+                        </h5>
+                        <stacked-column-chart 
+                           :values="booking_price_range"
+                        />
+                     </div>
+                     <div class="mb-4">
+                        <h5 class="section-semi-title">
+                           Biểu đồ thống kê số lượng booking theo khoảng tuổi
+                        </h5>
+                        <stacked-column-chart 
+                           :values="booking_age_range"
+                        />
+                     </div>
+                     <div class="mb-4">
+                        <h5 class="section-semi-title">
+                           Biểu đồ thống kê số lượng booking theo nguồn đặt phòng
+                        </h5>
+                        <stacked-column-chart 
+                           :values="booking_source"
+                        />
+                     </div>
+                     <div class="mb-4">
+                        <h5 class="section-semi-title">
+                           Biểu đồ thống kê số lượng booking bị hủy theo các lý do hủy phòng
+                        </h5>
+                        <stacked-column-chart 
+                           :values="booking_cancel"
+                        />
+                     </div>
+                     <div class="mb-4">
+                        <h5 class="section-semi-title">
+                           Biểu đồ thống kê số lượng phòng theo loại phòng
+                        </h5>
+                        <stacked-column-chart 
+                           :values="room_type"
+                        />
+                     </div>
+                     <div class="mb-4">
+                        <h5 class="section-semi-title">
+                           Biểu đồ thống kê số lượng phòng theo tỉnh thành
+                        </h5>
+                        <stacked-column-chart 
+                           :values="room_district"
+                        />
                      </div>
                      <div class="mb-4">
                         <h5 class="section-semi-title">
                            Biểu đồ thống kê Top phòng có booking nhiều nhất
                         </h5>
-                        <!-- <pie-chart-with-legend 
+                        <pie-chart-with-legend 
                            :values="room_top_booking"
-                        /> -->
+                        />
                      </div>
                      <div class="mb-4">
                         <h5 class="section-semi-title">
                            Biểu đồ thống kê Top phòng có booking nhiều nhất theo loại phòng
                         </h5>
-                        <!-- <pie-chart-with-legend 
+                        <pie-chart-with-legend 
                            :values="room_type_top_booking"
-                        /> -->
+                        />
+                     </div> -->
+                     <div class="mb-4">
+                        <h5 class="section-semi-title">
+                           Biểu đồ thống kê doanh thu của booking theo phòng tự quản lý
+                        </h5>
+                        <stacked-bar-chart 
+                           :values="booking_manager_revenue"
+                        />
                      </div>
                   </div>
                </div>
@@ -150,6 +230,7 @@
    import StackedClusteredColumnChart from '../../../components/amcharts/StackedClusteredColumnChart.vue';
    import PieChartWithLegend from '../../../components/amcharts/PieChartWithLegend.vue';
    import StackedColumnChart from '../../../components/amcharts/StackedColumnChart.vue';
+   import StackedBarChart from '../../../components/amcharts/StackedBarChart.vue';
    import ColumnChart from '../../../components/fusioncharts/ColumnChart.vue';
 
    export default {
@@ -158,14 +239,16 @@
          StackedClusteredColumnChart,
          PieChartWithLegend,
          StackedColumnChart,
+         StackedBarChart,
          ColumnChart,
       },
       data () {
          return {
             permission: "statistical.view",
-            date_start: '2018-09-12',
-            date_end: '2018-12-12',
+            date_start: '2018-08-01',
+            date_end: '2019-08-12',
             view:"month",
+            status:4,
             format: "yyyy-MM-dd",
             disabledDateEnd: {
               to: ""
@@ -173,9 +256,19 @@
             booking_status:null,
             booking_city:null,
             booking_district:null,
+            booking_type:null,
             booking_revenue:null,
+            booking_room_type:null,
+            booking_sex:null,
+            booking_price_range:null,
+            booking_age_range:null,
+            booking_source:null,
+            booking_cancel:null,
+            room_type:null,
+            room_district:null,
             room_top_booking:null,
             room_type_top_booking:null,
+            booking_manager_revenue:null,
          }
       },
       mounted() {
@@ -186,11 +279,21 @@
                   this.$router.push("/permission-denied-403");
                } else {
                      // this.getBookingStatus({});
-                     this.getBookingCity({});
+                     // this.getBookingCity({});
                      // this.getBookingDistrict({});
+                     // this.getBookingType({});
                      // this.getBookingRevenue({});
+                     // this.getBookingRoomType({});
+                     // this.getBookingSex({});
+                     // this.getBookingPriceRange({});
+                     // this.getBookingAgeRange({});
+                     // this.getBookingSource({});
+                     // this.getBookingCancel({});
+                     // this.getRoomType({});
+                     // this.getRoomDistrict({});
                      // this.getRoomTopBooking({});
                      // this.getRoomTypeTopBooking({});
+                     this.getBookingManagerRevenue({});
                   }
                });
             }
@@ -208,9 +311,18 @@
          },
          applyFilter(){
             // this.getBookingStatus({});
-            this.getBookingCity({});
+            // this.getBookingCity({});
             // this.getBookingDistrict({});
+            // this.getBookingType({});
             // this.getBookingRevenue({});
+            // this.getBookingRoomType({});
+            // this.getBookingSex({});
+            // this.getBookingPriceRange({});
+            // this.getBookingAgeRange({});
+            // this.getBookingSource({});
+            // this.getBookingCancel({});
+            // this.getRoomType({});
+            // this.getRoomDistrict({});
             // this.getRoomTopBooking({});
             // this.getRoomTypeTopBooking({});
          },
@@ -253,9 +365,14 @@
                      date_start:this.date_start,
                      date_end:this.date_end,
                      view:this.view,
+                     status:this.status,
                   }
                });
-               this.booking_city = response.data.data;
+               let data = {
+                  data: response.data.data,
+                  dataFields:'createdAt',
+               };
+               this.booking_city = data;
             } catch (error) {
                if (error) {
                   window.toastr["error"]("There was an error", "Error");
@@ -271,7 +388,31 @@
                      view:this.view,
                   }
                });
-               this.booking_district = response.data.data;
+               let data = {
+                  data: response.data.data,
+                  dataFields:'createdAt',
+               };
+               this.booking_district = data;
+            } catch (error) {
+               if (error) {
+                  window.toastr["error"]("There was an error", "Error");
+               }
+            }
+         },
+         async getBookingType({}) {
+            try {
+               const response = await axios.get(`statisticals/booking-type`,{
+                  params:{
+                     date_start:this.date_start,
+                     date_end:this.date_end,
+                     view:this.view,
+                  }
+               });
+               let data = {
+                  data: response.data.data,
+                  dataFields:'createdAt',
+               };
+               this.booking_type = data;
             } catch (error) {
                if (error) {
                   window.toastr["error"]("There was an error", "Error");
@@ -299,6 +440,166 @@
                };
                this.booking_revenue = data;
                // console.log(response);
+            } catch (error) {
+               if (error) {
+                  window.toastr["error"]("There was an error", "Error");
+               }
+            }
+         },
+         async getBookingRoomType({}) {
+            try {
+               const response = await axios.get(`statisticals/count-booking-room-type`,{
+                  params:{
+                     date_start:this.date_start,
+                     date_end:this.date_end,
+                     view:this.view,
+                  }
+               });
+               let data = {
+                  data: response.data.data,
+                  dataFields:'createdAt',
+               };
+               this.booking_room_type = data;
+            } catch (error) {
+               if (error) {
+                  window.toastr["error"]("There was an error", "Error");
+               }
+            }
+         },
+         async getBookingSex({}) {
+            try {
+               const response = await axios.get(`statisticals/booking-sex`,{
+                  params:{
+                     date_start:this.date_start,
+                     date_end:this.date_end,
+                     view:this.view,
+                  }
+               });
+               let data = {
+                  data: response.data.data,
+                  dataFields:'createdAt',
+               };
+               this.booking_sex = data;
+            } catch (error) {
+               if (error) {
+                  window.toastr["error"]("There was an error", "Error");
+               }
+            }
+         },
+         async getBookingPriceRange({}) {
+            try {
+               const response = await axios.get(`statisticals/booking-price-range`,{
+                  params:{
+                     date_start:this.date_start,
+                     date_end:this.date_end,
+                     view:this.view,
+                  }
+               });
+               let data = {
+                  data: response.data.data,
+                  dataFields:'createdAt',
+               };
+               this.booking_price_range = data;
+            } catch (error) {
+               if (error) {
+                  window.toastr["error"]("There was an error", "Error");
+               }
+            }
+         },
+         async getBookingAgeRange({}) {
+            try {
+               const response = await axios.get(`statisticals/booking-age-range`,{
+                  params:{
+                     date_start:this.date_start,
+                     date_end:this.date_end,
+                     view:this.view,
+                  }
+               });
+               let data = {
+                  data: response.data.data,
+                  dataFields:'createdAt',
+               };
+               this.booking_age_range = data;
+            } catch (error) {
+               if (error) {
+                  window.toastr["error"]("There was an error", "Error");
+               }
+            }
+         },
+         async getBookingSource({}) {
+            try {
+               const response = await axios.get(`statisticals/booking-source`,{
+                  params:{
+                     date_start:this.date_start,
+                     date_end:this.date_end,
+                     view:this.view,
+                  }
+               });
+               let data = {
+                  data: response.data.data,
+                  dataFields:'createdAt',
+               };
+               this.booking_source = data;
+            } catch (error) {
+               if (error) {
+                  window.toastr["error"]("There was an error", "Error");
+               }
+            }
+         },
+         async getBookingCancel({}) {
+            try {
+               const response = await axios.get(`statisticals/booking-cancel`,{
+                  params:{
+                     date_start:this.date_start,
+                     date_end:this.date_end,
+                     view:this.view,
+                  }
+               });
+               let data = {
+                  data: response.data.data,
+                  dataFields:'createdAt',
+               };
+               this.booking_cancel = data;
+            } catch (error) {
+               if (error) {
+                  window.toastr["error"]("There was an error", "Error");
+               }
+            }
+         },
+         async getRoomType({}) {
+            try {
+               const response = await axios.get(`statisticals/room-type`,{
+                  params:{
+                     date_start:this.date_start,
+                     date_end:this.date_end,
+                     view:this.view,
+                  }
+               });
+               let data = {
+                  data: response.data.data,
+                  dataFields:'createdAt',
+               };
+               this.room_type = data;
+            } catch (error) {
+               if (error) {
+                  window.toastr["error"]("There was an error", "Error");
+               }
+            }
+         },
+         async getRoomDistrict({}) {
+            try {
+               const response = await axios.get(`statisticals/room-district`,{
+                  params:{
+                     date_start:this.date_start,
+                     date_end:this.date_end,
+                     view:this.view,
+                  }
+               });
+               let data = {
+                  data: response.data.data,
+                  dataFields:'createdAt',
+               };
+               this.room_district = data;
             } catch (error) {
                if (error) {
                   window.toastr["error"]("There was an error", "Error");
@@ -343,6 +644,28 @@
                };
                this.room_type_top_booking = data;
                
+            } catch (error) {
+               if (error) {
+                  window.toastr["error"]("There was an error", "Error");
+               }
+            }
+         },
+         async getBookingManagerRevenue({}) {
+            try {
+               const response = await axios.get(`statisticals/booking-manager-revenue`,{
+                  params:{
+                     date_start:this.date_start,
+                     date_end:this.date_end,
+                     view:this.view,
+                  }
+               });
+               let data = {
+                  data: response.data.data,
+                  ValueDataFields:'total_booking',
+                  // CategoryDataFields:"room_type_txt",
+               };
+               this.booking_manager_revenue = data;
+               // console.log(response);
             } catch (error) {
                if (error) {
                   window.toastr["error"]("There was an error", "Error");

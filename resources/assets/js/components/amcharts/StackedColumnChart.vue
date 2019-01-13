@@ -16,25 +16,25 @@
       },
       props: {
          values: {
-            type: Array,
-            default: Array
+            type: Object,
+            default: Object
          }
       },
       watch: {
          values: {
             handler(val) {
                if (val !== null) {
-                  this.Axes();
+                  this.Axes(val.data,val.dataFields);
                }
             }
          }
       },
       methods: {
-         Axes() {
+         Axes(data,dataFields) {
             // Create chart instance
             let chart = am4core.create(this.$refs.chartdiv, am4charts.XYChart);
             // Add data
-            this.values.forEach(element => {
+            data.forEach(element => {
                element.forEach(e => {
                   chart.data.push(e);
                });
@@ -42,7 +42,7 @@
             console.log(chart.data);
             // Create axes
             let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-            categoryAxis.dataFields.category = "createdAt";
+            categoryAxis.dataFields.category = dataFields;
             categoryAxis.renderer.grid.template.location = 0;
 
             let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
@@ -57,7 +57,7 @@
                var series = chart.series.push(new am4charts.ColumnSeries());
                series.name = name;
                series.dataFields.valueY = field;
-               series.dataFields.categoryX = "createdAt";
+               series.dataFields.categoryX = dataFields;
                series.sequencedInterpolation = true;
 
                // Make it stacked
@@ -84,18 +84,16 @@
             // console.log(data_arr);
             // Remove createdAt keys
             var remain_field = _.remove(data_arr, function(n) {
-               return n !== "createdAt";
+               return n !== dataFields;
             });
 
             //Unique City name keys
             let city_field = _.intersection(remain_field);
-            // console.log(city_field)
             //Create series
             city_field.forEach(element => {
                createSeries(element, element);
             });
 
-            // console.log(city_field)
             // Legend
             chart.legend = new am4charts.Legend();
          }
@@ -112,6 +110,6 @@
 <style scoped>
 .hello {
    width: 100%;
-   height: 500px;
+   height: 600px;
 }
 </style>
