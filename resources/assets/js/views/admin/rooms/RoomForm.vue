@@ -64,7 +64,7 @@
                             <input
                               type="text"
                               name="room.number_bed"
-                              v-validate="step==0 ? 'required|numeric|min_value:1':''"
+                              v-validate="step==0 ? 'required|numeric|min_value:1|max_value:100':''"
                               data-vv-as="Số giường"
                               v-model.number="room.number_bed"
                               class="form-control"
@@ -82,7 +82,7 @@
                             <input
                               type="text"
                               name="room.max_guest"
-                              v-validate="step==0 ? 'required|numeric|min_value:1':''"
+                              v-validate="step==0 ? 'required|numeric|min_value:1|max_value:100':''"
                               data-vv-as="Số khách tối đa"
                               v-model.number="room.max_guest"
                               class="form-control"
@@ -98,7 +98,8 @@
                             <input
                               type="text"
                               name="room.number_room"
-                              v-validate="step==0 ? 'required|numeric|min_value:1':''"
+                              v-validate="step==0 ?
+                                'required|numeric|min_value:1|max_value:100':''"
                               data-vv-as="Số phòng ngủ"
                               v-model.number="room.number_room"
                               class="form-control"
@@ -169,6 +170,7 @@
                                 <i class="icon-fa icon-fa-plus"/> Thêm tiếng anh
                               </button>
                               <button
+                                :disabled="currentTab === 'English'"
                                 type="button"
                                 v-else
                                 @click="deleteLangEnglishForm"
@@ -179,7 +181,10 @@
                               </button>
                             </div>
                           </div>
-                          <tabs class="tabs-default">
+                          <tabs
+                            :options="{ useUrlFragment: false }"
+                            class="tabs-default"
+                            @changed="tabChanged">
                             <tab
                               :id="detail.id"
                               :name="detail.lang === 'vi' ? 'Việt Nam':'English'"
@@ -199,7 +204,7 @@
                                     v-model="room.details.data[index].name"
                                     :name="'detail.name' + index"
                                     v-validate="step==0 ? { required:true, min:10, max:255,
-                                  regex:/^([a-zA-Z0-9ạảắặằẳẵấậầẩẫẹẻẽếệềểễịỉĩọỏõốộồổỗơớợờởỡụủũưứựừửữỵỳỷỹđ\uooCO-\u017F\s]+)$/ }:''"
+                                    regex:/^([a-zA-Z0-9ạảắặằẳẵấậầẩẫẹẻẽếệềểễịỉĩọỏõốộồổỗơớợờởỡụủũưứựừửữỵỳỷỹđ\uooCO-\u017F\s]+)$/ }:''"
                                     data-vv-as="Tên phòng"
                                     class="form-control"
                                   >
@@ -300,7 +305,7 @@
                           <input
                             type="text"
                             name="room.max_additional_guest"
-                            v-validate="step==1 ? 'required|numeric|min:1':''"
+                            v-validate="step==1 ? 'required|numeric|min:1|max_value:100':''"
                             data-vv-as="Số khách thêm tối đa"
                             v-model.number="room.max_additional_guest"
                             class="form-control"
@@ -316,14 +321,15 @@
                             {{errors.has('room.price_charge_guest')
                             ? errors.first('room.price_charge_guest') : 'Giá tiền tăng cho mỗi khách *'}}
                           </label>
-                          <input
-                            type="text"
-                            name="room.price_charge_guest"
+                          <vue-numeric
+                            separator="."
+                            v-model="room.price_charge_guest"
                             v-validate="step==1 ? 'required|numeric':''"
                             data-vv-as="Giá tiền tăng cho mỗi khách"
-                            v-model.number="room.price_charge_guest"
                             class="form-control"
+                            name="room.price_charge_guest"
                           >
+                          </vue-numeric>
                         </div>
                       </div>
                     </div>
@@ -357,14 +363,15 @@
                             {{errors.has('room.price_hour')
                             ? errors.first('room.price_hour') : 'Giá theo giờ *'}}
                           </label>
-                          <input
-                            type="text"
-                            name="room.price_hour"
-                            v-validate="step==1 ? 'required|numeric':''"
-                            data-vv-as="Giá theo giờ"
-                            v-model.number="room.price_hour"
+                          <vue-numeric
+                            separator="."
+                            v-model="room.price_hour"
                             class="form-control"
+                            data-vv-as="Giá theo giờ"
+                            v-validate="step==1 ? 'required|numeric':''"
+                            name="room.price_hour"
                           >
+                          </vue-numeric>
                         </div>
                       </div>
                       <div
@@ -376,14 +383,15 @@
                             {{errors.has('room.price_day')
                             ? errors.first('room.price_day') : 'Giá theo ngày *'}}
                           </label>
-                          <input
-                            type="text"
-                            name="room.price_day"
-                            v-validate="step==1 ? 'required|numeric':''"
-                            data-vv-as="Giá theo ngày"
-                            v-model.number="room.price_day"
+                          <vue-numeric
+                            separator="."
+                            v-model="room.price_day"
                             class="form-control"
+                            data-vv-as="Giá theo ngày"
+                            v-validate="step==1 ? 'required|numeric':''"
+                            name="room.price_day"
                           >
+                          </vue-numeric>
                         </div>
                       </div>
                     </div>
@@ -437,14 +445,15 @@
                             {{errors.has('room.optional_prices.price_day')
                             ? errors.first('room.optional_prices.price_day') : 'Giá phòng theo ngày *'}}
                           </label>
-                          <input
-                            type="text"
-                            name="room.optional_prices.price_day"
-                            v-validate="step==1 ? 'required|numeric':''"
-                            data-vv-as="Giá phòng theo ngày"
-                            v-model.number="room.optional_prices.price_day"
+                          <vue-numeric
+                            separator="."
+                            v-model="room.optional_prices.price_day"
                             class="form-control"
+                            data-vv-as="Giá phòng theo ngày"
+                            v-validate="step==1 ? 'required|numeric':''"
+                            name="room.optional_prices.price_day"
                           >
+                          </vue-numeric>
                         </div>
                       </div>
                       <div
@@ -459,14 +468,23 @@
                             {{errors.has('room.optional_prices.price_hour')
                             ? errors.first('room.optional_prices.price_hour') : 'Giá phòng theo giờ *'}}
                           </label>
-                          <input
+                          <vue-numeric
+                            separator="."
+                            v-model="room.optional_prices.price_hour"
+                            class="form-control"
+                            data-vv-as="Giá phòng theo giờ"
+                            v-validate="step==1 ? 'required|numeric':''"
+                            name="room.optional_prices.price_hour"
+                          >
+                          </vue-numeric>
+                          <!-- <input
                             type="text"
                             name="room.optional_prices.price_hour"
                             v-validate="step==1 ? 'required|numeric':''"
                             data-vv-as="Giá phòng theo giờ"
                             v-model.number="room.optional_prices.price_hour"
                             class="form-control"
-                          >
+                          > -->
                         </div>
                       </div>
                       <div
@@ -481,14 +499,23 @@
                             {{errors.has('room.optional_prices.price_after_hour')
                             ? errors.first('room.optional_prices.price_after_hour') : 'Giá phòng khi ở thêm giờ *'}}
                           </label>
-                          <input
+                          <vue-numeric
+                            separator="."
+                            v-model="room.optional_prices.price_after_hour"
+                            class="form-control"
+                            data-vv-as="Giá phòng khi ở thêm giờ"
+                            v-validate="step==1 ? 'required|numeric':''"
+                            name="room.optional_prices.price_after_hour"
+                          >
+                          </vue-numeric>
+                          <!-- <input
                             type="text"
                             name="room.optional_prices.price_after_hour"
                             v-validate="step==1 ? 'required|numeric':''"
                             data-vv-as="Giá phòng khi ở thêm giờ"
                             v-model.number="room.optional_prices.price_after_hour"
                             class="form-control"
-                          >
+                          > -->
                         </div>
                       </div>
                     </div>
@@ -550,14 +577,23 @@
                             {{errors.has(`weekdays[${index}]price_day`)
                             ? errors.first(`weekdays[${index}]price_day`) : 'Giá theo ngày *'}}
                           </label>
-                          <input
+                          <vue-numeric
+                            separator="."
+                            v-model="room.weekday_price[index].price_day"
+                            class="form-control"
+                            data-vv-as="Giá theo ngày"
+                            v-validate="step==1 ? 'required|numeric':''"
+                            :name="`weekdays[${index}]price_day`"
+                          >
+                          </vue-numeric>
+                          <!-- <input
                             type="text"
                             :name="`weekdays[${index}]price_day`"
                             v-validate="step==1 ? 'required|numeric':''"
                             data-vv-as="Giá theo ngày"
                             v-model.number="room.weekday_price[index].price_day"
                             class="form-control"
-                          >
+                          > -->
                         </div>
                       </div>
                       <div
@@ -571,14 +607,23 @@
                             {{errors.has(`weekdays[${index}]price_hour`)
                             ? errors.first(`weekdays[${index}]price_hour`) : 'Giá theo giờ *'}}
                           </label>
-                          <input
+                          <vue-numeric
+                            separator="."
+                            v-model="room.weekday_price[index].price_hour"
+                            class="form-control"
+                            data-vv-as="Giá theo giờ"
+                            v-validate="step==1 ? 'required|numeric':''"
+                            :name="`weekdays[${index}]price_hour`"
+                          >
+                          </vue-numeric>
+                          <!-- <input
                             type="text"
                             :name="`weekdays[${index}]price_hour`"
                             v-validate="step==1 ? 'required|numeric':''"
                             data-vv-as="Giá theo giờ"
                             v-model.number="room.weekday_price[index].price_hour"
                             class="form-control"
-                          >
+                          > -->
                         </div>
                       </div>
                       <div
@@ -592,14 +637,23 @@
                             {{errors.has(`weekdays[${index}]price_after_hour`)
                             ? errors.first(`weekdays[${index}]price_after_hour`) : 'Giá khi ở thêm giờ *'}}
                           </label>
-                          <input
+                          <vue-numeric
+                            separator="."
+                            v-model="room.weekday_price[index].price_after_hour"
+                            class="form-control"
+                            data-vv-as="Giá khi ở thêm giờ"
+                            v-validate="step==1 ? 'required|numeric':''"
+                            :name="`weekdays[${index}]price_after_hour`"
+                          >
+                          </vue-numeric>
+                          <!-- <input
                             type="text"
                             :name="`weekdays[${index}]price_after_hour`"
                             v-validate="step==1 ? 'required|numeric':''"
                             data-vv-as="Giá khi ở thêm giờ"
                             v-model.number="room.weekday_price[index].price_after_hour"
                             class="form-control"
-                          >
+                          > -->
                         </div>
                       </div>
 
@@ -781,8 +835,10 @@
                         <input
                           type="text"
                           id="addressMap"
-                          name="detail.address"
                           v-model="addressMap"
+                          v-validate="step==4 ?'required':''"
+                          name="detail.address"
+                          data-vv-as="Địa chỉ phòng"
                           class="form-control"
                           placeholder="Nhập địa điểm..."
                           @click="doAutocomplete()"
@@ -1007,17 +1063,16 @@ export default {
             name: null
           }
         },
-        room_time_blocks: [],
         weekday_price: [],
         optional_prices: {
           days: [],
-          price_day: null,
-          price_hour: null,
-          price_after_hour: null,
+          price_day: 0,
+          price_hour: 0,
+          price_after_hour: 0,
           status: 1
         },
         max_additional_guest: null,
-        price_charge_guest: null,
+        price_charge_guest: 0,
 
         price_day: 0,
         price_hour: 0,
@@ -1029,9 +1084,9 @@ export default {
         room_type_txt: "Nhà riêng",
         rent_type: 2,
         rent_type_txt: "Theo ngày",
-        number_bed: null,
-        number_room: null,
-        max_guest: null,
+        number_bed: 1,
+        number_room: 1,
+        max_guest: 1,
         status: 0,
         status_txt: "Chưa xác nhận",
         city_id: null,
@@ -1117,6 +1172,8 @@ export default {
         lng: 0
       },
       loadedImages: false,
+      isActive: true,
+      currentTab: null,
     };
   },
   computed: {
@@ -1297,11 +1354,11 @@ export default {
             date.setTime(date.getTime() - 7 * 60 * 60 * 1000);
             this.specialDays.push(date);
             this.room.optional_prices.days.push(item.day);
-            this.room.optional_prices.price_day === null &&
+            this.room.optional_prices.price_day == 0 &&
               (this.room.optional_prices.price_day = item.price_day);
-            this.room.optional_prices.price_hour === null &&
+            this.room.optional_prices.price_hour == 0 &&
               (this.room.optional_prices.price_hour = item.price_hour);
-            this.room.optional_prices.price_after_hour === null &&
+            this.room.optional_prices.price_after_hour == 0 &&
               (this.room.optional_prices.price_after_hour =
                 item.price_after_hour);
           }
@@ -1367,6 +1424,9 @@ export default {
         };
         reader.readAsDataURL(blob);
       })
+    },
+    tabChanged (selectedTab) {
+      this.currentTab = selectedTab.tab.name;
     },
     vmountedPost() {
       let arrImage = this.room.images;
@@ -1678,6 +1738,9 @@ export default {
     deleteLangEnglishForm() {
       let index = this.room.details.data.findIndex(x => x.lang == "en");
       this.room.details.data.splice(index, 1);
+      // let elem = this.$refs.myTab.$el;
+      // console.log(elem)
+      // elem.click();
     },
   },
   created() {

@@ -69,14 +69,15 @@
                     {{errors.has('coupons.max_discount')
                     ? errors.first('coupons.max_discount') : 'Giảm tối đa (VNĐ) *'}}
                   </label>
-                  <input
-                    type="number"
-                    name="coupons.max_discount"
-                    v-model.number="coupons.max_discount"
-                    v-validate="'min_value:0'"
-                    data-vv-as="Giá tiền giảm tối đa"
+                   <vue-numeric
+                    separator="."
+                    v-model="coupons.max_discount"
                     class="form-control"
+                    data-vv-as="Giá tiền giảm tối đa"
+                    v-validate="'min_value:0'"
+                    name="coupons.max_discount"
                   >
+                  </vue-numeric>
                 </div>
               </div>
               <br>
@@ -658,7 +659,12 @@
               <div class="form-group row">
                 <label for="pasword" class="col-sm-3 col-form-label">Áp dụng cho giá booking trên:</label>
                 <div class="col-sm-8 min-price">
-                  <input type="text" v-model="coupons.settings.min_price" class="form-control">
+                  <vue-numeric
+                    separator="."
+                    v-model="coupons.settings.min_price"
+                    class="form-control"
+                  >
+                  </vue-numeric>
                 </div>
                 <div class="col-sm-1 custom-checkbox-all custom-control custom-checkbox">
                   <input
