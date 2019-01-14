@@ -217,7 +217,13 @@
                           <p>Giảm giá</p>
                         </div>
                         <div class="content-subject">
-                          <p>Tổng tiền</p>
+                          <p>Khuyến mãi</p>
+                        </div>
+                        <div class="content-subject">
+                          <p>Phụ thu</p>
+                        </div>
+                        <div class="content-subject">
+                          <p style="color: red;">Tổng tiền</p>
                         </div>
                       </div>
                     </td>
@@ -230,7 +236,13 @@
                           <p>{{booking.price_discount | formatNumber}}</p>
                         </div>
                         <div class="content-subject">
-                          <p>{{booking.booking_fee | formatNumber}}</p>
+                          <p>{{booking.coupon_discount | formatNumber}}</p>
+                        </div>
+                        <div class="content-subject">
+                          <p>{{booking.additional_fee | formatNumber}}</p>
+                        </div>
+                        <div class="content-subject">
+                          <p style="color: red;">{{booking.total_fee | formatNumber}}</p>
                         </div>
                       </div>
                     </td>

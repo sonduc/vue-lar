@@ -1,8 +1,13 @@
 <template>
   <div class="main-content">
     <div class="row">
-      <div class="form__group">
-      </div>
+      <button class="btn-back" @click="returnRoomList()">
+        <i style="padding-right: 5px;"
+          class="icon-fa icon-fa-undo"/>
+          Quay lại danh sách phòng
+      </button>
+    </div>
+    <div class="row">
       <div class="col-sm-7" v-if="roomDetail"
         style="padding-right: 243px; text-align: center;">
         <h2>{{roomDetail.details.data[0].name}}</h2>
@@ -24,7 +29,6 @@
             </div>
           </div>
           <div class="col-sm-7" style="margin-left: 60px;">
-            <!-- <label>Where do you go out at night ?</label><br/> -->
             <label
               :style="errors.has('address' + index) ? 'color:red;' : ''">
                 {{errors.has('address' + index)
@@ -95,12 +99,35 @@
           style="width: 100%; height: 100%"
           @idle="onIdle"
         >
-          <gmap-marker v-for="(marker, index) in markers"
+          <!-- <gmap-marker v-for="(marker, index) in markers"
             :key="index"
             :position="marker.position"
             :clickable="true"
             :icon="getIcon(marker)"
-          />
+          /> -->
+          <gmap-marker
+            v-if="isLoaded"
+            v-for="(place, index) in placeList"
+            :key="index"
+            :position="{
+              lat: parseFloat(place.latitude),
+              lng: parseFloat(place.longitude)
+            }"
+            :clickable="true"
+            :icon="getIcon(place)">
+            <gmap-info-window
+              :options="infoOptions"
+              :position="{
+                lat: parseFloat(place.latitude),
+                lng: parseFloat(place.longitude)
+              }"
+              :opened="true"
+              @closeclick="infoWinOpen=false">
+              <div style="width:190px">
+                <p>Địa chỉ: {{place.name}}</p>
+              </div>
+            </gmap-info-window>
+          </gmap-marker>
           <gmap-marker
             v-if="roomDetail"
             label="★"
@@ -109,14 +136,23 @@
               lng: parseFloat(roomDetail.longitude)
             }"
           />
-          <gmap-info-window
-            :options="infoOptions"
-            :position="infoWindowPos"
-            :opened="infoWinOpen"
-            @closeclick="infoWinOpen=false"
+          <gmap-marker
+            v-if="isUpdate == 0"
+            v-for="(marker, idx) in markers"
+            :key="'m'+ idx"
+            :position="marker.position"
+            :clickable="true"
+            :icon="getIcon(marker)"
           >
-            <div v-html="infoContent"></div>
-          </gmap-info-window>
+            <gmap-info-window
+              :options="infoOptions"
+              :position="infoWindowPos"
+              :opened="infoWinOpen"
+              @closeclick="infoWinOpen=false"
+            >
+              <div style="width:190px;" v-html="infoContent"></div>
+            </gmap-info-window>
+          </gmap-marker>
         </gmap-map>
       </div>
     </div>
@@ -151,8 +187,8 @@ export default {
       guideBookList: [],
       infoOptions: {
         pixelOffset: {
-          width: 0,
-          height: -30
+          width: -10,
+          height: 7
         },
         disableAutoPan: true
       },
@@ -193,10 +229,10 @@ export default {
         }
       }
     },
-    place: {
+    currentPlace: {
       handler(val) {
         if(val) {
-          this.showInfoWindow(this.currentMarker)
+          this.showInfoWindow(val)
         }
         else {
           this.infoWinOpen = false;
@@ -234,18 +270,18 @@ export default {
       this.usePlace(place);
     },
     usePlace(palce) {
-      if (this.place) {
+      if (this.currentPlace) {
         this.markers = [],
         this.markers.push({
           position: {
-            lat: this.place.geometry.location.lat(),
-            lng: this.place.geometry.location.lng(),
+            lat: this.currentPlace.geometry.location.lat(),
+            lng: this.currentPlace.geometry.location.lng(),
           }
         })
         this.currentMarker = this.markers[0];
         this.infoWinOpen = true;
-        this.placeRecommendation.latitude = this.place.geometry.location.lat();
-        this.placeRecommendation.longitude = this.place.geometry.location.lng();
+        this.placeRecommendation.latitude = this.currentPlace.geometry.location.lat();
+        this.placeRecommendation.longitude = this.currentPlace.geometry.location.lng();
         this.placeRecommendation.name = this.currentAddress;
       }
     },
@@ -253,11 +289,14 @@ export default {
       let svg = [
           '<?xml version="1.0"?>',
           '<svg width="40px" height="40px" version="1.1" xmlns="http://www.w3.org/2000/svg">',
-          '<circle cx="20" cy="20" r="16" stroke="green" stroke-width="1" fill="red" />',
+          '<circle cx="10" cy="10" r="8" stroke="green" stroke-width="1" fill="red" />',
           "</svg>"
         ].join("\n");
       let myIcon = {
         url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
+        scaledSize: new google.maps.Size(40, 40),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(10, 10)
       };
       return myIcon;
     },
@@ -269,9 +308,17 @@ export default {
         };
       });
     },
-    showInfoWindow: function(marker) {
-      this.infoWindowPos = marker.position;
-      this.infoContent = this.placeRecommendation.name;
+    showInfoWindow(place) {
+      if(this.isUpdate == 1) {
+        this.infoWindowPos.lat = parseFloat(place.latitude);
+        this.infoWindowPos.lng = parseFloat(place.longitude);
+        this.infoContent = this.placeRecommendation.name;
+      }
+      else {
+        this.infoWindowPos.lat = parseFloat(this.currentPlace.geometry.location.lat());
+        this.infoWindowPos.lng = parseFloat(this.currentPlace.geometry.location.lng());
+        this.infoContent = this.placeRecommendation.name;
+      }
     },
     showInfoPlace(place) {
       this.isUpdate = 1;
@@ -300,9 +347,9 @@ export default {
         lat: parseFloat(place.latitude),
         lng: parseFloat(place.longitude)
       },
-      this.infoContent = place.name;
-      this.infoWinOpen = true;
-      this.placeRecommendation.name = this.currentAddress;
+      this.infoContent = null;
+      this.infoWinOpen = false;
+      this.placeRecommendation.name = this.currentPlace.name;
       this.placeRecommendation.description = place.description;
       this.placeRecommendation.latitude = place.latitude;
       this.placeRecommendation.longitude = place.longitude;
@@ -316,11 +363,12 @@ export default {
       this.description.splice(index + 1, 1);
 
       this.isUpdate = 0;
-      this.place = null;
     },
     doAutocomplete(index) {
-      if(this.currentPlace && (index + 1) != this.currentPlace.guidebook_category_id) {
+      if(this.currentAddress == null) {
         this.isUpdate = 0;
+        this.addressMap[index] = "";
+        this.description[index] = "";
       }
       let element = document.getElementById('addressMap'+ index)
       this.autocomplete = new google.maps.places.Autocomplete(element)
@@ -340,6 +388,7 @@ export default {
         this.currentAddress = address;
         this.addressMap[index] = address;
         this.place = place;
+        this.currentPlace = place;
         this.usePlace(place);
       });
       this.addressMap.forEach((address, idx) => {
@@ -351,6 +400,11 @@ export default {
           this.description.splice(idx + 1, 1);
         }
       })
+    },
+    returnRoomList() {
+      this.$router.push({
+        name: "room.list"
+      });
     },
     async createPlace(category_id, index) {
       try {
@@ -374,6 +428,9 @@ export default {
               this.description.splice(index + 1, 1);
 
               this.place = null;
+              this.currentAddress = null;
+              this.infoContent = null;
+              this.infoWinOpen = false;
               this.getRoomById();
               this.$swal(
                 "Thành công",
@@ -414,7 +471,6 @@ export default {
               this.description.splice(index + 1, 1);
 
               this.isUpdate = 0;
-              this.place = null;
               this.getRoomById();
               this.$swal(
                 "Thành công",
@@ -590,5 +646,23 @@ export default {
   position: absolute;
   top: 10px;
   left: 10px;
+}
+.btn-back {
+  margin-left: -3px;
+  margin-top: -30px;
+  margin-bottom: 30px;
+  display: inline-block;
+  padding: 8px 10px;
+  background-color: #00798a;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  max-width: 75%;
+  cursor: pointer;
+  text-align: center;
+  color: white;
+  border: none;
+}
+.btn-back:hover {
+  background-color: #00998a;
 }
 </style>

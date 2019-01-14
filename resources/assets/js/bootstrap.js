@@ -14,6 +14,7 @@ import VDropdownDivider from './components/dropdown/VDropdownDivider'
 import VCollapse from './components/collapse/VCollapse'
 import VCollapseItem from './components/collapse/VCollapseItem'
 import * as VueGoogleMaps from 'vue2-google-maps'
+import VueNumeric from 'vue-numeric'
 
 /**
  * Global CSS imports
@@ -106,6 +107,7 @@ Vue.use(VueGoogleMaps, {
     language: 'vi'
   }
 })
+Vue.use(VueNumeric)
 Vue.use(VueSweetalert2)
 Vue.use(VueRouter)
 Vue.use(VuePrism)

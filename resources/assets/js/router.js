@@ -114,11 +114,7 @@ const routes = [
   {
     path: '/',
     component: LayoutLogin,
-    children: [{
-        path: '/',
-        component: Login,
-        name: 'login'
-      },
+    children: [
       {
         path: 'login',
         component: Login,
@@ -127,15 +123,15 @@ const routes = [
     ]
   },
 
-  // {
-  //   path: '/',
-  //   component: LayoutFront,
-  //   children: [{
-  //     path: '/',
-  //     component: Home,
-  //     name: 'home'
-  //   }]
-  // },
+  {
+    path: '/',
+    component: LayoutFront,
+    children: [{
+      path: '/',
+      component: Home,
+      name: 'home'
+    }]
+  },
 
   /*
    |--------------------------------------------------------------------------
@@ -358,21 +354,21 @@ const routes = [
    |--------------------------------------------------------------------------|
    */
 
-  {
-    path: '/',
-    component: LayoutLogin,
-    children: [{
-        path: 'login',
-        component: Login,
-        name: 'login'
-      },
-      {
-        path: 'register',
-        component: Register,
-        name: 'register'
-      }
-    ]
-  },
+  // {
+  //   path: '/',
+  //   component: LayoutLogin,
+  //   children: [{
+  //       path: 'login',
+  //       component: Login,
+  //       name: 'login'
+  //     },
+  //     {
+  //       path: 'register',
+  //       component: Register,
+  //       name: 'register'
+  //     }
+  //   ]
+  // },
 
   //   DEFAULT ROUTE
   {

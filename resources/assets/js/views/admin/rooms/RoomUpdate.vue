@@ -24,7 +24,7 @@ export default {
           `rooms/${ this.$route.params.roomId }`,
           {
             params: {
-              include: "details,user,prices,comforts,blocks,media,city,district,status"
+              include: "details,user,prices,comforts,media,city,district,status"
             }
           }
         );

@@ -339,30 +339,48 @@
                       <div class="form-group">
                         <label :style="errors.has('money_received') ? 'color:red;' : ''">
                           {{errors.has('money_received')
-                          ? errors.first('money_received') : 'Số tiền thanh toán'}}
+                          ? errors.first('money_received') : 'Số tiền đã thanh toán'}}
                         </label>
-                        <input
+                        <vue-numeric
+                          separator="."
+                          v-model="booking.money_received"
+                          class="form-control"
+                          data-vv-as="Số tiền đã thanh toán"
+                          v-validate="'numeric'"
+                          name="money_received"
+                        >
+                        </vue-numeric>
+                        <!-- <input
                           name="money_received"
                           v-model.number="booking.money_received"
                           v-validate="'numeric'"
                           type="number"
                           class="form-control"
-                          data-vv-as="Số tiền thanh toán"
-                        >
+                          dât-vv-á="Số tiền thanh toán"
+                        > -->
                       </div>
                       <div class="form-group">
                         <label :style="errors.has('price_discount') ? 'color:red;' : ''">
                           {{errors.has('price_discount')
                           ? errors.first('price_discount') : 'Giảm giá'}}
                         </label>
-                        <input
+                        <vue-numeric
+                          separator="."
+                          v-model="booking.price_discount"
+                          class="form-control"
+                          data-vv-as="Giảm giá"
+                          v-validate="'numeric'"
+                          name="price_discount"
+                        >
+                        </vue-numeric>
+                        <!-- <input
                           name="price_discount"
                           data-vv-as="Giảm giá"
                           v-model.number="booking.price_discount"
                           v-validate="'numeric'"
                           type="number"
                           class="form-control"
-                        >
+                        > -->
                       </div>
                       <div class="form-group">
                         <label>Mã giảm giá</label>
@@ -412,14 +430,15 @@
                           {{errors.has('additional_fee')
                           ? errors.first('additional_fee') : 'Phụ thu'}}
                         </label>
-                        <input
-                          name="additional_fee"
-                          data-vv-as="Phụ thu"
-                          v-model.number="booking.additional_fee"
-                          v-validate="'numeric'"
-                          type="number"
+                        <vue-numeric
+                          separator="."
+                          v-model="booking.additional_fee"
                           class="form-control"
+                          data-vv-as="Phụ thu"
+                          v-validate="'numeric'"
+                          name="additional_fee"
                         >
+                        </vue-numeric>
                       </div>
                       <div class="form-group">
                         <label :style="errors.has('status') ? 'color:red;' : ''">
@@ -783,23 +802,15 @@ export default {
       } else {
         let index;
         if (this.checkout != null) {
-          // console.log(this.checkout);
           index = this.blocked_dates.indexOf(
             this.checkout.toISOString().substr(0, 10)
           );
-          // console.log(index);
           if (index == -1) {
             this.checkout = this.addDay(this.checkout);
           }
         }
         const result = this.$validator.validateAll();
         if (result) {
-          // console.log(
-          //   this.addDay(this.checkin)
-          //     .toISOString()
-          //     .substr(0, 10) + " 14:00:00"
-          // );
-          // console.log(this.checkout.toISOString().substr(0, 10) + " 12:00:00");
           const response = await axios.post(`bookings/price-calculator/`, {
             additional_fee: 0,
             price_discount: 0,
@@ -833,7 +844,6 @@ export default {
             this.booking.price_original = response.data.data.price_original;
             this.booking.total_fee = response.data.data.total_fee;
             this.booking.service_fee = response.data.data.service_fee;
-            this.booking.coupon_discount = response.data.data.coupon_discount;
           }
           return true;
         } else {
