@@ -114,11 +114,6 @@ const routes = [
     component: LayoutLogin,
     children: [
       {
-        path: '/',
-        component: Login,
-        name: 'login'
-      },
-      {
         path: 'login',
         component: Login,
         name: 'login'
