@@ -15,7 +15,7 @@ import VCollapse from './components/collapse/VCollapse'
 import VCollapseItem from './components/collapse/VCollapseItem'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import VueNumeric from 'vue-numeric'
-
+import HighchartsVue from 'highcharts-vue'
 /**
  * Global CSS imports
  */
@@ -46,8 +46,8 @@ global.Vue = require('vue')
  */
 
 global.axios = require('axios')
-global.axios.defaults.baseURL = 'http://ws-api.nhat/api/'
-// global.axios.defaults.baseURL = 'https://somethingapi.club/api/'
+// global.axios.defaults.baseURL = 'http://ws-api.nhat/api/'
+global.axios.defaults.baseURL = 'https://somethingapi.club/api/'
 global.axios.defaults.headers.common = {
   'X-Requested-With': 'XMLHttpRequest'
 }
@@ -130,3 +130,4 @@ Vue.use(VCalendar, {
     data: ['L', 'Y-m-d', 'Y-m-d']
   }
 })
+Vue.use(HighchartsVue);
