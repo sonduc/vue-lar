@@ -1,9 +1,9 @@
 <template>
   <div class="chartElem">
     <!-- <div class="row"> -->
-      <!-- <div class="col-md-12 col-lg-6 col-xl-3"> -->
-        <highcharts class="chart" :options="chartOptions" :updateArgs="updateArgs"></highcharts>
-      <!-- </div> -->
+    <!-- <div class="col-md-12 col-lg-6 col-xl-3"> -->
+    <highcharts class="chart" :options="chartOptions" :updateArgs="updateArgs"></highcharts>
+    <!-- </div> -->
     <!-- </div> -->
   </div>
 </template>
@@ -13,18 +13,7 @@ export default {
   data() {
     return {
       title: "",
-      points: [
-        "01-01-2019",
-        "02-01-2019",
-        "03-01-2019",
-        "04-01-2019",
-        "05-01-2019",
-        "06-01-2019",
-        "07-01-2019",
-        "08-01-2019",
-        "09-01-2019",
-        "10-01-2019"
-      ],
+      points: [],
       chartType: "column",
       colorInputIsSupported: null,
       updateArgs: [true, true, { duration: 1000 }],
@@ -35,140 +24,51 @@ export default {
         title: {
           text: "Sin chart"
         },
-        series: [
-          {
-            name: "Hà Nội",
-            data: [4, 5, 12, 10, 13, 3, 6, 17, 14, 1],
-            success: [3, 4, 10, 7, 12, 1, 3, 14, 14, 1],
-            cancel: [1, 1, 2, 3, 1, 2, 3, 3, 0, 0]
+        series: [],
+        yAxis: {
+          min: 0,
+          title: {
+            text: "Total fruit consumption"
           },
-          {
-            name: "Hồ Chí Minh",
-            data: [1, 0, 0, 1, 1, 1, 4, 0, 1, 1],
-            success: [0, 0, 0, 0, 0, 0, 2, 0, 1, 1],
-            cancel: [1, 0, 0, 1, 1, 1, 2, 0, 0, 0]
-          },
-          {
-            name: "Hưng Yên",
-            data: [0, 0, 0, 2, 0, 0, 1, 1, 0, 0],
-            success: [0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 1, 1, 0, 0]
-          },
-          {
-            name: "Long An",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Đà Nẵng",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Quảng Ninh",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Nha Trang",
-            data: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Huế",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Đà Lạt",
-            data: [0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
-          },
-          {
-            name: "Vũng Tàu",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Sơn La",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Hoà Bình",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Vĩnh Phúc",
-            data: [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Thanh Hoá",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Sapa",
-            data: [0, 0, 0, 1, 0, 0, 0, 0, 1, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-            cancel: [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Bình Định",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Bình Thuận",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Ninh Bình",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Quảng Nam",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Kiên Giang",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Bắc Ninh",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          },
-          {
-            name: "Phú Yên",
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            success: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            cancel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          stackLabels: {
+            enabled: true
           }
-        ]
+        },
+        plotOptions: {
+          column: {
+            stacking: "normal",
+            dataLabels: {
+              enabled: true
+            }
+          }
+        },
+        tooltip: {
+          formatter() {
+            var cancelText =
+              "<br/><span>Hủy</span>: <b>" +
+              this.series.userOptions.cancel[this.point.x] +
+              "</b>";
+            var successText =
+              "<br/><span>Thành công </span>: <b>" +
+              this.series.userOptions.success[this.point.x] +
+              "</b><br/>";
+            var totalText =
+              "<br/><span>Thất bại</span>: <b>" +
+              this.series.userOptions.data[this.point.x] +
+              "</b><br/>";
+            return (
+              this.x +
+              '<br/>  <span style="color:' +
+              this.series.color +
+              '">' +
+              this.series.name +
+              ": </span>" +
+              totalText +
+              successText +
+              cancelText
+            );
+          }
+        }
       }
     };
   },
@@ -179,23 +79,36 @@ export default {
       ? (this.colorInputIsSupported = true)
       : (this.colorInputIsSupported = false);
   },
-  watch: {
-    title(newValue) {
-      this.chartOptions.title.text = newValue;
-    },
-    points(newValue) {
-      this.chartOptions.series[0].data = newValue;
-    },
-    chartType(newValue) {
-      this.chartOptions.chart.type = newValue.toLowerCase();
-    },
-    seriesColor(newValue) {
-      this.chartOptions.series[0].color = newValue.toLowerCase();
-    },
-    animationDuration(newValue) {
-      this.updateArgs[2].duration = Number(newValue);
+
+  methods: {
+    async getData() {
+      const response = await axios.get(
+        "statisticals/booking-city?view=week&date_start=2018-12-01&date_end=2018-12-12"
+      );
+      this.chartOptions.series = response.data.data.data;
+      this.points = response.data.data.createdAt;
     }
+  },
+  mounted() {
+    this.getData();
   }
+  // watch: {
+  //   title(newValue) {
+  //     this.chartOptions.title.text = newValue;
+  //   },
+  //   points(newValue) {
+  //     this.chartOptions.series[0].data = newValue;
+  //   },
+  //   chartType(newValue) {
+  //     this.chartOptions.chart.type = newValue.toLowerCase();
+  //   },
+  //   seriesColor(newValue) {
+  //     this.chartOptions.series[0].color = newValue.toLowerCase();
+  //   },
+  //   animationDuration(newValue) {
+  //     this.updateArgs[2].duration = Number(newValue);
+  //   }
+  // }
 };
 </script>
 
