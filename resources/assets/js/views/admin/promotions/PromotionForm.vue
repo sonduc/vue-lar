@@ -231,21 +231,7 @@ export default {
       );
 
       if(dataPromotion.image != null) {
-        async function getBase64ImageFromUrl(imageUrl) {
-          let res = await fetch(imageUrl);
-          let blob = await res.blob();
-          return new Promise((resolve, reject) => {
-            let reader  = new FileReader();
-            reader.addEventListener("load", function () {
-                resolve(reader.result);
-            }, false);
-            reader.onerror = () => {
-              return reject(this);
-            };
-            reader.readAsDataURL(blob);
-          })
-        }
-        getBase64ImageFromUrl(
+        this.getBase64ImageFromUrl(
           "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+ dataPromotion.image)
         .then(result => {
           this.images.push(result);
@@ -253,6 +239,20 @@ export default {
          })
         .catch(err => console.error(err));
       }
+    },
+    async getBase64ImageFromUrl(imageUrl) {
+      let res = await fetch(imageUrl);
+      let blob = await res.blob();
+      return new Promise((resolve, reject) => {
+        let reader  = new FileReader();
+        reader.addEventListener("load", function () {
+            resolve(reader.result);
+        }, false);
+        reader.onerror = () => {
+          return reject(this);
+        };
+        reader.readAsDataURL(blob);
+      })
     },
     selectRoom(selectedOption, id) {
       let objectRoom = {

@@ -14,7 +14,7 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="card">
-          <div class="card-body" v-if="blog != null">
+          <div class="card-body" v-if="checkLoadedImage()">
             <div class="row">
               <div class="col-xl-12 mb-3">
                 <h5 class="section-semi-title">Sửa bài viết</h5>
@@ -58,15 +58,17 @@
                           ? errors.first('category') : 'Danh mục *'}}
                         </label>
                         <multiselect
-                          :allow-empty="false"
+                          style="z-index:4"
                           name="category"
                           label="name"
                           v-model="category"
                           v-validate="'required'"
                           data-vv-as="Danh mục"
+                          :allow-empty="false"
                           :options="listCategory"
                           :searchable="true"
                           :show-labels="false"
+                          track-by="name"
                         />
                       </div>
                       <div class="form-group">
@@ -87,29 +89,30 @@
                   </tab>
                 </tabs>
                 <div class="col-xl-12 mb-3">
-                  <label>Tags bài viết</label>
-                  <input-tag
-                    :addTagOnBlur="true"
-                    :addTagOnKeys="[13]"
-                    :tags.sync="tagsArray"
-                    class="form-control"
-                  ></input-tag>
+                  <label v-if="tags.length">Tags bài viết</label>
+                  <label v-else style="color: red;">Tags bài viết là bắt buộc </label>
+                  <vue-tags-input
+                    v-model="tag"
+                    :tags="tags"
+                    @tags-changed="newTags => tags = newTags"
+                  />
                 </div>
                 <div class="col-xl-12 mb-3">
-                  <label>Ảnh đại diện</label>
+                  <label v-if="images.length">Ảnh đại diện</label>
+                  <label v-else style="color: red;">Upload ảnh là bắt buộc </label>
                   <vue-dropzone
-                    @vdropzone-file-added="showFile"
                     id="dropzone"
-                    @vdropzone-mounted="initImages"
                     ref="myVueDropzone"
-                    :options="dropzoneOptions"
-                    @vdropzone-success="onSuccess"
-                    @vdropzone-removed-file="remove"
+                    :options="imageBlog"
+                    @vdropzone-canceled
+                    @vdropzone-mounted="vmountedBlog"
+                    @vdropzone-removed-file="removedImageInDropzone"
+                    @vdropzone-complete="afterCompleteImageBlog"
                   />
                 </div>
               </div>
             </div>
-            <button @click="createBlog" class="btn btn-primary">Lưu bài viết</button>
+            <button @click="updateBlog" class="btn btn-primary">Lưu bài viết</button>
           </div>
           <div class="card-body" v-else>
             <lottie :options="defaultOptions" :height="150" :width="150"></lottie>
@@ -148,77 +151,213 @@ export default {
       defaultOptions: {
         animationData: animationData
       },
-      dropzoneOptions: {
-        url: "http://ws-api.lc/api/upload-blog-image",
-        maxFilesize: 5,
-        maxFiles: 10,
+      images:[],
+      imageBlog: {
+        url: "https://httpbin.org/post",
+        maxFilesize: 3,
+        maxFiles: 1,
         addRemoveLinks: true,
         thumbnailWidth: 150,
         thumbnailHeight: 150,
         acceptedFiles: "image/*",
-        uploadMultiple: true,
-        autoProcessQueue: true,
-        dictCancelUpload: "Remove File"
+        dictCancelUpload: "Cancel File",
+        uploadMultiple: false,
+        dictDefaultMessage:
+          "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
+        headers: { "My-Awesome-Header": "header value" }
       },
-      tagsArray: [],
-      blog: null,
+      tag: '',
+      tags: [],
+      blog: {
+        source: null,
+        status: 0,
+        hot: 0,
+        new: 0,
+        category_id: null,
+        content: null,
+        title: null,
+        description: null,
+        type: 1,
+        tags: {
+          data: [
+            {
+              name: ""
+            }
+          ]
+        }
+      },
+      loadedImages: false,
       listCategory: [],
+      categoryId: null,
       categories: [],
-      category: {},
+      categoryChoose: {
+        name: null
+      },
       permissions: "blog.create"
     };
   },
-  watch: {
-    tagsArray: {
-      handler(val) {
-        this.blog.tags.data[0].name = val.toString();
+  computed: {
+    category: {
+      get() {
+        if(this.categoryChoose.name) {
+          return {
+            name: this.categoryChoose.name
+          };
+        }
       },
-      deep: true
-    },
+      set(val) {
+        this.blog.category_id = val.id;
+        this.categoryChoose = val;
+      }
+    }
+  },
+  watch: {
     categories: {
       handler(val) {
         val.forEach(element => {
           this.listCategory.push({
             id: element.id,
-            name: element.details.data[0].name
+            name: element.details.data[0].lang === "en" ?
+              element.details.data[1].name : ''
           });
         });
       }
     },
-    category: {
+    categoryId: {
       handler(val) {
-        this.blog.category_id = val.id;
+        if(val) {
+          this.listCategory.forEach(item => {
+            if(item.id == val) {
+              this.categoryChoose.name = item.name;
+            }
+          })
+        }
       }
     }
   },
+   blog: {
+        source: null,
+        status: 0,
+        hot: 0,
+        new: 0,
+        category_id: null,
+        content: null,
+        title: null,
+        description: null,
+        type: 1,
+        tags: {
+          data: [
+            {
+              name: ""
+            }
+          ]
+        }
+      },
   methods: {
-    initImages() {
-      let files = [];
-      files.forEach(element => {
-        this.$refs.myVueDropzone.manuallyAddFile(element.file, element.url);
+    setInitData(dataBlog) {
+      this.blog.source = dataBlog.image;
+      this.blog.status = dataBlog.status;
+      this.blog.hot = dataBlog.hot;
+      this.blog.new = dataBlog.new;
+      this.blog.category_id = dataBlog.category_id;
+      this.blog.content = dataBlog.content;
+      this.blog.title = dataBlog.title;
+      this.blog.description = dataBlog.description;
+      this.blog.type = dataBlog.type;
+      this.blog.description = dataBlog.description;
+      if(dataBlog.image != null) {
+        this.getBase64ImageFromUrl(
+          "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+ dataBlog.image)
+        .then(result => {
+          this.images.push(result);
+          this.loadedImages = true;
+         })
+        .catch(err => console.error(err));
+      }
+      if(dataBlog.tags.data.length) {
+        dataBlog.tags.data.forEach(tag => {
+          this.tags.push({text: tag.name, tiClasses: ['ti-valid']});
+        });
+      }
+    },
+    async getBase64ImageFromUrl(imageUrl) {
+      let res = await fetch(imageUrl);
+      let blob = await res.blob();
+      return new Promise((resolve, reject) => {
+        let reader  = new FileReader();
+        reader.addEventListener("load", function () {
+            resolve(reader.result);
+        }, false);
+        reader.onerror = () => {
+          return reject(this);
+        };
+        reader.readAsDataURL(blob);
+      })
+    },
+    vmountedBlog() {
+      this.images.forEach(item => {
+        let file = { name: "Ảnh blog", size: 12345, type: "image" };
+        let url = item;
+        this.$refs.myVueDropzone.manuallyAddFile(file, url);
       });
-      // console.log(this.$refs.myVueDropzone);
     },
-    showFile(file) {
-      //   console.log(file);
+    afterCompleteImageBlog(file) {
+      if (file.dataURL) {
+        this.images= [];
+        this.images.push(file.dataURL);
+      }
     },
-    async createBlog() {
-      console.log(this.blog);
-      // try {
-      //   const response = await axios
-      //     .post("blogs", this.blog)
-      //     .then(response => {
-      //       this.$swal("Thành công", "Đã tạo bài viết", "success");
-      //     })
-      //     .catch(error => {
-      //       let err = error.response.data.data.errors;
-      //       window.toastr["error"]("There was an error", "Error");
-      //     });
-      // } catch (error) {
-      //   if (error) {
-      //     window.toastr["error"]("", "Error");
-      //   }
-      // }
+    removedImageInDropzone(file, error, xhr) {
+      let index = this.images.findIndex(
+        item => item === file.dataURL
+      );
+      if(index > -1) {
+        this.images.splice(index, 1);
+      }
+    },
+    checkLoadedImage() {
+      if(this.loadedImages){
+        return true;
+      }
+      else {
+        return false;
+      }
+    },
+    async updateBlog() {
+      const result = await this.$validator.validateAll();
+      if (!result) {
+        return window.scroll({
+          top: 0,
+          behavior: "smooth"
+        });
+      }else {
+        let lenghtTags = this.tags.length - 1;
+        this.tags.forEach((tag,index) => {
+          if(index != lenghtTags) {
+            this.blog.tags.data[0].name += tag.text;
+            this.blog.tags.data[0].name += ',';
+          }
+          else {
+            this.blog.tags.data[0].name += tag.text;
+          }
+        })
+        this.blog.image = this.images[0];
+        try {
+          const response = await axios
+            .put(`blogs/${this.$route.params.blogId}`, this.blog)
+            .then(response => {
+              this.$swal("Thành công", "Cập nhật bài viết thành công", "success");
+            })
+            .catch(error => {
+              let err = error.response.data.data.errors;
+              window.toastr["error"]("There was an error", "Error");
+            });
+        } catch (error) {
+          if (error) {
+            window.toastr["error"]("There was an error", "Error");
+          }
+        }
+      }
     },
     async getCategories() {
       try {
@@ -243,7 +382,8 @@ export default {
             include: "tags,categories"
           }
         });
-        this.blog = response.data.data;
+        this.categoryId = response.data.data.categories.data[0].id;
+        this.setInitData(response.data.data);
       } catch (error) {
         if (error) {
           window.toastr["error"](error, "Error");
@@ -258,19 +398,6 @@ export default {
         }
       };
     },
-    onSuccess(file, response) {
-      console.log(file);
-      //   console.log(response);
-
-      this.blog.source = file.dataURL;
-    },
-    // afterComplete(file) {
-    //   //   console.log(file.name);
-    //   this.blog.source = file.dataURL;
-    // },
-    remove(file) {
-      this.blog.source = null;
-    }
   },
   mounted() {
     Auth.getProfile().then(res => {
@@ -291,24 +418,8 @@ export default {
 </script>
 
 <style>
-.vue-input-tag-wrapper .new-tag {
-  font-size: 16px;
-}
-.vue-input-tag-wrapper .input-tag {
-  background-color: #d6d5d5;
-  border: 1px solid #d6d5d5;
-  border-radius: 12px;
-  color: #000000;
-  display: inline-block;
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 0px;
-  margin-right: 5px;
-  padding: 4px;
-}
-.vue-input-tag-wrapper .input-tag .remove {
-  color: #000000;
-  cursor: pointer;
-  font-weight: 700;
+.vue-tags-input .ti-input {
+  width: 1496px;
+  height: 40px;
 }
 </style>

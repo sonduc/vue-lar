@@ -4,15 +4,15 @@
       <h3 class="page-title">Users</h3>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Users</a></li>
-        <li class="breadcrumb-item active">Users</li>
+        <li class="breadcrumb-item"><a href="#">Customers</a></li>
+        <li class="breadcrumb-item active">List</li>
       </ol>
     </div>
     <div class="row">
       <div class="col-sm-12">
         <div class="card">
           <div class="card-header">
-            <h6>All Users</h6>
+            <h6>All Customers</h6>
             <div class="card-actions" />
           </div>
           <div class="card-body">
@@ -24,7 +24,11 @@
               <table-column show="type_txt" label="Role" />
               <table-column :filterable="false" label="Status" :sortable="false">
                   <template slot-scope="row">
-                      <button :class="row.status == 0 ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'">
+                      <button
+                        :class="row.status == 0 ?
+                          'btn btn-danger btn-sm' : 'btn btn-success btn-sm'"
+                        :style="row.status == 0 ? 'width:77px;' : ''"
+                        >
                         {{row.status_txt}}
                       </button>
                   </template>
@@ -56,8 +60,8 @@
     <!-- All Modal Here -->
   </div>
 </template>
-
-<script type="text/babel">
+<!-- type="text/babel" -->
+<script>
 import { TableComponent, TableColumn } from "vue-table-component";
 import { SweetModal } from "sweet-modal-vue";
 import Auth from "../../../services/auth";

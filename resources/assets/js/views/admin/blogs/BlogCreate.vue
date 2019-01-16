@@ -30,7 +30,7 @@
                           v-model="blog.title"
                           name="title"
                           data-vv-as="Tiêu đề"
-                          v-validate="'required|max:150|min:10'"
+                          v-validate="'required|max:255|min:10'"
                           type="text"
                           class="form-control"
                         >
@@ -58,15 +58,17 @@
                           ? errors.first('category') : 'Danh mục *'}}
                         </label>
                         <multiselect
-                          :allow-empty="false"
+                          style="z-index:4"
                           name="category"
                           label="name"
                           v-model="category"
                           v-validate="'required'"
                           data-vv-as="Danh mục"
+                          :allow-empty="false"
                           :options="listCategory"
                           :searchable="true"
                           :show-labels="false"
+                          track-by="name"
                         />
                       </div>
                       <div class="form-group">
@@ -87,29 +89,33 @@
                   </tab>
                 </tabs>
                 <div class="col-xl-12 mb-3">
-                  <label>Tags bài viết</label>
-                  <input-tag
-                    :addTagOnBlur="true"
-                    :addTagOnKeys="[13]"
-                    :tags.sync="tagsArray"
-                    class="form-control"
-                  ></input-tag>
+                  <label v-if="tags.length">Tags bài viết</label>
+                  <label v-else style="color: red;">Tags bài viết là bắt buộc </label>
+                  <vue-tags-input
+                    v-model="tag"
+                    :tags="tags"
+                    @tags-changed="newTags => tags = newTags"
+                  />
                 </div>
                 <div class="col-xl-12 mb-3">
-                  <label>Ảnh đại diện</label>
+                  <label v-if="images.length">Ảnh đại diện</label>
+                  <label v-else style="color: red;">Upload ảnh là bắt buộc </label>
                   <vue-dropzone
-                    @vdropzone-file-added="showFile"
                     id="dropzone"
-                    @vdropzone-mounted="initImages"
                     ref="myVueDropzone"
-                    :options="dropzoneOptions"
-                    @vdropzone-complete="afterComplete"
-                    @vdropzone-removed-file="remove"
+                    :options="imageBlog"
+                    @vdropzone-canceled
+                    @vdropzone-removed-file="removedImageInDropzone"
+                    @vdropzone-complete="afterCompleteImageBlog"
                   />
                 </div>
               </div>
             </div>
-            <button @click="createBlog" class="btn btn-primary">Lưu bài viết</button>
+            <button
+              :disabled="images.length < 1 || tags.length < 1"
+              @click="createBlog"
+              class="btn btn-primary">Lưu bài viết
+            </button>
           </div>
           <div class="card-footer"></div>
         </div>
@@ -139,21 +145,25 @@ export default {
   },
   data() {
     return {
-      dropzoneOptions: {
-        url: "http://ws-api.lc/api/upload-blog-image",
-        maxFilesize: 5,
+      tag: '',
+      tags: [],
+      images:[],
+      imageBlog: {
+        url: "https://httpbin.org/post",
+        maxFilesize: 3,
         maxFiles: 1,
         addRemoveLinks: true,
         thumbnailWidth: 150,
         thumbnailHeight: 150,
         acceptedFiles: "image/*",
+        dictCancelUpload: "Cancel File",
         uploadMultiple: false,
-        autoProcessQueue: true,
-        dictCancelUpload: "Remove File"
+        dictDefaultMessage:
+          "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
+        headers: { "My-Awesome-Header": "header value" }
       },
-      tagsArray: [],
       blog: {
-        source: null,
+        image: null,
         status: 0,
         hot: 0,
         new: 0,
@@ -165,68 +175,82 @@ export default {
         tags: {
           data: [
             {
-              name: null
+              name: ""
             }
           ]
         }
       },
       listCategory: [],
       categories: [],
-      category: {},
+      categoryChoose: {
+        name: null
+      },
       permissions: "blog.create"
     };
   },
-  watch: {
-    tagsArray: {
-      handler(val) {
-        this.blog.tags.data[0].name = val.toString();
+  computed: {
+    category: {
+      get() {
+        if(this.categoryChoose.name) {
+          return {
+            name: this.categoryChoose.name
+          };
+        }
       },
-      deep: true
-    },
+      set(val) {
+        this.blog.category_id = val.id;
+        this.categoryChoose = val;
+      }
+    }
+  },
+  watch: {
     categories: {
       handler(val) {
         val.forEach(element => {
           this.listCategory.push({
             id: element.id,
-            name: element.details.data[0].name
+            name: element.details.data[0].lang === "en" ? element.details.data[1].name : ''
           });
         });
       }
     },
-    category: {
-      handler(val) {
-        this.blog.category_id = val.id;
-      }
-    }
   },
   methods: {
-    initImages() {
-      let files = [];
-      files.forEach(element => {
-        this.$refs.myVueDropzone.manuallyAddFile(element.file, element.url);
-      });
-      // console.log(this.$refs.myVueDropzone);
-    },
-    showFile(file) {
-      console.log(file);
-    },
     async createBlog() {
-      console.log(this.blog);
-      // try {
-      //   const response = await axios
-      //     .post("blogs", this.blog)
-      //     .then(response => {
-      //       this.$swal("Thành công", "Đã tạo bài viết", "success");
-      //     })
-      //     .catch(error => {
-      //       let err = error.response.data.data.errors;
-      //       window.toastr["error"]("There was an error", "Error");
-      //     });
-      // } catch (error) {
-      //   if (error) {
-      //     window.toastr["error"]("", "Error");
-      //   }
-      // }
+      const result = await this.$validator.validateAll();
+      if (!result) {
+        return window.scroll({
+          top: 10,
+          behavior: "smooth"
+        });
+      }else {
+        let lenghtTags = this.tags.length - 1;
+        this.tags.forEach((tag,index) => {
+          if(index != lenghtTags) {
+            this.blog.tags.data[0].name += tag.text;
+            this.blog.tags.data[0].name += ',';
+          }
+          else {
+            this.blog.tags.data[0].name += tag.text;
+          }
+        })
+        this.blog.image = this.images[0];
+        try {
+          const response = await axios
+            .post("blogs", this.blog)
+            .then(response => {
+              this.$swal("Thành công", "Đã tạo bài viết", "success");
+            })
+            .catch(error => {
+              let err = error.response.data.data.errors;
+              window.toastr["error"]("There was an error", "Error");
+            });
+        } catch (error) {
+          if (error) {
+            window.toastr["error"]("There was an error", "Error");
+          }
+        }
+      }
     },
     async getCategories() {
       try {
@@ -252,12 +276,20 @@ export default {
         }
       };
     },
-    afterComplete(file) {
-      this.blog.source = file.dataURL;
+    afterCompleteImageBlog(file) {
+      if (file.dataURL) {
+        this.images= [];
+        this.images.push(file.dataURL);
+      }
     },
-    remove(file) {
-      this.blog.source = null;
-    }
+    removedImageInDropzone(file, error, xhr) {
+      let index = this.images.findIndex(
+        item => item === file.dataURL
+      );
+      if(index > -1) {
+        this.images.splice(index, 1);
+      }
+    },
   },
   mounted() {
     Auth.getProfile().then(res => {
@@ -277,24 +309,8 @@ export default {
 </script>
 
 <style>
-.vue-input-tag-wrapper .new-tag {
-  font-size: 16px;
-}
-.vue-input-tag-wrapper .input-tag {
-  background-color: #d6d5d5;
-  border: 1px solid #d6d5d5;
-  border-radius: 12px;
-  color: #000000;
-  display: inline-block;
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 0px;
-  margin-right: 5px;
-  padding: 4px;
-}
-.vue-input-tag-wrapper .input-tag .remove {
-  color: #000000;
-  cursor: pointer;
-  font-weight: 700;
+.vue-tags-input .ti-input {
+  width: 1496px;
+  height: 40px;
 }
 </style>
