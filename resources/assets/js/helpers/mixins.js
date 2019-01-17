@@ -17,6 +17,12 @@ export const format = {
         let d = new Date(date);
         return moment(d).format('DD/MM/YYYY')
       }
+    },
+    formatDateBlog(date) {
+      if (date) {
+        let d = new Date(date);
+        return moment(d).format('DD/MM/YYYY hh:mm')
+      }
     }
   }
 };

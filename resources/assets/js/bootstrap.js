@@ -15,6 +15,7 @@ import VCollapse from './components/collapse/VCollapse'
 import VCollapseItem from './components/collapse/VCollapseItem'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import VueNumeric from 'vue-numeric'
+import VueTagsInput from '@johmun/vue-tags-input'
 
 /**
  * Global CSS imports
@@ -47,7 +48,6 @@ global.Vue = require('vue')
 
 global.axios = require('axios')
 global.axios.defaults.baseURL = 'http://ws-api.nhat/api/'
-// global.axios.defaults.baseURL = 'https://somethingapi.club/api/'
 global.axios.defaults.headers.common = {
   'X-Requested-With': 'XMLHttpRequest'
 }
@@ -107,6 +107,7 @@ Vue.use(VueGoogleMaps, {
     language: 'vi'
   }
 })
+Vue.use(VueTagsInput)
 Vue.use(VueNumeric)
 Vue.use(VueSweetalert2)
 Vue.use(VueRouter)

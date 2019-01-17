@@ -389,22 +389,9 @@ export default {
           }
         }
       }
-      async function getBase64ImageFromUrl(imageUrl) {
-        let res = await fetch(imageUrl);
-        let blob = await res.blob();
-        return new Promise((resolve, reject) => {
-          let reader  = new FileReader();
-          reader.addEventListener("load", function () {
-              resolve(reader.result);
-          }, false);
-          reader.onerror = () => {
-            return reject(this);
-          };
-          reader.readAsDataURL(blob);
-        })
-      }
+
       if(dataCollection.image != null) {
-        getBase64ImageFromUrl(
+        this.getBase64ImageFromUrl(
           "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+ dataCollection.image)
         .then(result => {
           this.collection.image.push(result);
@@ -423,6 +410,20 @@ export default {
         this.collection.vi = dataCollection.details.data[1];
       }
       this.isLoaded = !this.isLoaded;
+    },
+    async getBase64ImageFromUrl(imageUrl) {
+      let res = await fetch(imageUrl);
+      let blob = await res.blob();
+      return new Promise((resolve, reject) => {
+        let reader  = new FileReader();
+        reader.addEventListener("load", function () {
+            resolve(reader.result);
+        }, false);
+        reader.onerror = () => {
+          return reject(this);
+        };
+        reader.readAsDataURL(blob);
+      })
     },
     async getCollection() {
       try {

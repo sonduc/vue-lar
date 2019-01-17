@@ -20,26 +20,27 @@
         <div class="card-header">Bộ lọc</div>
         <div class="card-body">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-5">
               <div class="form-group row">
-                <label for="firstName" class="col-sm-2 col-form-label">Tìm kiếm</label>
+                <label for="tagBlog" class="col-sm-2 col-form-label">Tìm kiếm</label>
                 <div class="col-sm-10">
                   <input
                     v-model="tags"
-                    id="firstName"
+                    id="tagBlog"
                     type="text"
                     class="form-control"
-                    placeholder="Nhập vào tên bài viết,tags..."
+                    placeholder="Nhập vào tên bài viết, tags..."
                   >
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-7">
               <div class="form-group row">
-                <label for="email" class="col-sm-2 col-form-label">Người viết</label>
+                <label for="userName" class="col-sm-2 col-form-label">Người viết</label>
                 <div class="col-sm-4">
                   <multiselect
-                    id="inputUserName"
+                    class="custom-input-filter"
+                    id="userName"
                     v-model="user"
                     label="name"
                     :options="users"
@@ -47,10 +48,11 @@
                     :show-labels="false"
                   />
                 </div>
-                <label for="email" class="col-sm-2 col-form-label">Bộ sưu tập</label>
+                <label for="collection" class="col-sm-2 col-form-label">Bộ sưu tập</label>
                 <div class="col-sm-4">
                   <multiselect
-                    id="inputUserName"
+                    class="custom-input-filter"
+                    id="collection"
                     v-model="category"
                     label="name"
                     :options="list_categories"
@@ -60,7 +62,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
               <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label">Hiển thị</label>
                 <div class="col-sm-10 mt-2">
@@ -100,15 +102,20 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-7">
               <div class="form-group row">
-                <label for="lastName" class="col-sm-1 col-form-label">Từ</label>
-                <div class="col-sm-5">
-                  <datepicker v-model="date_start" :format="format" input-class="form-control"/>
-                </div>
-                <label for="lastName" class="col-sm-1 col-form-label">Đến</label>
-                <div class="col-sm-5">
+                <label for="lastName" class="col-sm-2 col-form-label">Từ ngày</label>
+                <div class="col-sm-4">
                   <datepicker
+                  class="custom-input-filter"
+                  v-model="date_start"
+                  :format="format"
+                  input-class="form-control"/>
+                </div>
+                <label for="lastName" class="col-sm-2 col-form-label">Đến ngày</label>
+                <div class="col-sm-4">
+                  <datepicker
+                    class="custom-input-filter"
                     :disabled-dates="disabledDate"
                     v-model="date_end"
                     :format="format"
@@ -139,7 +146,8 @@
             <tr v-for="(blog,index) in blogs" :key="index" :class="{'read' : blog.status }">
               <td>{{index + 1}}</td>
               <td class="cell-content" width="160">
-                <img :src="blog.image" height="150px" width="150px">
+                <img :src="'https://s3-ap-southeast-1.amazonaws.com/d-beauty/'+blog.image"
+                  height="150px" width="150px">
               </td>
               <td class="cell-content">
                 <div class="content">
@@ -149,6 +157,20 @@
                   <div class="content-subject mb-2">
                     <i class="icon-fa icon-fa-user"/>
                     &ensp; Người đăng: {{ blog.user.data.name }}
+                  </div>
+                  <div class="content-subject mb-2">
+                    <i class="icon-fa icon-fa-clock-o"/>
+                    &ensp; {{ blog.created_at | formatDateBlog }}
+                  </div>
+                  <div class="content-subject mb-2">
+                    <i class="icon-fa icon-fa-tag"/>
+                      &ensp;
+                      <span v-for="(tag,idx) in blog.tags.data" :key="'tag'+idx">
+                        {{ tag.name }}
+                        <span v-if="idx != (blog.tags.data.length - 1)">
+                        &frasl;
+                        </span>
+                      </span>
                   </div>
                 </div>
               </td>
@@ -198,6 +220,7 @@
               <td width="10%" style="text-align:center">
                 <div class="btn-group mb-3" role="group" aria-label="First group">
                   <button
+                    @click="openDetailBlog(blog.id)"
                     v-tooltip.top-center="'Chi tiết'"
                     type="button"
                     class="btn btn-sm btn-icon btn-outline-info"
@@ -205,7 +228,7 @@
                     <i class="icon-fa icon-fa-search"/>
                   </button>
                   <button
-                    @click="openUpdateBlogModal(blog.id)"
+                    @click="openUpdateBlog(blog.id)"
                     v-tooltip.top-center="'Chỉnh sửa'"
                     type="button"
                     class="btn btn-sm btn-icon btn-outline-info"
@@ -214,6 +237,7 @@
                   </button>
                   <button
                     v-tooltip.top-center="'Xóa'"
+                    @click="deleteBlog(blog.id)"
                     type="button"
                     class="btn btn-sm btn-icon btn-outline-info"
                   >
@@ -250,6 +274,7 @@ import Datepicker from "vuejs-datepicker";
 import Multiselect from "vue-multiselect";
 import Pagination from "../../../components/paginate/ServerPagination";
 export default {
+  mixins: [format, constant, location],
   components: {
     Pagination,
     Multiselect,
@@ -262,7 +287,7 @@ export default {
         animationData: animationData
       },
       list_categories: [],
-      format: "yyyy-MM-dd",
+      format: "dd/MM/yyyy",
       permissions: "blog.view",
       totalPages: null,
       currentPage: null,
@@ -289,7 +314,33 @@ export default {
       }
     };
   },
+  watch: {
+    categories: {
+      handler(val) {
+        val.forEach(element => {
+          this.list_categories.push({
+            id: element.id,
+            name: element.details.data[0].name
+          });
+        });
+      },
+      deep: true
+    },
+    date_start: {
+      handler(val) {
+        let addOneDay = this.addDay(val);
+        this.disabledDate.to = new Date(addOneDay);
+      }
+    }
+  },
   methods: {
+    addDay(date) {
+      let beforeAddDay = new Date(date);
+      let timeDay = 86400000;
+      let afterAddDay = new Date(beforeAddDay.getTime() + timeDay);
+      let day = afterAddDay.toISOString().substring(0, 10);
+      return day;
+    },
     async getBlogs({ page, filter, sort }) {
       let date_start =
         this.date_start !== null
@@ -305,8 +356,8 @@ export default {
             limit: 5,
             date_start: date_start,
             date_end: date_end,
-            user_id: this.user.id,
-            tag: this.tags,
+            user: this.user.id,
+            q: this.tags,
             status: this.status,
             hot: this.hot_blog,
             new: this.new_blog,
@@ -332,7 +383,7 @@ export default {
         const response = await axios.get(`users`, {
           params: {
             limit: -1,
-            type: 2
+            is_owner: 2
           }
         });
         this.users = response.data.data;
@@ -401,7 +452,47 @@ export default {
           });
       }
     },
-    openUpdateBlogModal(blog_id) {
+    async deleteBlog(id) {
+      this.$swal({
+        title: "Bạn có muốn xóa bài viết này không ?",
+        type: "warning",
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Quay lại",
+        showCloseButton: true
+      }).then(result => {
+        if (result.value) {
+          let response = axios
+          .delete("blogs/" + id)
+          .then(result => {
+            if (result) {
+              this.reloadData(this.currentPage);
+              this.$swal(
+                "Success!",
+                "Bài viết đã đưọc xóa",
+                "success"
+              );
+            } else {
+              this.$swal(
+                "Xin lỗi",
+                "Bài viết chưa đưọc xóa",
+                "error"
+              );
+            }
+          });
+        }
+      });
+    },
+    openDetailBlog(blog_id) {
+      this.$router.push({
+        name: "blog.detail",
+        params: {
+          blogId: blog_id
+        }
+      });
+    },
+    openUpdateBlog(blog_id) {
       this.$router.push({
         name: "blog.update",
         params: {
@@ -445,19 +536,6 @@ export default {
       };
     }
   },
-  watch: {
-    categories: {
-      handler(val) {
-        val.forEach(element => {
-          this.list_categories.push({
-            id: element.id,
-            name: element.details.data[0].name
-          });
-        });
-      },
-      deep: true
-    }
-  },
   mounted() {
     Auth.getProfile().then(res => {
       if (res) {
@@ -478,4 +556,8 @@ export default {
 </script>
 
 <style>
+.custom-input-filter {
+  width: 300px;
+  margin-left: -27px;
+}
 </style>

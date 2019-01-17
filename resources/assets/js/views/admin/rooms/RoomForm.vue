@@ -477,14 +477,6 @@
                             name="room.optional_prices.price_hour"
                           >
                           </vue-numeric>
-                          <!-- <input
-                            type="text"
-                            name="room.optional_prices.price_hour"
-                            v-validate="step==1 ? 'required|numeric':''"
-                            data-vv-as="Giá phòng theo giờ"
-                            v-model.number="room.optional_prices.price_hour"
-                            class="form-control"
-                          > -->
                         </div>
                       </div>
                       <div
@@ -508,14 +500,6 @@
                             name="room.optional_prices.price_after_hour"
                           >
                           </vue-numeric>
-                          <!-- <input
-                            type="text"
-                            name="room.optional_prices.price_after_hour"
-                            v-validate="step==1 ? 'required|numeric':''"
-                            data-vv-as="Giá phòng khi ở thêm giờ"
-                            v-model.number="room.optional_prices.price_after_hour"
-                            class="form-control"
-                          > -->
                         </div>
                       </div>
                     </div>
@@ -586,14 +570,6 @@
                             :name="`weekdays[${index}]price_day`"
                           >
                           </vue-numeric>
-                          <!-- <input
-                            type="text"
-                            :name="`weekdays[${index}]price_day`"
-                            v-validate="step==1 ? 'required|numeric':''"
-                            data-vv-as="Giá theo ngày"
-                            v-model.number="room.weekday_price[index].price_day"
-                            class="form-control"
-                          > -->
                         </div>
                       </div>
                       <div
@@ -616,14 +592,6 @@
                             :name="`weekdays[${index}]price_hour`"
                           >
                           </vue-numeric>
-                          <!-- <input
-                            type="text"
-                            :name="`weekdays[${index}]price_hour`"
-                            v-validate="step==1 ? 'required|numeric':''"
-                            data-vv-as="Giá theo giờ"
-                            v-model.number="room.weekday_price[index].price_hour"
-                            class="form-control"
-                          > -->
                         </div>
                       </div>
                       <div
@@ -646,14 +614,6 @@
                             :name="`weekdays[${index}]price_after_hour`"
                           >
                           </vue-numeric>
-                          <!-- <input
-                            type="text"
-                            :name="`weekdays[${index}]price_after_hour`"
-                            v-validate="step==1 ? 'required|numeric':''"
-                            data-vv-as="Giá khi ở thêm giờ"
-                            v-model.number="room.weekday_price[index].price_after_hour"
-                            class="form-control"
-                          > -->
                         </div>
                       </div>
 
@@ -1629,7 +1589,6 @@ export default {
             }
           } catch (error) {
             if (error) {
-              console.log(error)
               this.$swal(
                 "Xin lỗi",
                 "Phòng chưa đưọc lưu, làm ơn kiểm tra lại thông tin",
@@ -1738,9 +1697,6 @@ export default {
     deleteLangEnglishForm() {
       let index = this.room.details.data.findIndex(x => x.lang == "en");
       this.room.details.data.splice(index, 1);
-      // let elem = this.$refs.myTab.$el;
-      // console.log(elem)
-      // elem.click();
     },
   },
   created() {

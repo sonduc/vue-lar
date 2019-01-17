@@ -7,9 +7,9 @@
           <a href="#">Home</a>
         </li>
         <li class="breadcrumb-item">
-          <a href="#">Users</a>
+          <a href="#">Merchant</a>
         </li>
-        <li class="breadcrumb-item active">Users</li>
+        <li class="breadcrumb-item active">List</li>
       </ol>
     </div>
     <div class="row">
