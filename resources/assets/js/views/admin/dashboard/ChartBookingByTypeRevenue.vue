@@ -24,16 +24,16 @@ export default {
             text: "Số lượng booking"
           },
           stackLabels: {
-            enabled: true
+            enabled: false
           }
         },
         xAxis: {
           categories: []
         },
         plotOptions: {
-          // series: {
-          //   pointWidth: 100
-          // },
+          series: {
+            pointWidth: 100
+          },
           column: {
             stacking: "normal",
             dataLabels: {
@@ -48,7 +48,7 @@ export default {
               return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             }
             var cancelText =
-              "<br/><span>Tổng tiền</span>: <b>" +
+              "<br/><span>Tiền về</span>: <b>" +
               formatPrice(this.series.userOptions.data[this.point.x]) +
               "</b>";
             var successText =

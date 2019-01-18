@@ -1,6 +1,6 @@
 webpackJsonp([1],{
 
-/***/ 1037:
+/***/ 1057:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, Buffer, process) {/* xlsx.js (C) 2013-present SheetJS -- http://sheetjs.com */
@@ -14,8 +14,8 @@ var current_codepage = 1200, current_ansi = 1252;
 /*global cptable:true, window */
 if(true) {
 	if(typeof cptable === 'undefined') {
-		if(typeof global !== 'undefined') global.cptable = __webpack_require__(1039);
-		else if(typeof window !== 'undefined') window.cptable = __webpack_require__(1039);
+		if(typeof global !== 'undefined') global.cptable = __webpack_require__(1059);
+		else if(typeof window !== 'undefined') window.cptable = __webpack_require__(1059);
 	}
 }
 
@@ -1160,7 +1160,7 @@ function filename(p) {
 	return (c === -1) ? p : p.slice(c+1);
 }
 var fs;
-function get_fs() { return fs || (fs = __webpack_require__(1040)); }
+function get_fs() { return fs || (fs = __webpack_require__(1060)); }
 function parse(file, options) {
 if(file.length < 512) throw new Error("CFB file size " + file.length + " < 512");
 var mver = 3;
@@ -1848,7 +1848,7 @@ return exports;
 
 if("function" !== 'undefined' && typeof module !== 'undefined' && typeof DO_NOT_EXPORT_CFB === 'undefined') { module.exports = CFB; }
 var _fs;
-if(true) try { _fs = __webpack_require__(1040); } catch(e) {}
+if(true) try { _fs = __webpack_require__(1060); } catch(e) {}
 
 /* normalize data for blob ctor */
 function blobify(data) {
@@ -2109,7 +2109,7 @@ var jszip;
 if(typeof JSZipSync !== 'undefined') jszip = JSZipSync;
 if(true) {
 	if(typeof module !== 'undefined' && module.exports) {
-		if(typeof jszip === 'undefined') jszip = __webpack_require__(1043);
+		if(typeof jszip === 'undefined') jszip = __webpack_require__(1063);
 	}
 }
 
@@ -2726,7 +2726,7 @@ var make_offcrypto = function(O, _crypto) {
 	var crypto;
 	if(typeof _crypto !== 'undefined') crypto = _crypto;
 	else if(true) {
-		try { crypto = __webpack_require__(1044); }
+		try { crypto = __webpack_require__(1064); }
 		catch(e) { crypto = null; }
 	}
 
@@ -20022,7 +20022,7 @@ return utils;
 })(utils);
 
 if(has_buf && "function" != 'undefined') (function() {
-	var Readable = __webpack_require__(1045).Readable;
+	var Readable = __webpack_require__(1065).Readable;
 
 	var write_csv_stream = function(sheet, opts) {
 		var stream = Readable();
@@ -20111,7 +20111,7 @@ var XLS = XLSX, ODS = XLSX;
 
 /***/ }),
 
-/***/ 1039:
+/***/ 1059:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/* cpexcel.js (C) 2013-present SheetJS -- http://sheetjs.com */
@@ -21622,14 +21622,14 @@ if (typeof module !== 'undefined' && module.exports && typeof DO_NOT_EXPORT_CODE
 
 /***/ }),
 
-/***/ 1040:
+/***/ 1060:
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
 
-/***/ 1043:
+/***/ 1063:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var require;var require;/*!
@@ -30637,14 +30637,14 @@ module.exports = ZStream;
 
 /***/ }),
 
-/***/ 1044:
+/***/ 1064:
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
 
-/***/ 1045:
+/***/ 1065:
 /***/ (function(module, exports) {
 
 /* (ignored) */
