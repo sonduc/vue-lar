@@ -1,12 +1,4 @@
 {
-    "/pdfmake.js": "/pdfmake.js",
-    "/pdfmake.js.map": "/pdfmake.js.map",
-    "/xlsx.js": "/xlsx.js",
-    "/xlsx.js.map": "/xlsx.js.map",
-    "/canvg.js": "/canvg.js",
-    "/canvg.js.map": "/canvg.js.map",
-    "/responsivedefaults.js": "/responsivedefaults.js",
-    "/responsivedefaults.js.map": "/responsivedefaults.js.map",
     "/assets/js/app.js": "/assets/js/app.js",
     "/assets/css/laraspace.css": "/assets/css/laraspace.css",
     "/assets/js/app.js.map": "/assets/js/app.js.map",

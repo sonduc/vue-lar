@@ -15,12 +15,8 @@ import VCollapse from './components/collapse/VCollapse'
 import VCollapseItem from './components/collapse/VCollapseItem'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import VueNumeric from 'vue-numeric'
-<<<<<<< HEAD
 import VueTagsInput from '@johmun/vue-tags-input'
-
-=======
 import HighchartsVue from 'highcharts-vue'
->>>>>>> ta_charts
 /**
  * Global CSS imports
  */
