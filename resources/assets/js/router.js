@@ -9,12 +9,13 @@ import AuthService from './services/auth'
  */
 
 //  Dashboard
-import Basic from './views/admin/dashboard/Basic.vue'
+import BookingStatistical from './views/admin/dashboard/BookingStatistical.vue'
+import FinanceStatistical from './views/admin/dashboard/FinanceStatistical.vue'
+import RoomStatistical from './views/admin/dashboard/RoomStatistical.vue'
 
 //  Layouts
 import LayoutBasic from './views/layouts/LayoutBasic.vue'
 import LayoutLogin from './views/layouts/LayoutLogin.vue'
-import LayoutFront from './views/layouts/LayoutFront.vue'
 
 //  Users
 import Admin from './views/admin/users/Admin.vue'
@@ -64,8 +65,6 @@ import CollectionCreate from './views/admin/collections/CollectionCreate.vue'
 import CollectionUpdate from './views/admin/collections/CollectionUpdate.vue'
 import CollectionDetail from './views/admin/collections/CollectionDetail.vue'
 
-// Statistical
-import StatisticalList from './views/admin/statistical/StatisticalList.vue'
 /*
  |--------------------------------------------------------------------------
  | Other
@@ -74,7 +73,6 @@ import StatisticalList from './views/admin/statistical/StatisticalList.vue'
 
 //  Auth
 import Login from './views/auth/Login.vue'
-import Register from './views/auth/Register.vue'
 
 import NotFoundPage from './views/errors/404.vue'
 import PermissionForbidden from './views/errors/403.vue'
@@ -85,7 +83,7 @@ import PermissionForbidden from './views/errors/403.vue'
  |--------------------------------------------------------------------------|
  */
 
-import Home from './views/front/Home.vue'
+// import Home from './views/front/Home.vue'
 
 Vue.use(VueRouter)
 
@@ -101,7 +99,7 @@ const routes = [
     component: LayoutBasic,
     children: [{
       path: 'sidebar',
-      component: Basic
+      component: BookingStatistical
     }]
   },
 
@@ -114,21 +112,19 @@ const routes = [
   {
     path: '/',
     component: LayoutLogin,
-    children: [
-      {
-        path: 'login',
-        component: Login,
-        name: 'login'
-      }
-    ]
+    children: [{
+      path: 'login',
+      component: Login,
+      name: 'login'
+    }]
   },
 
   {
     path: '/',
-    component: LayoutFront,
+    component: LayoutLogin,
     children: [{
       path: '/',
-      component: Home,
+      component: Login,
       name: 'home'
     }]
   },
@@ -147,8 +143,18 @@ const routes = [
     children: [
       //  Dashboard
       {
-        path: 'dashboard/basic',
-        component: Basic,
+        path: 'dashboard/booking',
+        component: BookingStatistical,
+        name: 'dashboard'
+      },
+      {
+        path: 'dashboard/finance',
+        component: FinanceStatistical,
+        name: 'dashboard'
+      },
+      {
+        path: 'dashboard/room',
+        component: RoomStatistical,
         name: 'dashboard'
       },
 
@@ -325,13 +331,6 @@ const routes = [
         path: 'blogs/create',
         name: 'blog.create',
         component: BlogCreate
-      },
-
-      // Statistical
-      {
-        path: 'statistical/list',
-        name: 'statistical.list',
-        component: StatisticalList
       },
 
       {

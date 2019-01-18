@@ -9,7 +9,9 @@
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
-            <router-link to="/admin/dashboard/basic">Thống kê</router-link>
+            <router-link to="/admin/dashboard/booking">Thống kê đặt phòng</router-link>
+            <router-link to="/admin/dashboard/finance">Thống kê doanh thu</router-link>
+            <router-link to="/admin/dashboard/room">Thống kê số lượng phòng</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/users">
@@ -76,25 +78,6 @@
             </a>
             <router-link to="/admin/blogs/list">Danh sách Bài viết</router-link>
             <router-link to="/admin/blogs/create">Đăng bài viết</router-link>
-          </v-collapse-item>
-
-          <v-collapse-item active-url="/admin/statistical">
-            <a slot="item-title" href="#">
-              <i class="icon-fa icon-fa-bar-chart-o"/>Thống kê
-              <span class="icon-fa arrow icon-fa-fw"/>
-            </a>
-            <router-link to="/admin/statistical/list">Danh sách thống kê</router-link>
-          </v-collapse-item>
-
-          <v-collapse-item active-url="/admin/apps">
-            <a slot="item-title" href="#">
-              <i class="icon-fa icon-fa-adn"/>Apps
-              <span class="icon-fa arrow icon-fa-fw"/>
-            </a>
-
-            <router-link to="/admin/apps/mailbox">Mailbox</router-link>
-
-            <router-link to="/admin/apps/todos">Todos</router-link>
           </v-collapse-item>
 
           <v-collapse-item active-url="/admin/settings">

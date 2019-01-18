@@ -39,7 +39,7 @@
                   chart.data.push(e);
                });
             });
-            console.log(chart.data);
+            // console.log(chart.data);
             // Create axes
             let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
             categoryAxis.dataFields.category = dataFields;
