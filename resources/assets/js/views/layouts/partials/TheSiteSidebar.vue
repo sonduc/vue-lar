@@ -80,6 +80,15 @@
             <router-link to="/admin/blogs/create">Đăng bài viết</router-link>
           </v-collapse-item>
 
+          <v-collapse-item active-url="/admin/comforts">
+            <a slot="item-title" href="#">
+              <i class="icon-fa icon-fa-bed"/>Tiện ích
+              <span class="icon-fa arrow icon-fa-fw"/>
+            </a>
+            <router-link to="/admin/comforts/list">Danh sách Tiện ích</router-link>
+            <router-link to="/admin/comforts/create">Tạo tiện ích</router-link>
+          </v-collapse-item>
+
           <v-collapse-item active-url="/admin/settings">
             <router-link slot="item-title" to="/admin/settings">
               <i class="icon-fa icon-fa-cogs"/>Settings

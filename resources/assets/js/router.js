@@ -59,6 +59,11 @@ import BlogDetail from './views/admin/blogs/BlogDetail.vue'
 import BlogCreate from './views/admin/blogs/BlogCreate.vue'
 import BlogUpdate from './views/admin/blogs/BlogUpdate.vue'
 
+// Comforts
+import ComfortList from './views/admin/comforts/ComfortList.vue'
+import ComfortCreate from './views/admin/comforts/ComfortCreate.vue'
+import ComfortUpdate from './views/admin/comforts/ComfortUpdate.vue'
+
 // Collection
 import CollectionList from './views/admin/collections/CollectionList.vue'
 import CollectionCreate from './views/admin/collections/CollectionCreate.vue'
@@ -331,6 +336,28 @@ const routes = [
         path: 'blogs/create',
         name: 'blog.create',
         component: BlogCreate
+      },
+      {
+        path: 'blogs/update/:blogId',
+        name: 'blog.update',
+        component: BlogUpdate
+      },
+
+      // Comforts
+      {
+        path: 'comforts/list',
+        name: 'comfort.list',
+        component: ComfortList
+      },
+      {
+        path: 'comforts/create',
+        name: 'comfort.create',
+        component: ComfortCreate
+      },
+      {
+        path: 'comforts/update/:comfortId',
+        name: 'comfort.update',
+        component: ComfortUpdate
       },
 
       {

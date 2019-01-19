@@ -1263,7 +1263,6 @@ export default {
                       "Phiếu giảm giá được cập nhật thành công",
                       "success"
                     );
-                    // console.log(response);
                     this.$router.push({ name: "promotion.list" });
                   })
                   .catch(error => {
