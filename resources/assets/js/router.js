@@ -145,17 +145,17 @@ const routes = [
       {
         path: 'dashboard/booking',
         component: BookingStatistical,
-        name: 'dashboard'
+        name: 'dashboard.booking'
       },
       {
         path: 'dashboard/finance',
         component: FinanceStatistical,
-        name: 'dashboard'
+        name: 'dashboard.finance'
       },
       {
         path: 'dashboard/room',
         component: RoomStatistical,
-        name: 'dashboard'
+        name: 'dashboard.room'
       },
 
       //  Users
