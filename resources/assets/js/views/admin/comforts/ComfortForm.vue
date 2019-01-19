@@ -24,8 +24,8 @@
                     <div class="form-group">
                       <label :style="errors.has('comfort.icon') ? 'color:red;' : ''">
                         {{errors.has('comfort.icon')
-                          ? errors.first('comfort.icon') :
-                          'Icon biểu thị *'}}
+                        ? errors.first('comfort.icon') :
+                        'Icon biểu thị *'}}
                       </label>
                       <multiselect
                         style="z-index: 10"
@@ -43,26 +43,28 @@
                         :show-labels="false"
                         :allow-empty="false"
                       >
-                      <template slot="singleLabel" slot-scope="props">
-                        <img
-                          height="25px" width="25px;"
-                          class="option__image"
-                          :alt="props.option.icon"
-                          :src="'/assets/svg_comforts/'+ comfort.icon +'.svg'"
-                          style="margin-right: 10px;"/>
-                          <span class="option__title">
-                            {{ props.option.name }}
-                          </span>
-                      </template>
-                      <template slot="option" slot-scope="props">
-                        <img
-                          height="25px" width="25px;"
-                          class="option__image"
-                          :src="props.option.icon"
-                          style="margin-right: 10px;" />
-                        <span class="option__title">{{ props.option.name }}</span>
-                      </template>
-                    </multiselect>
+                        <template slot="singleLabel" slot-scope="props">
+                          <img
+                            height="25px"
+                            width="25px;"
+                            class="option__image"
+                            :alt="props.option.icon"
+                            :src="'/assets/svg_comforts/'+ comfort.icon +'.svg'"
+                            style="margin-right: 10px;"
+                          >
+                          <span class="option__title">{{ props.option.name }}</span>
+                        </template>
+                        <template slot="option" slot-scope="props">
+                          <img
+                            height="25px"
+                            width="25px;"
+                            class="option__image"
+                            :src="props.option.icon"
+                            style="margin-right: 10px;"
+                          >
+                          <span class="option__title">{{ props.option.name }}</span>
+                        </template>
+                      </multiselect>
                     </div>
                   </div>
                 </div>
@@ -97,7 +99,8 @@
                     <tabs
                       :options="{ useUrlFragment: false }"
                       class="tabs-default"
-                      @changed="tabChanged">
+                      @changed="tabChanged"
+                    >
                       <tab
                         :id="detail.id"
                         :name="detail.lang === 'vi' ? 'Việt Nam':'English'"
@@ -106,9 +109,7 @@
                       >
                         <div class="col-lg-12">
                           <div class="form-group">
-                            <label
-                              :style="errors.has('detail.name' + index) ? 'color:red;' : ''"
-                            >
+                            <label :style="errors.has('detail.name' + index) ? 'color:red;' : ''">
                               {{errors.has('detail.name' + index)
                               ? errors.first('detail.name' + index) : 'Tên tiện ích *'}}
                             </label>
@@ -122,19 +123,12 @@
                             >
                           </div>
                           <div class="form-group">
-                            <label
-                              :style="errors.has('detail.description' + index) ? 'color:red;' : ''"
-                            >
-                              {{errors.has('detail.description' + index)
-                              ? errors.first('detail.description' + index) : 'Mô tả *'}}
-                            </label>
+                            <label>Mô tả</label>
                             <textarea
                               rows="4"
                               type="text"
                               v-model="comfort.details[index].description"
                               :name="'detail.description' + index"
-                              v-validate="'required'"
-                              data-vv-as="Mô tả"
                               class="form-control"
                             ></textarea>
                           </div>
@@ -144,12 +138,13 @@
                   </div>
                 </div>
                 <div class="btn-center">
-                  <button class="btn btn-success" v-if="type === 'Create'"
-                    @click.prevent="onSubmit">Tạo tiện ích</button>
-                  <button class="btn btn-success" v-else
-                    @click.prevent="onSubmit">Cập nhật tiện ích</button>
-                  <button class="btn btn-danger"
-                    @click.prevent="returnComfortList">Quay lại</button>
+                  <button
+                    class="btn btn-success"
+                    v-if="type === 'Create'"
+                    @click.prevent="onSubmit"
+                  >Tạo tiện ích</button>
+                  <button class="btn btn-success" v-else @click.prevent="onSubmit">Cập nhật tiện ích</button>
+                  <button class="btn btn-danger" @click.prevent="returnComfortList">Quay lại</button>
                 </div>
               </div>
             </div>
@@ -166,16 +161,16 @@ import { FormWizard, TabContent } from "vue-form-wizard";
 import { Tabs, Tab } from "vue-tabs-component";
 import Multiselect from "vue-multiselect";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
-import { map } from 'lodash'
+import { map } from "lodash";
 import { comforts } from "../../../helpers/comforts";
 export default {
-  mixins: [ comforts ],
+  mixins: [comforts],
   components: {
     FormWizard,
     TabContent,
     Tabs,
     Tab,
-    Multiselect,
+    Multiselect
   },
   props: {
     type: {
@@ -198,10 +193,10 @@ export default {
             name: "",
             description: "",
             lang: "vi"
-          },
+          }
         ]
       },
-      currentTab: null,
+      currentTab: null
     };
   },
   computed: {
@@ -210,47 +205,47 @@ export default {
         let length = this.comfort.details.length;
         return !!(length == 1);
       }
-    },
+    }
   },
   watch: {
-   value: {
+    value: {
       handler(val) {
-        if(val) {
+        if (val) {
           this.comfort.icon = val.name;
         }
       }
-    },
+    }
   },
   methods: {
-     setInitData() {
+    setInitData() {
       let dataComfort = { ...this.dataComfort };
       if (dataComfort.details) {
         dataComfort.details = map(dataComfort.details.data, detail => {
-          return detail
-        })
+          return detail;
+        });
       }
-      this.comfort = { ...this.comfort, ...dataComfort}
+      this.comfort = { ...this.comfort, ...dataComfort };
       this.value = {
         name: dataComfort.icon,
-        value: '/assets/svg_comforts/' + dataComfort.icon + '.svg'
-      }
+        value: "/assets/svg_comforts/" + dataComfort.icon + ".svg"
+      };
     },
     addNewLangEnglishForm() {
       this.comfort.details.push({
         name: "",
         description: "",
-        lang: "en",
+        lang: "en"
       });
     },
     deleteLangEnglishForm() {
       let index = this.comfort.details.findIndex(x => x.lang == "en");
       this.comfort.details.splice(index, 1);
     },
-    tabChanged (selectedTab) {
+    tabChanged(selectedTab) {
       this.currentTab = selectedTab.tab.name;
     },
-    customLabel ({ name, icon }) {
-      return `${name} - ${icon}`
+    customLabel({ name, icon }) {
+      return `${name} - ${icon}`;
     },
     returnComfortList() {
       this.$router.push({
@@ -330,7 +325,7 @@ export default {
           }
         }
       }
-    },
+    }
   },
   created() {
     !(this.dataComfort === null) && this.setInitData();
