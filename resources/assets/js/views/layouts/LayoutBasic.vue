@@ -20,6 +20,7 @@ export default {
   },
   mounted() {
     this.$utils.setLayout("default");
+    this.$utils.setSkin("lannister");
   }
 };
 </script>

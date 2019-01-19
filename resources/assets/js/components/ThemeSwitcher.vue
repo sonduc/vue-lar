@@ -27,7 +27,7 @@ export default {
   data () {
     return {
       isOpen: false,
-      selectedSkin: 'tyrell',
+      selectedSkin: 'lannister',
       skins: [
         {title: 'Skin - Default', 'slug': 'default', 'img': '/assets/img/skins/skin-default.png', 'light': false},
         {title: 'Skin - Tyrell', 'slug': 'tyrell', 'img': '/assets/img/skins/skin-tyrell.png', 'light': true},
@@ -42,11 +42,11 @@ export default {
     selectSkin (skin) {
       this.selectedSkin = skin.slug
       this.$utils.setSkin(skin.slug)
-      if (skin.light === true) {
-        this.$utils.setLogo('/assets/img/logo_white.png')
-      } else {
-        this.$utils.setLogo('/assets/img/logo-desk.png')
-      }
+      // if (skin.light === true) {
+      //   this.$utils.setLogo('/assets/img/logo_white.png')
+      // } else {
+      //   this.$utils.setLogo('/assets/img/logo-desk.png')
+      // }
     }
   }
 }
