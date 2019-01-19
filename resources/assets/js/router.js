@@ -121,13 +121,7 @@ const routes = [
       path: 'login',
       component: Login,
       name: 'login'
-    }]
-  },
-
-  {
-    path: '/',
-    component: LayoutLogin,
-    children: [{
+    }, {
       path: '/',
       component: Login,
       name: 'home'
@@ -379,22 +373,6 @@ const routes = [
    | Auth & Registration Routes
    |--------------------------------------------------------------------------|
    */
-
-  // {
-  //   path: '/',
-  //   component: LayoutLogin,
-  //   children: [{
-  //       path: 'login',
-  //       component: Login,
-  //       name: 'login'
-  //     },
-  //     {
-  //       path: 'register',
-  //       component: Register,
-  //       name: 'register'
-  //     }
-  //   ]
-  // },
 
   //   DEFAULT ROUTE
   {

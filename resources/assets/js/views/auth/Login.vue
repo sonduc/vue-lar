@@ -64,8 +64,8 @@ export default {
   data() {
     return {
       loginData: {
-        email: "admin@westay.org",
-        password: "admin",
+        email: "",
+        password: "",
         remember: ""
       }
     };
