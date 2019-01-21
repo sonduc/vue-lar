@@ -354,12 +354,6 @@ const routes = [
         component: ComfortUpdate
       },
 
-      {
-        path: 'blogs/update/:blogId',
-        name: 'blog.update',
-        component: BlogUpdate
-      },
-
       //  Settings
       {
         path: 'settings',
