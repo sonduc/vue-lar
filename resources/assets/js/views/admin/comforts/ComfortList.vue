@@ -39,10 +39,10 @@
               <td class="cell-content" width="40%">
                 <div class="content">
                   <div class="content-name">
-                    <img
-                      height="25px" width="25px"
-                      :src="'/assets/svg_comforts/'+ comfort.icon +'.svg'"
-                      />
+                    <div
+                      style="height: 25px; width: 25px;"
+                      v-html="comfort.icon">
+                    </div>
                   </div>
                 </div>
               </td>

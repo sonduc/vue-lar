@@ -481,7 +481,6 @@ export default {
           let paginate = response.data.meta.pagination;
           this.count = paginate.count;
         }
-        // console.log('asdf' + roomSearch);
         this.markers = [];
         this.changeSearchMapStatus(0);
         roomSearch.forEach(room => {
