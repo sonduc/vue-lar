@@ -43,9 +43,6 @@
                         :allow-empty="false"
                       >
                         <template slot="singleLabel" slot-scope="props">
-                          <!-- <div
-                            style="height:25px; width: 25px;"
-                            v-html="comfort.icon"></div> -->
                           <img
                             height="25px"
                             width="25px;"
@@ -179,6 +176,7 @@ export default {
       svgChoose: null,
       comfort: {
         icon: null,
+        icon_name: null,
         details: [
           {
             name: "",
@@ -258,6 +256,7 @@ export default {
             showLoaderOnConfirm: false
           });
           this.comfort.icon = this.getContentFileSvg(this.svgChoose.icon);
+          this.comfort.icon_name = this.svgChoose.name;
           let response = await axios
             .post("comforts", this.comfort)
             .then(response => {
@@ -266,7 +265,7 @@ export default {
                 "Tiện ích được tạo mới thành công",
                 "success"
               );
-              // this.$router.push({ name: "comfort.list" });
+              this.$router.push({ name: "comfort.list" });
             })
             .catch(error => {
               let err = error.response.data.data.errors;

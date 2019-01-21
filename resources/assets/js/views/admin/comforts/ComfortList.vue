@@ -40,7 +40,7 @@
                 <div class="content">
                   <div class="content-name">
                     <div
-                      style="height: 25px; width: 25px;"
+                      style="height: 25px;width: 25px;margin-left: 26px;"
                       v-html="comfort.icon">
                     </div>
                   </div>

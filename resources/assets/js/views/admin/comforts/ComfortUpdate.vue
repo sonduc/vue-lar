@@ -46,10 +46,14 @@
                         <template
                           slot="singleLabel" slot-scope="props">
                           <div
-                           v-if="icon_rechoose == 0"
-                            style="height: 25px; width: 25px;"
+                            v-if="icon_rechoose == 0"
+                            style="width: 25px; height: 6px;"
                             v-html="comfort.icon">
                           </div>
+                          <span
+                            v-if="icon_rechoose == 0"
+                            style="margin-left: 37px;">{{ comfort.icon_name }}
+                          </span>
                           <img
                             v-if="icon_rechoose == 1"
                             height="25px"
@@ -295,7 +299,9 @@ export default {
           });
           if(this.icon_rechoose == 1) {
             this.comfort.icon = this.getContentFileSvg(this.svgChoose.icon);
+            this.comfort.icon_name = this.svgChoose.name;
           }
+
           let response = await axios
             .put(`comforts/${this.$route.params.comfortId}`, this.comfort)
             .then(response => {
