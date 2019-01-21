@@ -17,9 +17,7 @@ export default {
         title: {
           text: ""
         },
-        xAxis: {
-          type: "category"
-        },
+        series: [],
         yAxis: {
           min: 0,
           title: {
@@ -29,22 +27,33 @@ export default {
             enabled: true
           }
         },
-        legend: {
-          enabled: true
+        xAxis: {
+          categories: []
         },
-        series: [],
         plotOptions: {
           column: {
-            pointPadding: 0.2,
-            borderWidth: 0,
+            // stacking: "normal",
             dataLabels: {
               enabled: true
             }
           }
         },
         tooltip: {
-          pointFormat:
-            '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> book<br/>'
+          formatter() {
+            var cancelText =
+              "<br/><span>Số phòng</span>: <b>" +
+              this.series.userOptions.data[this.point.x] +
+              "</b>";
+            return (
+              this.x +
+              '<br/>  <span style="color:' +
+              this.series.color +
+              '">' +
+              this.series.name +
+              ": </span>" +
+              cancelText
+            );
+          }
         }
       }
     };
@@ -69,14 +78,15 @@ export default {
   },
   methods: {
     async getData() {
-      const response = await axios.get("statisticals/room-top-booking", {
+      const response = await axios.get("statisticals/room-type-compare", {
         params: {
+          view: this.view,
           date_start: this.date_start,
-          date_end: this.date_end,
-          take: 10
+          date_end: this.date_end
         }
       });
-      this.chartOptions.series = response.data.data[0];
+      this.chartOptions.series = response.data.data.data;
+      this.chartOptions.xAxis.categories = response.data.data.createdAt;
     }
   },
   mounted() {
