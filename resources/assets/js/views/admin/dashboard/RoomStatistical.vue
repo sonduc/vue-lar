@@ -33,13 +33,13 @@
               <div class="form-group row">
                 <label for="lastName" class="col-sm-1 col-form-label">Từ</label>
                 <div class="col-sm-5">
-                  <datepicker v-model="date_start" :format="format" input-class="form-control"/>
+                  <datepicker v-model="start" :format="format" input-class="form-control"/>
                 </div>
                 <label for="lastName" class="col-sm-1 col-form-label">Đến</label>
                 <div class="col-sm-5">
                   <datepicker
                     :disabled-dates="disabledDateEnd"
-                    v-model="date_end"
+                    v-model="end"
                     :format="format"
                     input-class="form-control"
                   />
@@ -58,13 +58,13 @@
             <div class="card">
               <div class="card-header">
                 <h6>
-                  <i class="icon-fa icon-fa-line-chart text-warning"/>Biểu đồ số phòng trên hệ thống
+                  <i class="icon-fa icon-fa-line-chart text-warning"/>Tổng số phòng trên hệ thống
                 </h6>
               </div>
               <div class="card-body">
                 <chart-room-by-room-type
-                  :date_end="date_end"
-                  :date_start="date_start"
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
                   :view="view"
                 />
               </div>
@@ -76,11 +76,15 @@
             <div class="card">
               <div class="card-header">
                 <h6>
-                  <i class="icon-fa icon-fa-line-chart text-warning"/>Biểu đồ số phòng trên hệ thống
+                  <i class="icon-fa icon-fa-line-chart text-warning"/>Số phòng theo tỉnh thành
                 </h6>
               </div>
               <div class="card-body">
-                <chart-room-by-city :date_end="date_end" :date_start="date_start" :view="view"/>
+                <chart-room-by-city
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
+                  :view="view"
+                />
               </div>
             </div>
           </div>
@@ -91,11 +95,37 @@
               <div class="card-header">
                 <h6>
                   <i class="icon-fa icon-fa-line-chart text-warning"/>
-                  Top phòng có nhiều booking nhất từ {{$date_start}} - {{$date_end}}
+                  Top phòng có nhiều booking nhất từ
+                  <b>{{date_start !== null ? date_start.toISOString().substr(0, 10) : ''}}</b> đến
+                  <b>{{date_end !== null ? date_end.toISOString().substr(0, 10) : ''}}</b>
                 </h6>
               </div>
               <div class="card-body">
-                <chart-top-room :date_end="date_end" :date_start="date_start"/>
+                <chart-top-room
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12 col-xl-12 mt-2">
+            <div class="card">
+              <div class="card-header">
+                <h6>
+                  <i class="icon-fa icon-fa-line-chart text-warning"/>
+                  Top phòng có nhiều booking nhất từ
+                  <b>{{date_start !== null ? date_start.toISOString().substr(0, 10) : ''}}</b> đến
+                  <b>{{date_end !== null ? date_end.toISOString().substr(0, 10) : ''}}</b>
+                </h6>
+              </div>
+              <div class="card-body">
+                <room-compare
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
+                  :view="view"
+                />
               </div>
             </div>
           </div>
@@ -112,20 +142,22 @@ import { format, constant, location } from "../../../helpers/mixins";
 import ChartRoomByRoomType from "./ChartRoomByRoomType.vue";
 import ChartRoomByCity from "./ChartRoomByCity.vue";
 import ChartTopRoom from "./ChartTopRoom.vue";
+import RoomCompare from "./RoomCompare.vue";
 
 export default {
   components: {
     Datepicker,
     ChartRoomByRoomType,
     ChartRoomByCity,
-    ChartTopRoom
+    ChartTopRoom,
+    RoomCompare
   },
   data() {
     return {
       header: "header",
-      date_start: null,
-      date_end: null,
-      view: "day",
+      start: null,
+      end: null,
+      view: "week",
       permissions: "statistics.view",
       status: 4,
       format: "yyyy-MM-dd",
@@ -136,9 +168,23 @@ export default {
   },
   methods: {
     resetFilter() {
-      this.date_start = null;
-      this.date_end = null;
+      this.start = null;
+      this.end = null;
       this.view = "week";
+    }
+  },
+  computed: {
+    date_start() {
+      var today = new Date();
+      var lastWeek = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() - 7
+      );
+      return this.start !== null ? this.start : lastWeek;
+    },
+    date_end() {
+      return this.end !== null ? this.end : new Date();
     }
   },
   mounted() {
