@@ -11,7 +11,6 @@
         </li>
       </ol>
     </div>
-    <!-- v-if="checkLoadedImage()" -->
     <lottie v-if="loading" :options="defaultOptions" :height="150" :width="150"></lottie>
     <div class="row" v-else>
       <div class="col-lg-12">
@@ -441,7 +440,6 @@ export default {
       isUpdateSettings: 0,
       arrImgHomepage: [],
       arrImgLogo: [],
-      listSettings: [],
       loadedImages: 0,
     }
   },
@@ -583,15 +581,31 @@ export default {
       let arrPhone = this.settings.contact_hotline.map(item => item.phone);
       if(this.checkDistinctInArray(arrAccountName)) {
         window.toastr["error"]("Tên tài khoản ngân hàng trùng nhau", "Error");
+        return window.scroll({
+          top: 600,
+          behavior: "smooth"
+        });
       }
       else if(this.checkDistinctInArray(arrAccountNumber)) {
         window.toastr["error"]("Số tài khoản ngân hàng trùng nhau", "Error");
-      }
-      else if(this.checkDistinctInArray(arrEmail)) {
-        window.toastr["error"]("Email trùng nhau", "Error");
+        return window.scroll({
+          top: 600,
+          behavior: "smooth"
+        });
       }
       else if(this.checkDistinctInArray(arrPhone)) {
         window.toastr["error"]("Số điện thoại trùng nhau", "Error");
+        return window.scroll({
+          top: 900,
+          behavior: "smooth"
+        });
+      }
+      else if(this.checkDistinctInArray(arrEmail)) {
+        window.toastr["error"]("Email trùng nhau", "Error");
+        return window.scroll({
+          top: 1100,
+          behavior: "smooth"
+        });
       }
       else {
         const result = await this.$validator.validateAll();
@@ -695,19 +709,6 @@ export default {
         if(index > -1) {
           this.arrImgLogo.splice(index, 1);
         }
-      }
-    },
-    checkLoadedImage() {
-      if(this.isUpdateSettings) {
-        if(this.loadedImages == 2){
-          return true;
-        }
-        else {
-          return false;
-        }
-      }
-      else {
-        return true;
       }
     },
     checkDistinctInArray(array) {
