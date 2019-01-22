@@ -89,6 +89,15 @@
             <router-link to="/admin/comforts/create">Tạo tiện ích</router-link>
           </v-collapse-item>
 
+          <v-collapse-item active-url="/admin/transactions">
+            <a slot="item-title" href="#">
+              <i class="icon-fa icon-fa-money"/>Sổ quỹ
+              <span class="icon-fa arrow icon-fa-fw"/>
+            </a>
+            <router-link to="/admin/transactions/list">Giao dịch</router-link>
+            <router-link to="/admin/transactions/compare-checking">Đối soát</router-link>
+          </v-collapse-item>
+
           <v-collapse-item active-url="/admin/settings">
             <router-link slot="item-title" to="/admin/settings">
               <i class="icon-fa icon-fa-cogs"/>Settings
