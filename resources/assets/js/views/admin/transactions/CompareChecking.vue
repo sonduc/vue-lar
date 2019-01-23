@@ -22,15 +22,15 @@
           <div class="row">
             <div class="col-md-6 col-sm-6 col-lg-6 col-xs-12">
               <div class="form-group row">
-                <label for="firstName" class="col-sm-2 col-md-3 col-form-label">Tên chủ nhà</label>
+                <label for="email" class="col-sm-2 col-md-3 col-form-label">Chủ nhà</label>
                 <div class="col-sm-10 col-md-9">
-                  <input
-                    v-model="q"
-                    id="firstName"
-                    type="text"
-                    class="form-control"
-                    placeholder="Nhập vào tên chủ nhà"
-                  >
+                  <multiselect
+                    v-model="merchant"
+                    label="name"
+                    :options="merchants"
+                    :searchable="true"
+                    :show-labels="false"
+                  />
                 </div>
               </div>
             </div>
@@ -55,82 +55,53 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xs-12">
-              <div class="form-group row">
-                <label for="email" class="col-sm-2 col-md-3 col-form-label">Loại giao dịch</label>
-                <div class="col-sm-10 col-md-9">
-                  <multiselect
-                    v-model="transaction_type"
-                    label="value"
-                    :options="transaction_types"
-                    :searchable="true"
-                    :show-labels="false"
-                  />
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="email" class="col-sm-2 col-md-3 col-form-label">Chủ nhà</label>
-                <div class="col-sm-10 col-md-9">
-                  <multiselect
-                    v-model="merchant"
-                    label="name"
-                    :options="merchants"
-                    :searchable="true"
-                    :show-labels="false"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xs-12">
-              <div class="form-group row">
-                <label for="email" class="col-sm-2 col-md-3 col-form-label">Phòng</label>
-                <div class="col-sm-10 col-md-9">
-                  <multiselect
-                    v-model="room"
-                    label="name"
-                    :options="rooms"
-                    :searchable="true"
-                    :show-labels="false"
-                  />
-                </div>
-              </div>
-            </div>
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xs-12"></div>
           </div>
           <button @click="applyFilter(1)" class="btn btn-success btn-sm">Áp dụng</button>
           <button @click="resetFilter(1)" class="btn btn-info btn-sm">Làm mới</button>
         </div>
       </div>
-      <div class="mailbox-content">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="card">
-              <div class="card-header">
-                <h6>Tất cả giao dịch</h6>
-                <div class="card-actions"/>
-              </div>
-              <div class="card-body">
-                <table-component :data="getTransactions" table-class="table">
-                  <table-column show="transaction_id" label="Mã giao dịch"/>
-                  <table-column show="type_txt" label="Loại giao dịch"/>
-                  <table-column label="Mã đặt phòng">
-                    <template slot-scope="row">
-                      <button
-                        v-if="row.booking.data.length !== 0"
-                        class="btn btn-xs btn-outline-primary"
-                      >{{row.booking.data.code}}</button>
-                    </template>
-                  </table-column>
-                  <table-column show="debit" :formatter="formatter" label="debit"/>
-                  <table-column show="credit" :formatter="formatter" label="credit"/>
-                  <table-column show="bonus" :formatter="formatter" label="bonus"/>
-                  <table-column show="comission" label="Comission"/>
-                  <table-column show="user.data.name" label="Chủ nhà"/>
-                  <table-column show="created_at" label="Thời gian tạo"/>
-                </table-component>
-              </div>
+      <!-- <div class="mailbox-content"> -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-header">
+              <h6>Tất cả giao dịch</h6>
+            </div>
+            <div class="card-body">
+              <table-component v-if="data_test !== null" :data="data_test" table-class="table">
+                <table-column show="id" label="Mã giao dịch"/>
+                <table-column show="date" label="Ngày đối soát"/>
+                <table-column show="total_debit" :formatter="formatter" label="Tổng Debit"/>
+                <table-column show="total_credit" :formatter="formatter" label="Tổng Credit"/>
+                <table-column show="total_bonus" :formatter="formatter" label="Tổng thưởng"/>
+                <table-column
+                  show="total_compare_checking"
+                  :formatter="formatter"
+                  label="Tổng đối soát"
+                />
+                <table-column show="user.data.name" label="Chủ nhà"/>
+                <table-column label="Trạng thái">
+                  <template slot-scope="row">
+                    <button
+                      @click="updateCompareCheckingStatus('status',row)"
+                      :class="row.status == 0 ? 'btn btn-danger btn-sm' : 'btn btn-success btn-sm'"
+                    >{{row.status_txt}}</button>
+                  </template>
+                </table-column>
+              </table-component>
+            </div>
+
+            <div class="card-footer">
+              <pagination
+                @clicked="reloadData"
+                :total-pages="totalPages"
+                :current-page="currentPage"
+              />
             </div>
           </div>
         </div>
+        <!-- </div> -->
       </div>
     </div>
     <!-- All Modal Here -->
@@ -144,6 +115,7 @@ import Auth from "../../../services/auth";
 import numeral from "numeral";
 import Multiselect from "vue-multiselect";
 import Datepicker from "vuejs-datepicker";
+import Pagination from "../../../components/paginate/ServerPagination";
 
 export default {
   components: {
@@ -151,32 +123,26 @@ export default {
     TableColumn,
     SweetModal,
     Datepicker,
-    Multiselect
+    Multiselect,
+    Pagination
   },
   data() {
     return {
       format: "yyyy-MM-dd",
-      q: "",
       date_start: null,
       date_end: null,
-      rooms: [],
-      transaction_types: [],
+      date: null,
       merchants: [],
+      data_test: null,
       merchant: {
-        id: ""
-      },
-      merchant: {
-        id: ""
-      },
-      room: {
-        id: ""
-      },
-      transaction_type: {
         id: ""
       },
       disabledCheckout: {
         to: ""
       },
+      totalPages: null,
+      currentPage: null,
+      count: null,
       permissions: "transaction.view"
     };
   },
@@ -184,46 +150,27 @@ export default {
     Vue.component("SweetModal", SweetModal);
   },
   methods: {
-    async getTransactions({ page, filter, sort }) {
+    async getCompareChecking({ page, filter, sort }) {
       try {
-        const response = await axios.get(`transactions`, {
+        const response = await axios.get(`compare-checking`, {
           params: {
-            include: "user,booking,room",
+            include: "user",
             page: page,
-            date_start: this.date_start,
-            date_end: this.date_end,
-            property: this.room.id,
             merchant: this.merchant.id,
-            type: this.transaction_type.id
+            date_start: this.date_start,
+            date_end: this.date_end
           }
         });
         let paginate = response.data.meta.pagination;
-        return {
-          data: response.data.data,
-          pagination: {
-            totalPages: paginate.total_pages,
-            currentPage: page,
-            count: paginate.count
-          }
-        };
+        this.data_test = response.data.data;
+        this.currentPage = paginate.current_page;
+        this.totalPages = paginate.total_pages;
+        this.count = paginate.count;
       } catch (error) {
         if (error) {
+          // console.log(error);
           window.toastr["error"](
-            "Không thể lấy được dữ liệu giao dịch",
-            "Error"
-          );
-        }
-      }
-    },
-    async getTransactionTypes() {
-      try {
-        const response = await axios.get(`transaction-types`);
-
-        this.transaction_types = response.data;
-      } catch (error) {
-        if (error) {
-          window.toastr["error"](
-            "Không thể lấy được dữ liệu loại giao dịch",
+            "Không thể lấy được dữ liệu đối soát",
             "Error"
           );
         }
@@ -244,21 +191,12 @@ export default {
         }
       }
     },
-    async getRooms() {
-      try {
-        const response = await axios.get(`rooms/get-name`);
-        this.rooms = response.data.data;
-      } catch (error) {
-        if (error) {
-          window.toastr["error"]("Không lấy được dữ liệu phòng", "Error");
-        }
-      }
-    },
+
     formatter(value, rowProperties) {
       return numeral(value).format("0,0");
     },
     applyFilter(page) {
-      this.getTransactions({
+      this.getCompareChecking({
         page
       });
     },
@@ -266,7 +204,38 @@ export default {
       this.q = "";
       this.date_start = null;
       this.date_end = null;
-      this.getTransactions({
+      this.merchant = {
+        id: ""
+      };
+      this.getCompareChecking({
+        page
+      });
+    },
+    async updateCompareCheckingStatus(option = "status", compare_checking) {
+      // console.log(compare_checking);
+      let response = await axios
+        .put(
+          `compare-checking/prop-update/${
+            compare_checking.id
+          }?option=${option}`,
+          {
+            status: compare_checking.status == 1 ? 0 : 1
+          }
+        )
+        .then(result => {
+          if (result) {
+            this.getCompareChecking({});
+            window.toastr["success"](
+              "Đã thay đổi trạng thái đối soát",
+              "Success"
+            );
+          } else {
+            window.toastr["error"]("Something wrong!", "Error");
+          }
+        });
+    },
+    reloadData(page) {
+      this.getCompareChecking({
         page
       });
     }
@@ -287,8 +256,7 @@ export default {
             this.$router.push("/permission-denied-403");
           } else {
             this.getMerchants();
-            this.getTransactionTypes();
-            this.getRooms();
+            this.getCompareChecking({});
           }
         });
       }

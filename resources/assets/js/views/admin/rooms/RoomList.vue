@@ -200,7 +200,7 @@
                 <div class="col-sm-3">
                   <datepicker v-model="date_start" :format="format" input-class="form-control"/>
                 </div>
-              </div> -->
+              </div>-->
             </div>
           </div>
           <button @click="applyFilter(1)" class="btn btn-success btn-sm">Áp dụng</button>
@@ -228,7 +228,9 @@
             <tr v-for="(room,index) in filteredRooms" :key="index" :class="{'read' : room.status }">
               <td>{{index+1}}</td>
               <td v-if="room.media.data.length">
-                <img v-for="(item,index) in room.media.data" :key="index"
+                <img
+                  v-for="(item,index) in room.media.data"
+                  :key="index"
                   v-if="item.type == 4"
                   :src="'https://s3-ap-southeast-1.amazonaws.com/d-beauty/'+item.image"
                   height="150px"

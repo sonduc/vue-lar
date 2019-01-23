@@ -90,7 +90,7 @@
                 </tabs>
                 <div class="col-xl-12 mb-3">
                   <label v-if="tags.length">Tags bài viết</label>
-                  <label v-else style="color: red;">Tags bài viết là bắt buộc </label>
+                  <label v-else style="color: red;">Tags bài viết là bắt buộc</label>
                   <vue-tags-input
                     v-model="tag"
                     :tags="tags"
@@ -99,7 +99,7 @@
                 </div>
                 <div class="col-xl-12 mb-3">
                   <label v-if="images.length">Ảnh đại diện</label>
-                  <label v-else style="color: red;">Upload ảnh là bắt buộc </label>
+                  <label v-else style="color: red;">Upload ảnh là bắt buộc</label>
                   <vue-dropzone
                     id="dropzone"
                     ref="myVueDropzone"
@@ -114,8 +114,8 @@
             <button
               :disabled="images.length < 1 || tags.length < 1"
               @click="createBlog"
-              class="btn btn-primary">Lưu bài viết
-            </button>
+              class="btn btn-primary"
+            >Lưu bài viết</button>
           </div>
           <div class="card-footer"></div>
         </div>
@@ -145,9 +145,9 @@ export default {
   },
   data() {
     return {
-      tag: '',
+      tag: "",
       tags: [],
-      images:[],
+      images: [],
       imageBlog: {
         url: "https://httpbin.org/post",
         maxFilesize: 3,
@@ -191,7 +191,7 @@ export default {
   computed: {
     category: {
       get() {
-        if(this.categoryChoose.name) {
+        if (this.categoryChoose.name) {
           return {
             name: this.categoryChoose.name
           };
@@ -209,11 +209,14 @@ export default {
         val.forEach(element => {
           this.listCategory.push({
             id: element.id,
-            name: element.details.data[0].lang === "en" ? element.details.data[1].name : ''
+            name:
+              element.details.data[0].lang === "en"
+                ? element.details.data[1].name
+                : ""
           });
         });
       }
-    },
+    }
   },
   methods: {
     async createBlog() {
@@ -223,17 +226,16 @@ export default {
           top: 10,
           behavior: "smooth"
         });
-      }else {
+      } else {
         let lenghtTags = this.tags.length - 1;
-        this.tags.forEach((tag,index) => {
-          if(index != lenghtTags) {
+        this.tags.forEach((tag, index) => {
+          if (index != lenghtTags) {
             this.blog.tags.data[0].name += tag.text;
-            this.blog.tags.data[0].name += ',';
-          }
-          else {
+            this.blog.tags.data[0].name += ",";
+          } else {
             this.blog.tags.data[0].name += tag.text;
           }
-        })
+        });
         this.blog.image = this.images[0];
         try {
           const response = await axios
@@ -278,18 +280,16 @@ export default {
     },
     afterCompleteImageBlog(file) {
       if (file.dataURL) {
-        this.images= [];
+        this.images = [];
         this.images.push(file.dataURL);
       }
     },
     removedImageInDropzone(file, error, xhr) {
-      let index = this.images.findIndex(
-        item => item === file.dataURL
-      );
-      if(index > -1) {
+      let index = this.images.findIndex(item => item === file.dataURL);
+      if (index > -1) {
         this.images.splice(index, 1);
       }
-    },
+    }
   },
   mounted() {
     Auth.getProfile().then(res => {
