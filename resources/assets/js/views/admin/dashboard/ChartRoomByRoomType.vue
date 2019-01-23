@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  props: ["view", "date_start", "date_end"],
+  props: ["view", "date_start", "date_end", "status"],
   data() {
     return {
       updateArgs: [true, true, { duration: 1000 }],
@@ -67,6 +67,7 @@ export default {
     async getData() {
       const response = await axios.get("statisticals/room-type", {
         params: {
+          status: this.status
           //   view: this.view,
           //   date_start: this.date_start,
           //   date_end: this.date_end
