@@ -5,7 +5,7 @@
         <v-collapse accordion>
           <v-collapse-item active-url="/admin/dashboard">
             <a slot="item-title" href="#">
-              <i class="icon-fa icon-fa-dashboard"/>Dashboard
+              <i class="icon-fa icon-fa-dashboard"/>Thống kê
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
 
@@ -27,7 +27,7 @@
 
           <v-collapse-item active-url="/admin/bookings">
             <a slot="item-title" href="#">
-              <i class="icon-fa icon-fa-book"/>Booking
+              <i class="icon-fa icon-fa-book"/>Đặt phòng
               <span class="icon-fa arrow icon-fa-fw"/>
             </a>
             <router-link to="/admin/bookings/list">Danh sách Booking</router-link>
