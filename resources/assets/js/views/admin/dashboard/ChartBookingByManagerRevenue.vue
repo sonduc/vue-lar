@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  props: ["view", "date_start", "date_end"],
+  props: ["view", "date_start", "date_end", "status"],
   data() {
     return {
       updateArgs: [true, true, { duration: 1000 }],
@@ -86,6 +86,9 @@ export default {
     },
     view() {
       this.getData();
+    },
+    status() {
+      this.getData();
     }
   },
   methods: {
@@ -93,6 +96,7 @@ export default {
       const response = await axios.get("statisticals/booking-manager-revenue", {
         params: {
           view: this.view,
+          status: this.status,
           date_start: this.date_start,
           date_end: this.date_end
         }

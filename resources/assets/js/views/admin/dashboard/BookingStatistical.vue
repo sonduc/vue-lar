@@ -7,39 +7,41 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-md-5">
-              <label class="container">
-                Ngày
-                <input type="radio" name="inlineRadioOptions" value="day" v-model="view">
-                <span class="checkmark"></span>
-              </label>
-              <label class="container">
-                Tuần
-                <input type="radio" name="inlineRadioOptions" value="week" v-model="view">
-                <span class="checkmark"></span>
-              </label>
-              <label class="container">
-                Tháng
-                <input type="radio" name="inlineRadioOptions" value="month" v-model="view">
-                <span class="checkmark"></span>
-              </label>
-              <label class="container">
-                Năm
-                <input type="radio" name="inlineRadioOptions" value="year" v-model="view">
-                <span class="checkmark"></span>
-              </label>
-            </div>
-            <div class="col-md-7">
+            <div class="col-md-6">
               <div class="form-group row">
-                <label for="lastName" class="col-sm-1 col-form-label">Từ</label>
-                <div class="col-sm-5">
-                  <datepicker v-model="date_start" :format="format" input-class="form-control"/>
+                <label for="email" class="col-sm-2 col-form-label">Xem theo</label>
+                <div class="col-sm-4">
+                  <multiselect
+                    v-model="current_view"
+                    label="value"
+                    :options="view_list"
+                    :searchable="true"
+                    :show-labels="false"
+                  />
                 </div>
-                <label for="lastName" class="col-sm-1 col-form-label">Đến</label>
-                <div class="col-sm-5">
+                <label for="email" class="col-sm-2 col-form-label">Trạng thái</label>
+                <div class="col-sm-4">
+                  <multiselect
+                    v-model="current_status"
+                    label="value"
+                    :options="status_list"
+                    :searchable="true"
+                    :show-labels="false"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label for="lastName" class="col-sm-3 col-md-3 col-form-label">Từ</label>
+                <div class="col-sm-3 col-md-3">
+                  <datepicker v-model="start" :format="format" input-class="form-control"/>
+                </div>
+                <label for="lastName" class="col-sm-3 col-md-3 col-form-label">Đến</label>
+                <div class="col-sm-3 col-md-3">
                   <datepicker
                     :disabled-dates="disabledDateEnd"
-                    v-model="date_end"
+                    v-model="end"
                     :format="format"
                     input-class="form-control"
                   />
@@ -62,9 +64,10 @@
               </div>
               <div class="card-body">
                 <chart-booking-by-gender
-                  :date_end="date_end"
-                  :date_start="date_start"
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
                   :view="view"
+                  :status="status"
                 />
               </div>
             </div>
@@ -81,9 +84,10 @@
               </div>
               <div class="card-body">
                 <chart-booking-by-status
-                  :date_end="date_end"
-                  :date_start="date_start"
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
                   :view="view"
+                  :status="status"
                 />
               </div>
             </div>
@@ -99,7 +103,12 @@
                 </h6>
               </div>
               <div class="card-body">
-                <chart-booking-by-type :date_end="date_end" :date_start="date_start" :view="view"/>
+                <chart-booking-by-type
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
+                  :view="view"
+                  :status="status"
+                />
               </div>
             </div>
           </div>
@@ -114,7 +123,12 @@
                 </h6>
               </div>
               <div class="card-body">
-                <chart-booking-by-city :date_end="date_end" :date_start="date_start" :view="view"/>
+                <chart-booking-by-city
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
+                  :view="view"
+                  :status="status"
+                />
               </div>
             </div>
           </div>
@@ -130,9 +144,10 @@
               </div>
               <div class="card-body">
                 <chart-booking-by-district
-                  :date_end="date_end"
-                  :date_start="date_start"
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
                   :view="view"
+                  :status="status"
                 />
               </div>
             </div>
@@ -149,9 +164,10 @@
               </div>
               <div class="card-body">
                 <chart-booking-by-price-range
-                  :date_end="date_end"
-                  :date_start="date_start"
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
                   :view="view"
+                  :status="status"
                 />
               </div>
             </div>
@@ -168,9 +184,10 @@
               </div>
               <div class="card-body">
                 <chart-booking-by-age-range
-                  :date_end="date_end"
-                  :date_start="date_start"
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
                   :view="view"
+                  :status="status"
                 />
               </div>
             </div>
@@ -187,9 +204,10 @@
               </div>
               <div class="card-body">
                 <chart-booking-by-source
-                  :date_end="date_end"
-                  :date_start="date_start"
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
                   :view="view"
+                  :status="status"
                 />
               </div>
             </div>
@@ -206,9 +224,10 @@
               </div>
               <div class="card-body">
                 <chart-booking-by-cancel-reason
-                  :date_end="date_end"
-                  :date_start="date_start"
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
                   :view="view"
+                  :status="status"
                 />
               </div>
             </div>
@@ -225,9 +244,10 @@
               </div>
               <div class="card-body">
                 <chart-booking-by-room-type
-                  :date_end="date_end"
-                  :date_start="date_start"
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
                   :view="view"
+                  :status="status"
                 />
               </div>
             </div>
@@ -252,6 +272,7 @@ import ChartBookingByAgeRange from "./ChartBookingByAgeRange.vue";
 import ChartBookingBySource from "./ChartBookingBySource.vue";
 import ChartBookingByCancelReason from "./ChartBookingByCancelReason.vue";
 import ChartBookingByRoomType from "./ChartBookingByRoomType.vue";
+import Multiselect from "vue-multiselect";
 
 export default {
   components: {
@@ -265,27 +286,93 @@ export default {
     ChartBookingByAgeRange,
     ChartBookingBySource,
     ChartBookingByCancelReason,
-    ChartBookingByRoomType
+    ChartBookingByRoomType,
+    Multiselect
   },
   data() {
     return {
       header: "header",
-      date_start: null,
-      date_end: null,
-      view: "day",
+      start: null,
+      end: null,
+      current_view: {
+        id: "day",
+        value: "Ngày"
+      },
+      view_list: [
+        {
+          id: "day",
+          value: "Ngày"
+        },
+        {
+          id: "week",
+          value: "Tuần"
+        },
+        {
+          id: "month",
+          value: "Tháng"
+        },
+        {
+          id: "year",
+          value: "Năm"
+        }
+      ],
+      current_status: {
+        id: "",
+        value: "Tất cả"
+      },
+      status_list: [
+        {
+          id: 4,
+          value: "Thành công"
+        },
+        {
+          id: 5,
+          value: "Hủy"
+        },
+        {
+          id: "",
+          value: "Tất cả"
+        }
+      ],
       permissions: "statistics.view",
-      status: 4,
       format: "yyyy-MM-dd",
       disabledDateEnd: {
         to: ""
       }
     };
   },
+  computed: {
+    date_start() {
+      var today = new Date();
+      var lastWeek = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() - 7
+      );
+      return this.start !== null ? this.start : lastWeek;
+    },
+    date_end() {
+      return this.end !== null ? this.end : new Date();
+    },
+    view() {
+      return this.current_view.id;
+    },
+    status() {
+      return this.current_status.id;
+    }
+  },
   methods: {
     resetFilter() {
-      this.date_start = null;
-      this.date_end = null;
-      this.view = "week";
+      this.start = null;
+      this.end = null;
+      this.current_view = {
+        id: "day",
+        value: "Ngày"
+      };
+      this.current_status = {
+        id: "",
+        value: "Tất cả"
+      };
     }
   },
   mounted() {
