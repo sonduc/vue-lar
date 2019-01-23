@@ -205,7 +205,6 @@ export default {
         }
       ],
       permissions: "statistics.view",
-      status: 4,
       format: "yyyy-MM-dd",
       disabledDateEnd: {
         to: ""

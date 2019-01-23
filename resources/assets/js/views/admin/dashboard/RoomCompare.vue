@@ -74,6 +74,9 @@ export default {
     },
     view() {
       this.getData();
+    },
+    status() {
+      this.getData();
     }
   },
   methods: {
