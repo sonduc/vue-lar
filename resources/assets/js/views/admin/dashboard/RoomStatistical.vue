@@ -7,36 +7,38 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-md-5">
-              <label class="container">
-                Ngày
-                <input type="radio" name="inlineRadioOptions" value="day" v-model="view">
-                <span class="checkmark"></span>
-              </label>
-              <label class="container">
-                Tuần
-                <input type="radio" name="inlineRadioOptions" value="week" v-model="view">
-                <span class="checkmark"></span>
-              </label>
-              <label class="container">
-                Tháng
-                <input type="radio" name="inlineRadioOptions" value="month" v-model="view">
-                <span class="checkmark"></span>
-              </label>
-              <label class="container">
-                Năm
-                <input type="radio" name="inlineRadioOptions" value="year" v-model="view">
-                <span class="checkmark"></span>
-              </label>
-            </div>
-            <div class="col-md-7">
+            <div class="col-md-6">
               <div class="form-group row">
-                <label for="lastName" class="col-sm-1 col-form-label">Từ</label>
-                <div class="col-sm-5">
+                <label for="email" class="col-sm-2 col-form-label">Xem theo</label>
+                <div class="col-sm-4">
+                  <multiselect
+                    v-model="current_view"
+                    label="value"
+                    :options="view_list"
+                    :searchable="true"
+                    :show-labels="false"
+                  />
+                </div>
+                <label for="email" class="col-sm-2 col-form-label">Trạng thái</label>
+                <div class="col-sm-4">
+                  <multiselect
+                    v-model="current_status"
+                    label="value"
+                    :options="status_list"
+                    :searchable="true"
+                    :show-labels="false"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label for="lastName" class="col-sm-3 col-md-3 col-form-label">Từ</label>
+                <div class="col-sm-3 col-md-3">
                   <datepicker v-model="start" :format="format" input-class="form-control"/>
                 </div>
-                <label for="lastName" class="col-sm-1 col-form-label">Đến</label>
-                <div class="col-sm-5">
+                <label for="lastName" class="col-sm-3 col-md-3 col-form-label">Đến</label>
+                <div class="col-sm-3 col-md-3">
                   <datepicker
                     :disabled-dates="disabledDateEnd"
                     v-model="end"
@@ -66,6 +68,7 @@
                   :date_end="date_end.toISOString().substr(0, 10)"
                   :date_start="date_start.toISOString().substr(0, 10)"
                   :view="view"
+                  :status="status"
                 />
               </div>
             </div>
@@ -84,6 +87,7 @@
                   :date_end="date_end.toISOString().substr(0, 10)"
                   :date_start="date_start.toISOString().substr(0, 10)"
                   :view="view"
+                  :status="status"
                 />
               </div>
             </div>
@@ -125,6 +129,7 @@
                   :date_end="date_end.toISOString().substr(0, 10)"
                   :date_start="date_start.toISOString().substr(0, 10)"
                   :view="view"
+                  :status="status"
                 />
               </div>
             </div>
@@ -143,6 +148,7 @@ import ChartRoomByRoomType from "./ChartRoomByRoomType.vue";
 import ChartRoomByCity from "./ChartRoomByCity.vue";
 import ChartTopRoom from "./ChartTopRoom.vue";
 import RoomCompare from "./RoomCompare.vue";
+import Multiselect from "vue-multiselect";
 
 export default {
   components: {
@@ -150,14 +156,54 @@ export default {
     ChartRoomByRoomType,
     ChartRoomByCity,
     ChartTopRoom,
-    RoomCompare
+    RoomCompare,
+    Multiselect
   },
   data() {
     return {
       header: "header",
       start: null,
       end: null,
-      view: "week",
+      current_view: {
+        id: "day",
+        value: "Ngày"
+      },
+      view_list: [
+        {
+          id: "day",
+          value: "Ngày"
+        },
+        {
+          id: "week",
+          value: "Tuần"
+        },
+        {
+          id: "month",
+          value: "Tháng"
+        },
+        {
+          id: "year",
+          value: "Năm"
+        }
+      ],
+      current_status: {
+        id: "",
+        value: "Tất cả"
+      },
+      status_list: [
+        {
+          id: 0,
+          value: "Đang khóa"
+        },
+        {
+          id: 1,
+          value: "Đang hoạt động"
+        },
+        {
+          id: "",
+          value: "Tất cả"
+        }
+      ],
       permissions: "statistics.view",
       status: 4,
       format: "yyyy-MM-dd",
@@ -170,7 +216,14 @@ export default {
     resetFilter() {
       this.start = null;
       this.end = null;
-      this.view = "week";
+      this.current_view = {
+        id: "day",
+        value: "Ngày"
+      };
+      this.current_status = {
+        id: "",
+        value: "Tất cả"
+      };
     }
   },
   computed: {
@@ -185,6 +238,12 @@ export default {
     },
     date_end() {
       return this.end !== null ? this.end : new Date();
+    },
+    view() {
+      return this.current_view.id;
+    },
+    status() {
+      return this.current_status.id;
     }
   },
   mounted() {
