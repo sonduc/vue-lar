@@ -107,10 +107,11 @@
                 <label for="lastName" class="col-sm-2 col-form-label">Từ ngày</label>
                 <div class="col-sm-4">
                   <datepicker
-                  class="custom-input-filter"
-                  v-model="date_start"
-                  :format="format"
-                  input-class="form-control"/>
+                    class="custom-input-filter"
+                    v-model="date_start"
+                    :format="format"
+                    input-class="form-control"
+                  />
                 </div>
                 <label for="lastName" class="col-sm-2 col-form-label">Đến ngày</label>
                 <div class="col-sm-4">
@@ -146,8 +147,11 @@
             <tr v-for="(blog,index) in blogs" :key="index" :class="{'read' : blog.status }">
               <td>{{index + 1}}</td>
               <td class="cell-content" width="160">
-                <img :src="'https://s3-ap-southeast-1.amazonaws.com/d-beauty/'+blog.image"
-                  height="150px" width="150px">
+                <img
+                  :src="'https://s3-ap-southeast-1.amazonaws.com/d-beauty/'+blog.image"
+                  height="150px"
+                  width="150px"
+                >
               </td>
               <td class="cell-content">
                 <div class="content">
@@ -164,13 +168,14 @@
                   </div>
                   <div class="content-subject mb-2">
                     <i class="icon-fa icon-fa-tag"/>
-                      &ensp;
-                      <span v-for="(tag,idx) in blog.tags.data" :key="'tag'+idx">
-                        {{ tag.name }}
-                        <span v-if="idx != (blog.tags.data.length - 1)">
-                        &frasl;
-                        </span>
-                      </span>
+                    &ensp;
+                    <span
+                      v-for="(tag,idx) in blog.tags.data"
+                      :key="'tag'+idx"
+                    >
+                      {{ tag.name }}
+                      <span v-if="idx != (blog.tags.data.length - 1)">&frasl;</span>
+                    </span>
                   </div>
                 </div>
               </td>
@@ -463,22 +468,12 @@ export default {
         showCloseButton: true
       }).then(result => {
         if (result.value) {
-          let response = axios
-          .delete("blogs/" + id)
-          .then(result => {
+          let response = axios.delete("blogs/" + id).then(result => {
             if (result) {
               this.reloadData(this.currentPage);
-              this.$swal(
-                "Success!",
-                "Bài viết đã đưọc xóa",
-                "success"
-              );
+              this.$swal("Success!", "Bài viết đã đưọc xóa", "success");
             } else {
-              this.$swal(
-                "Xin lỗi",
-                "Bài viết chưa đưọc xóa",
-                "error"
-              );
+              this.$swal("Xin lỗi", "Bài viết chưa đưọc xóa", "error");
             }
           });
         }

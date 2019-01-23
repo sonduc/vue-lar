@@ -184,7 +184,8 @@
                           <tabs
                             :options="{ useUrlFragment: false }"
                             class="tabs-default"
-                            @changed="tabChanged">
+                            @changed="tabChanged"
+                          >
                             <tab
                               :id="detail.id"
                               :name="detail.lang === 'vi' ? 'Việt Nam':'English'"
@@ -328,8 +329,7 @@
                             data-vv-as="Giá tiền tăng cho mỗi khách"
                             class="form-control"
                             name="room.price_charge_guest"
-                          >
-                          </vue-numeric>
+                          ></vue-numeric>
                         </div>
                       </div>
                     </div>
@@ -370,8 +370,7 @@
                             data-vv-as="Giá theo giờ"
                             v-validate="step==1 ? 'required|numeric':''"
                             name="room.price_hour"
-                          >
-                          </vue-numeric>
+                          ></vue-numeric>
                         </div>
                       </div>
                       <div
@@ -390,8 +389,7 @@
                             data-vv-as="Giá theo ngày"
                             v-validate="step==1 ? 'required|numeric':''"
                             name="room.price_day"
-                          >
-                          </vue-numeric>
+                          ></vue-numeric>
                         </div>
                       </div>
                     </div>
@@ -452,8 +450,7 @@
                             data-vv-as="Giá phòng theo ngày"
                             v-validate="step==1 ? 'required|numeric':''"
                             name="room.optional_prices.price_day"
-                          >
-                          </vue-numeric>
+                          ></vue-numeric>
                         </div>
                       </div>
                       <div
@@ -475,8 +472,7 @@
                             data-vv-as="Giá phòng theo giờ"
                             v-validate="step==1 ? 'required|numeric':''"
                             name="room.optional_prices.price_hour"
-                          >
-                          </vue-numeric>
+                          ></vue-numeric>
                         </div>
                       </div>
                       <div
@@ -498,8 +494,7 @@
                             data-vv-as="Giá phòng khi ở thêm giờ"
                             v-validate="step==1 ? 'required|numeric':''"
                             name="room.optional_prices.price_after_hour"
-                          >
-                          </vue-numeric>
+                          ></vue-numeric>
                         </div>
                       </div>
                     </div>
@@ -568,8 +563,7 @@
                             data-vv-as="Giá theo ngày"
                             v-validate="step==1 ? 'required|numeric':''"
                             :name="`weekdays[${index}]price_day`"
-                          >
-                          </vue-numeric>
+                          ></vue-numeric>
                         </div>
                       </div>
                       <div
@@ -590,8 +584,7 @@
                             data-vv-as="Giá theo giờ"
                             v-validate="step==1 ? 'required|numeric':''"
                             :name="`weekdays[${index}]price_hour`"
-                          >
-                          </vue-numeric>
+                          ></vue-numeric>
                         </div>
                       </div>
                       <div
@@ -612,8 +605,7 @@
                             data-vv-as="Giá khi ở thêm giờ"
                             v-validate="step==1 ? 'required|numeric':''"
                             :name="`weekdays[${index}]price_after_hour`"
-                          >
-                          </vue-numeric>
+                          ></vue-numeric>
                         </div>
                       </div>
 
@@ -787,10 +779,9 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-group">
-                        <label
-                          :style="errors.has('detail.address') ? 'color:red;' : ''">
+                        <label :style="errors.has('detail.address') ? 'color:red;' : ''">
                           {{errors.has('detail.address')
-                            ? errors.first('detail.address') : 'Địa chỉ *'}}
+                          ? errors.first('detail.address') : 'Địa chỉ *'}}
                         </label>
                         <input
                           type="text"
@@ -802,7 +793,7 @@
                           class="form-control"
                           placeholder="Nhập địa điểm..."
                           @click="doAutocomplete()"
-                        />
+                        >
                       </div>
                     </div>
                     <div class="col-sm-12">
@@ -830,7 +821,7 @@
                         </div>
                         <div class="col-lg-6">
                           <div class="form-group">
-                             <label :style="errors.has('room.district') ? 'color:red;' : ''">
+                            <label :style="errors.has('room.district') ? 'color:red;' : ''">
                               {{errors.has('room.district')
                               ? errors.first('room.district') : 'Quận huyện *'}}
                             </label>
@@ -856,16 +847,8 @@
                         map-type-id="terrain"
                         style="width: 1500px; height: 300px"
                       >
-                        <gmap-marker
-                          v-if="dataRoom"
-                          label="★"
-                          :position="center"
-                        />
-                        <gmap-marker
-                          v-else
-                          label="★"
-                          :position="center"
-                        />
+                        <gmap-marker v-if="dataRoom" label="★" :position="center"/>
+                        <gmap-marker v-else label="★" :position="center"/>
                       </gmap-map>
                     </div>
                   </div>
@@ -1125,7 +1108,7 @@ export default {
       addressMap: null,
       center: {
         lat: 21.027895,
-        lng: 105.833896,
+        lng: 105.833896
       },
       infoWindowPos: {
         lat: 0,
@@ -1133,7 +1116,7 @@ export default {
       },
       loadedImages: false,
       isActive: true,
-      currentTab: null,
+      currentTab: null
     };
   },
   computed: {
@@ -1281,14 +1264,14 @@ export default {
     },
     place: {
       handler(val) {
-        if(val) {
+        if (val) {
           this.center = {
             lat: val.geometry.location.lat(),
             lng: val.geometry.location.lng()
-          }
+          };
         }
       }
-    },
+    }
   },
   methods: {
     setInitData() {
@@ -1340,27 +1323,27 @@ export default {
           ]
         };
       }
-      if(dataRoom.media.data.length){
+      if (dataRoom.media.data.length) {
         this.room.images = [];
         let countImg = 0;
         dataRoom.media.data.forEach(item => {
           this.getBase64ImageFromUrl(
-            "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+item.image)
-          .then(result => {
-            let img = { source:null, type:null };
-            img.source = result;
-            img.type = item.type;
-            this.room.images.push(img);
-            this.room.images = JSON.parse(JSON.stringify(this.room.images));
-            countImg ++;
-            if(countImg == dataRoom.media.data.length) {
-               this.loadedImages = true;
-            }
-           })
-          .catch(err => console.error(err));
+            "https://s3-ap-southeast-1.amazonaws.com/d-beauty/" + item.image
+          )
+            .then(result => {
+              let img = { source: null, type: null };
+              img.source = result;
+              img.type = item.type;
+              this.room.images.push(img);
+              this.room.images = JSON.parse(JSON.stringify(this.room.images));
+              countImg++;
+              if (countImg == dataRoom.media.data.length) {
+                this.loadedImages = true;
+              }
+            })
+            .catch(err => console.error(err));
         });
-      }
-      else {
+      } else {
         this.loadedImages = true;
       }
 
@@ -1375,17 +1358,21 @@ export default {
       let res = await fetch(imageUrl);
       let blob = await res.blob();
       return new Promise((resolve, reject) => {
-        let reader  = new FileReader();
-        reader.addEventListener("load", function () {
+        let reader = new FileReader();
+        reader.addEventListener(
+          "load",
+          function() {
             resolve(reader.result);
-        }, false);
+          },
+          false
+        );
         reader.onerror = () => {
           return reject(this);
         };
         reader.readAsDataURL(blob);
-      })
+      });
     },
-    tabChanged (selectedTab) {
+    tabChanged(selectedTab) {
       this.currentTab = selectedTab.tab.name;
     },
     vmountedPost() {
@@ -1393,7 +1380,12 @@ export default {
       let i = 1;
       arrImage.forEach(item => {
         if (item.type == 1) {
-          let file = { name: "Ảnh bài viết "+ i, size: 12356, type: "image",dataURL: item.source };
+          let file = {
+            name: "Ảnh bài viết " + i,
+            size: 12356,
+            type: "image",
+            dataURL: item.source
+          };
           let url = item.source;
           this.$refs.myVueDropzone2.manuallyAddFile(file, url);
           i++;
@@ -1405,7 +1397,12 @@ export default {
       let i = 1;
       arrImage.forEach(item => {
         if (item.type == 4) {
-          let file = { name: "Ảnh đại diện "+ i, size: 12356, type: "image",dataURL: item.source };
+          let file = {
+            name: "Ảnh đại diện " + i,
+            size: 12356,
+            type: "image",
+            dataURL: item.source
+          };
           let url = item.source;
           this.$refs.myVueDropzone1.manuallyAddFile(file, url);
           i++;
@@ -1457,33 +1454,31 @@ export default {
       }
     },
     removedImageAvatar(file, error, xhr) {
-      this.room.images.forEach((item,index) => {
+      this.room.images.forEach((item, index) => {
         if (item.source === file.dataURL) {
           this.room.images.splice(index, 1);
         }
-      })
+      });
     },
     removedImagePost(file, error, xhr) {
-      this.room.images.forEach((item,index) => {
+      this.room.images.forEach((item, index) => {
         if (item.source === file.dataURL) {
           this.room.images.splice(index, 1);
         }
-      })
+      });
     },
     doAutocomplete() {
-      let element = document.getElementById('addressMap')
-      this.autocomplete = new google.maps.places.Autocomplete(element)
-      this.autocomplete.setComponentRestrictions(
-            {'country': ['vn']});
-      this.autocomplete.addListener('place_changed', () => {
+      let element = document.getElementById("addressMap");
+      this.autocomplete = new google.maps.places.Autocomplete(element);
+      this.autocomplete.setComponentRestrictions({ country: ["vn"] });
+      this.autocomplete.addListener("place_changed", () => {
         let place = this.autocomplete.getPlace();
         let address = "";
         let place_name = place.name.split("-")[0].trim();
         let place_formated = place.formatted_address.split(",")[0].trim();
-        if(place_name !== place_formated) {
-          address += (place_name + ', ' + place.formatted_address);
-        }
-        else {
+        if (place_name !== place_formated) {
+          address += place_name + ", " + place.formatted_address;
+        } else {
           address = place.formatted_address;
         }
         this.addressMap = address;
@@ -1498,14 +1493,12 @@ export default {
       });
     },
     checkLoadedImage() {
-      if(this.type == "Create") {
+      if (this.type == "Create") {
         return true;
-      }
-      else {
-        if(this.loadedImages){
+      } else {
+        if (this.loadedImages) {
           return true;
-        }
-        else {
+        } else {
           return false;
         }
       }
@@ -1697,7 +1690,7 @@ export default {
     deleteLangEnglishForm() {
       let index = this.room.details.data.findIndex(x => x.lang == "en");
       this.room.details.data.splice(index, 1);
-    },
+    }
   },
   created() {
     !(this.dataRoom === null) && this.setInitData();

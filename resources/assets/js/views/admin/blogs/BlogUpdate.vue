@@ -90,7 +90,7 @@
                 </tabs>
                 <div class="col-xl-12 mb-3">
                   <label v-if="tags.length">Tags bài viết</label>
-                  <label v-else style="color: red;">Tags bài viết là bắt buộc </label>
+                  <label v-else style="color: red;">Tags bài viết là bắt buộc</label>
                   <vue-tags-input
                     v-model="tag"
                     :tags="tags"
@@ -99,7 +99,7 @@
                 </div>
                 <div class="col-xl-12 mb-3">
                   <label v-if="images.length">Ảnh đại diện</label>
-                  <label v-else style="color: red;">Upload ảnh là bắt buộc </label>
+                  <label v-else style="color: red;">Upload ảnh là bắt buộc</label>
                   <vue-dropzone
                     id="dropzone"
                     ref="myVueDropzone"
@@ -151,7 +151,7 @@ export default {
       defaultOptions: {
         animationData: animationData
       },
-      images:[],
+      images: [],
       imageBlog: {
         url: "https://httpbin.org/post",
         maxFilesize: 3,
@@ -166,7 +166,7 @@ export default {
           "<i class='icon-fa icon-fa-cloud-upload'/></i> Uploads Your File's Here",
         headers: { "My-Awesome-Header": "header value" }
       },
-      tag: '',
+      tag: "",
       tags: [],
       blog: {
         source: null,
@@ -199,7 +199,7 @@ export default {
   computed: {
     category: {
       get() {
-        if(this.categoryChoose.name) {
+        if (this.categoryChoose.name) {
           return {
             name: this.categoryChoose.name
           };
@@ -217,42 +217,44 @@ export default {
         val.forEach(element => {
           this.listCategory.push({
             id: element.id,
-            name: element.details.data[0].lang === "en" ?
-              element.details.data[1].name : ''
+            name:
+              element.details.data[0].lang === "en"
+                ? element.details.data[1].name
+                : ""
           });
         });
       }
     },
     categoryId: {
       handler(val) {
-        if(val) {
+        if (val) {
           this.listCategory.forEach(item => {
-            if(item.id == val) {
+            if (item.id == val) {
               this.categoryChoose.name = item.name;
             }
-          })
+          });
         }
       }
     }
   },
-   blog: {
-        source: null,
-        status: 0,
-        hot: 0,
-        new: 0,
-        category_id: null,
-        content: null,
-        title: null,
-        description: null,
-        type: 1,
-        tags: {
-          data: [
-            {
-              name: ""
-            }
-          ]
+  blog: {
+    source: null,
+    status: 0,
+    hot: 0,
+    new: 0,
+    category_id: null,
+    content: null,
+    title: null,
+    description: null,
+    type: 1,
+    tags: {
+      data: [
+        {
+          name: ""
         }
-      },
+      ]
+    }
+  },
   methods: {
     setInitData(dataBlog) {
       this.blog.source = dataBlog.image;
@@ -265,18 +267,19 @@ export default {
       this.blog.description = dataBlog.description;
       this.blog.type = dataBlog.type;
       this.blog.description = dataBlog.description;
-      if(dataBlog.image != null) {
+      if (dataBlog.image != null) {
         this.getBase64ImageFromUrl(
-          "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+ dataBlog.image)
-        .then(result => {
-          this.images.push(result);
-          this.loadedImages = true;
-         })
-        .catch(err => console.error(err));
+          "https://s3-ap-southeast-1.amazonaws.com/d-beauty/" + dataBlog.image
+        )
+          .then(result => {
+            this.images.push(result);
+            this.loadedImages = true;
+          })
+          .catch(err => console.error(err));
       }
-      if(dataBlog.tags.data.length) {
+      if (dataBlog.tags.data.length) {
         dataBlog.tags.data.forEach(tag => {
-          this.tags.push({text: tag.name, tiClasses: ['ti-valid']});
+          this.tags.push({ text: tag.name, tiClasses: ["ti-valid"] });
         });
       }
     },
@@ -284,15 +287,19 @@ export default {
       let res = await fetch(imageUrl);
       let blob = await res.blob();
       return new Promise((resolve, reject) => {
-        let reader  = new FileReader();
-        reader.addEventListener("load", function () {
+        let reader = new FileReader();
+        reader.addEventListener(
+          "load",
+          function() {
             resolve(reader.result);
-        }, false);
+          },
+          false
+        );
         reader.onerror = () => {
           return reject(this);
         };
         reader.readAsDataURL(blob);
-      })
+      });
     },
     vmountedBlog() {
       this.images.forEach(item => {
@@ -303,23 +310,20 @@ export default {
     },
     afterCompleteImageBlog(file) {
       if (file.dataURL) {
-        this.images= [];
+        this.images = [];
         this.images.push(file.dataURL);
       }
     },
     removedImageInDropzone(file, error, xhr) {
-      let index = this.images.findIndex(
-        item => item === file.dataURL
-      );
-      if(index > -1) {
+      let index = this.images.findIndex(item => item === file.dataURL);
+      if (index > -1) {
         this.images.splice(index, 1);
       }
     },
     checkLoadedImage() {
-      if(this.loadedImages){
+      if (this.loadedImages) {
         return true;
-      }
-      else {
+      } else {
         return false;
       }
     },
@@ -330,23 +334,26 @@ export default {
           top: 0,
           behavior: "smooth"
         });
-      }else {
+      } else {
         let lenghtTags = this.tags.length - 1;
-        this.tags.forEach((tag,index) => {
-          if(index != lenghtTags) {
+        this.tags.forEach((tag, index) => {
+          if (index != lenghtTags) {
             this.blog.tags.data[0].name += tag.text;
-            this.blog.tags.data[0].name += ',';
-          }
-          else {
+            this.blog.tags.data[0].name += ",";
+          } else {
             this.blog.tags.data[0].name += tag.text;
           }
-        })
+        });
         this.blog.image = this.images[0];
         try {
           const response = await axios
             .put(`blogs/${this.$route.params.blogId}`, this.blog)
             .then(response => {
-              this.$swal("Thành công", "Cập nhật bài viết thành công", "success");
+              this.$swal(
+                "Thành công",
+                "Cập nhật bài viết thành công",
+                "success"
+              );
             })
             .catch(error => {
               let err = error.response.data.data.errors;
@@ -397,7 +404,7 @@ export default {
           self.isLeftSidebarVisible = false;
         }
       };
-    },
+    }
   },
   mounted() {
     Auth.getProfile().then(res => {

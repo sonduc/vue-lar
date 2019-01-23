@@ -311,7 +311,7 @@ import * as animationData from "../../loading/material_wave_loading.json";
 import Lottie from "vue-lottie";
 import { SweetModal } from "sweet-modal-vue";
 import { format } from "../../../helpers/mixins";
-import moment from 'moment';
+import moment from "moment";
 export default {
   mixins: [format],
   name: "RoomCalendar",
@@ -323,6 +323,7 @@ export default {
   },
   data() {
     return {
+      permissions: "room.view",
       defaultOptions: {
         animationData: animationData
       },
@@ -358,10 +359,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getRoomBookingDate",
+    ...mapGetters([
+      "getRoomBookingDate",
       "getActionDateCalendar",
       "getRoomCalendarId",
-      "getStatusRoomCalendar"]),
+      "getStatusRoomCalendar"
+    ]),
 
     config() {
       let self = this;
@@ -470,7 +473,7 @@ export default {
           self.dateSelected.startDate = start.format("YYYY-MM-DD");
           end = end.subtract(1, "days");
           self.dateSelected.endDate = end.format("YYYY-MM-DD");
-        },
+        }
       };
     }
   },
@@ -541,15 +544,17 @@ export default {
     },
     date_in: {
       handler(val) {
-        let objDate = {date_in: val, date_out: this.date_out};
+        let objDate = { date_in: val, date_out: this.date_out };
         this.changeRoomBookingDate(objDate);
       }
     }
   },
   methods: {
-    ...mapActions(["changeRoomBookingDate",
+    ...mapActions([
+      "changeRoomBookingDate",
       "changeActionDateCalendar",
-      "changeStatusRoomCalendar"]),
+      "changeStatusRoomCalendar"
+    ]),
 
     eventClicked(calEvent, jsEvent, view) {
       this.booking_current = calEvent.booking_detail;
@@ -599,11 +604,13 @@ export default {
           new Date(this.date_out).setMonth(this.date_out.getMonth() + 1)
         );
         let actionDate = this.actionDateCalendar;
-        this.actionDateCalendar = new Date(new Date(actionDate).setMonth(
-          actionDate.getMonth() + 1));
-        console.log(this.actionDateCalendar)
-        this.changeActionDateCalendar(new Date(new Date(actionDate).setMonth(
-          actionDate.getMonth() + 1)));
+        this.actionDateCalendar = new Date(
+          new Date(actionDate).setMonth(actionDate.getMonth() + 1)
+        );
+        console.log(this.actionDateCalendar);
+        this.changeActionDateCalendar(
+          new Date(new Date(actionDate).setMonth(actionDate.getMonth() + 1))
+        );
         this.reloadData();
         this.$refs.calendar.fireMethod("next");
       } else if (
@@ -615,12 +622,14 @@ export default {
         this.date_out = new Date(
           new Date(this.date_out).setDate(this.date_out.getDate() + 7)
         );
-       let actionDate = this.actionDateCalendar;
-       console.log(actionDate)
-        this.actionDateCalendar = new Date(new Date(actionDate).setDate(
-          actionDate.getDate() + 7));
-        this.changeActionDateCalendar(new Date(new Date(actionDate).setDate(
-          actionDate.getDate() + 7)));
+        let actionDate = this.actionDateCalendar;
+        console.log(actionDate);
+        this.actionDateCalendar = new Date(
+          new Date(actionDate).setDate(actionDate.getDate() + 7)
+        );
+        this.changeActionDateCalendar(
+          new Date(new Date(actionDate).setDate(actionDate.getDate() + 7))
+        );
         this.reloadData();
         this.$refs.calendar.fireMethod("next");
       } else {
@@ -631,10 +640,12 @@ export default {
           new Date(this.date_out).setDate(this.date_out.getDate() + 1)
         );
         let actionDate = this.actionDateCalendar;
-        this.actionDateCalendar = new Date(new Date(actionDate).setDate(
-          actionDate.getDate() + 1));
-        this.changeActionDateCalendar(new Date(new Date(actionDate).setDate(
-          actionDate.getDate() + 1)));
+        this.actionDateCalendar = new Date(
+          new Date(actionDate).setDate(actionDate.getDate() + 1)
+        );
+        this.changeActionDateCalendar(
+          new Date(new Date(actionDate).setDate(actionDate.getDate() + 1))
+        );
         this.reloadData();
         this.$refs.calendar.fireMethod("next");
       }
@@ -648,10 +659,12 @@ export default {
           new Date(this.date_out).setMonth(this.date_out.getMonth() - 1)
         );
         let actionDate = this.actionDateCalendar;
-        this.actionDateCalendar = new Date(new Date(actionDate).setMonth(
-          actionDate.getMonth() - 1));
-        this.changeActionDateCalendar(new Date(new Date(actionDate).setMonth(
-          actionDate.getMonth() - 1)));
+        this.actionDateCalendar = new Date(
+          new Date(actionDate).setMonth(actionDate.getMonth() - 1)
+        );
+        this.changeActionDateCalendar(
+          new Date(new Date(actionDate).setMonth(actionDate.getMonth() - 1))
+        );
         this.reloadData();
         this.$refs.calendar.fireMethod("prev");
       } else if (
@@ -664,10 +677,12 @@ export default {
           new Date(this.date_out).setDate(this.date_out.getDate() - 7)
         );
         let actionDate = this.actionDateCalendar;
-        this.actionDateCalendar = new Date(new Date(actionDate).setDate(
-          actionDate.getDate() - 7));
-        this.changeActionDateCalendar(new Date(new Date(actionDate).setDate(
-          actionDate.getDate() - 7)));
+        this.actionDateCalendar = new Date(
+          new Date(actionDate).setDate(actionDate.getDate() - 7)
+        );
+        this.changeActionDateCalendar(
+          new Date(new Date(actionDate).setDate(actionDate.getDate() - 7))
+        );
         this.reloadData();
         this.$refs.calendar.fireMethod("prev");
       } else {
@@ -678,26 +693,28 @@ export default {
           new Date(this.date_out).setDate(this.date_out.getDate() - 1)
         );
         let actionDate = this.actionDateCalendar;
-        this.actionDateCalendar = new Date(new Date(actionDate).setDate(
-          actionDate.getDate() - 1));
-        this.changeActionDateCalendar(new Date(new Date(actionDate).setDate(
-          actionDate.getDate() - 1)));
+        this.actionDateCalendar = new Date(
+          new Date(actionDate).setDate(actionDate.getDate() - 1)
+        );
+        this.changeActionDateCalendar(
+          new Date(new Date(actionDate).setDate(actionDate.getDate() - 1))
+        );
         this.reloadData();
         this.$refs.calendar.fireMethod("prev");
       }
     },
     today() {
-      this.date_in = new Date(
+      (this.date_in = new Date(
         new Date().getFullYear(),
         new Date().getMonth() - 2,
         1
-      ),
-      this.date_out = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth() + 2,
-        1
-      ),
-      this.actionDateCalendar = new Date();
+      )),
+        (this.date_out = new Date(
+          new Date().getFullYear(),
+          new Date().getMonth() + 2,
+          1
+        )),
+        (this.actionDateCalendar = new Date());
       this.changeActionDateCalendar(new Date());
       this.reloadData();
       this.$refs.calendar.fireMethod("today");
@@ -732,13 +749,14 @@ export default {
       try {
         let dateIn;
         let dateOut;
-        if(typeof this.getRoomBookingDate.date_in === "object") {
-          dateIn = this.getRoomBookingDate.date_in.toISOString().substr(0, 10)
-          dateOut = this.getRoomBookingDate.date_out.toISOString().substr(0, 10)
-        }
-        else {
-          dateIn = this.getRoomBookingDate.date_in.substr(0, 10)
-          dateOut = this.getRoomBookingDate.date_out.substr(0, 10)
+        if (typeof this.getRoomBookingDate.date_in === "object") {
+          dateIn = this.getRoomBookingDate.date_in.toISOString().substr(0, 10);
+          dateOut = this.getRoomBookingDate.date_out
+            .toISOString()
+            .substr(0, 10);
+        } else {
+          dateIn = this.getRoomBookingDate.date_in.substr(0, 10);
+          dateOut = this.getRoomBookingDate.date_out.substr(0, 10);
         }
         const response = await axios.get(`bookings`, {
           params: {
@@ -909,18 +927,25 @@ export default {
   created() {
     let roomId = this.$route.params.roomId;
     let roomCalendarId = this.getRoomCalendarId;
-    if(roomId == roomCalendarId && this.getStatusRoomCalendar == 0) {
+    if (roomId == roomCalendarId && this.getStatusRoomCalendar == 0) {
       this.date_in = new Date(this.getRoomBookingDate.date_in);
       this.date_out = new Date(this.getRoomBookingDate.date_out);
       this.actionDateCalendar = new Date(this.getActionDateCalendar);
-    }
-    else {
+    } else {
       this.changeStatusRoomCalendar(0);
-      this.changeActionDateCalendar(new Date())
+      this.changeActionDateCalendar(new Date());
       this.changeRoomBookingDate({
-        date_in: new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1),
-        date_out: new Date(new Date().getFullYear(), new Date().getMonth() + 2, 1)
-      })
+        date_in: new Date(
+          new Date().getFullYear(),
+          new Date().getMonth() - 2,
+          1
+        ),
+        date_out: new Date(
+          new Date().getFullYear(),
+          new Date().getMonth() + 2,
+          1
+        )
+      });
     }
     Auth.getProfile().then(res => {
       if (res) {
@@ -936,7 +961,7 @@ export default {
         });
       }
     });
-  },
+  }
 };
 </script>
 

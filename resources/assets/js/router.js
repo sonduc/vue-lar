@@ -70,6 +70,10 @@ import CollectionCreate from './views/admin/collections/CollectionCreate.vue'
 import CollectionUpdate from './views/admin/collections/CollectionUpdate.vue'
 import CollectionDetail from './views/admin/collections/CollectionDetail.vue'
 
+// Transactions
+import TransactionList from './views/admin/transactions/ListTransaction.vue'
+import TransactionCreate from './views/admin/transactions/CreateTransaction.vue'
+import CompareChecking from './views/admin/transactions/CompareChecking.vue'
 /*
  |--------------------------------------------------------------------------
  | Other
@@ -358,6 +362,23 @@ const routes = [
       {
         path: 'settings',
         component: Settings
+      },
+
+      // Transactions
+      {
+        path: 'transactions/list',
+        name: 'transaction.list',
+        component: TransactionList
+      },
+      {
+        path: 'transactions/create',
+        name: 'transaction.create',
+        component: TransactionCreate
+      },
+      {
+        path: 'transactions/compare-checking',
+        name: 'transaction.compare_checking',
+        component: CompareChecking
       }
     ]
   },

@@ -1,33 +1,30 @@
 <template>
-<room-form v-if="roomDetail" :titleHeader="titleHeader" type="Update" :data-room="roomDetail" />
+  <room-form v-if="roomDetail" :titleHeader="titleHeader" type="Update" :data-room="roomDetail"/>
 </template>
 <script>
-import RoomForm from './RoomForm';
+import RoomForm from "./RoomForm";
 import Auth from "../../../services/auth";
 
 export default {
-  name: 'RoomUpdate',
+  name: "RoomUpdate",
   components: {
     RoomForm
   },
-  data(){
+  data() {
     return {
-      titleHeader:"Chào mừng bạn đến với chức năng sửa phòng",
+      titleHeader: "Chào mừng bạn đến với chức năng sửa phòng",
       roomDetail: null,
-      permissions:"room.update",
+      permissions: "room.update"
     };
   },
   methods: {
     async getRoomById() {
       try {
-        const response = await axios.get(
-          `rooms/${ this.$route.params.roomId }`,
-          {
-            params: {
-              include: "details,user,prices,comforts,media,city,district,status"
-            }
+        const response = await axios.get(`rooms/${this.$route.params.roomId}`, {
+          params: {
+            include: "details,user,prices,comforts,media,city,district,status"
           }
-        );
+        });
         this.roomDetail = response.data.data;
       } catch (error) {
         if (error) {
