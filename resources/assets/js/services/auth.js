@@ -16,6 +16,7 @@ export default {
       if (error.response.status === 401) {
         toastr["error"]("Invalid Credentials", "Error");
       } else {
+        toastr["error"](error.response.data.data.errors[0], "Error");
         // Something happened in setting up the request that triggered an Error
         // console.log("Error", error.message);
       }
