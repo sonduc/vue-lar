@@ -1,31 +1,133 @@
 export const comforts = {
   data() {
     return {
-      iconComfortList: [
-        { name: 'air-conditioner', icon: '/assets/svg_comforts/air-conditioner.svg' },
-        { name: 'bathtub', icon: '/assets/svg_comforts/bathtub.svg' },
-        { name: 'big-bottle-water', icon: '/assets/svg_comforts/big-bottle-water.svg' },
-        { name: 'breakfast', icon: '/assets/svg_comforts/breakfast.svg' },
-        { name: 'elevator', icon: '/assets/svg_comforts/elevator.svg' },
-        { name: 'fireplace', icon: '/assets/svg_comforts/fireplace.svg' },
-        { name: 'fridge', icon: '/assets/svg_comforts/fridge.svg' },
-        { name: 'gym', icon: '/assets/svg_comforts/gym.svg' },
-        { name: 'hairdryer', icon: '/assets/svg_comforts/hairdryer.svg' },
-        { name: 'kitchen', icon: '/assets/svg_comforts/kitchen.svg' },
-        { name: 'microwave-oven', icon: '/assets/svg_comforts/microwave-oven.svg' },
-        { name: 'soap', icon: '/assets/svg_comforts/soap.svg' },
-        { name: 'stove', icon: '/assets/svg_comforts/stove.svg' },
-        { name: 'swim', icon: '/assets/svg_comforts/swim.svg' },
-        { name: 'television', icon: '/assets/svg_comforts/television.svg' },
-        { name: 'tissue', icon: '/assets/svg_comforts/tissue.svg' },
-        { name: 'toilet-paper', icon: '/assets/svg_comforts/toilet-paper.svg' },
-        { name: 'toothbrush', icon: '/assets/svg_comforts/toothbrush.svg' },
-        { name: 'toothpaste', icon: '/assets/svg_comforts/toothpaste.svg' },
-        { name: 'towel', icon: '/assets/svg_comforts/towel.svg' },
-        { name: 'track', icon: '/assets/svg_comforts/track.svg' },
-        { name: 'washing-machine', icon: '/assets/svg_comforts/washing-machine.svg' },
-        { name: 'wifi', icon: '/assets/svg_comforts/wifi.svg' },
-      ]
-    };
+      iconComfortList: [{
+        name: 'washing-machine',
+        icon: 'https://somethingapi.club/images/comforts/washing-machine.svg'
+      }, {
+        name: 'wifi',
+        icon: 'https://somethingapi.club/images/comforts/wifi.svg'
+      }, {
+        name: 'television',
+        icon: 'https://somethingapi.club/images/comforts/television.svg'
+      }, {
+        name: 'shampoo',
+        icon: 'https://somethingapi.club/images/comforts/shampoo.svg'
+      }, {
+        name: 'big-bottle-water',
+        icon: 'https://somethingapi.club/images/comforts/big-bottle-water.svg'
+      }, {
+        name: 'towel',
+        icon: 'https://somethingapi.club/images/comforts/towel.svg'
+      }, {
+        name: 'toothpaste',
+        icon: 'https://somethingapi.club/images/comforts/toothpaste.svg'
+      }, {
+        name: 'soap',
+        icon: 'https://somethingapi.club/images/comforts/soap.svg'
+      }, {
+        name: 'stove',
+        icon: 'https://somethingapi.club/images/comforts/stove.svg'
+      }, {
+        name: 'microwave-oven',
+        icon: 'https://somethingapi.club/images/comforts/microwave-oven.svg'
+      }, {
+        name: 'fridge',
+        icon: 'https://somethingapi.club/images/comforts/fridge.svg'
+      }, {
+        name: 'toothbrush',
+        icon: 'https://somethingapi.club/images/comforts/toothbrush.svg'
+      }, {
+        name: 'air-conditioner',
+        icon: 'https://somethingapi.club/images/comforts/air-conditioner.svg'
+      }, {
+        name: 'toilet-paper',
+        icon: 'https://somethingapi.club/images/comforts/toilet-paper.svg'
+      }, {
+        name: 'tissue',
+        icon: 'https://somethingapi.club/images/comforts/tissue.svg'
+      }, {
+        name: 'elevator',
+        icon: 'https://somethingapi.club/images/comforts/elevator.svg'
+      }, {
+        name: 'bathtub',
+        icon: 'https://somethingapi.club/images/comforts/bathtub.svg'
+      }, {
+        name: 'pet-allowed',
+        icon: 'https://somethingapi.club/images/comforts/pet-allowed.svg'
+      }, {
+        name: 'breakfast',
+        icon: 'https://somethingapi.club/images/comforts/breakfast.svg'
+      }, {
+        name: 'swim',
+        icon: 'https://somethingapi.club/images/comforts/swim.svg'
+      }, {
+        name: 'gym',
+        icon: 'https://somethingapi.club/images/comforts/gym.svg'
+      }, {
+        name: 'hairdryer',
+        icon: 'https://somethingapi.club/images/comforts/hairdryer.svg'
+      }, {
+        name: 'disable',
+        icon: 'https://somethingapi.club/images/comforts/disable.svg'
+      }, {
+        name: 'fireplace',
+        icon: 'https://somethingapi.club/images/comforts/fireplace.svg'
+      }, {
+        name: 'internet',
+        icon: 'https://somethingapi.club/images/comforts/internet.svg'
+      }, {
+        name: 'safe-for-kid',
+        icon: 'https://somethingapi.club/images/comforts/safe-for-kid.svg'
+      }, {
+        name: 'working-place',
+        icon: 'https://somethingapi.club/images/comforts/working-place.svg'
+      }, {
+        name: 'cloth-hooks',
+        icon: 'https://somethingapi.club/images/comforts/cloth-hooks.svg'
+      }, {
+        name: 'cable-channel',
+        icon: 'https://somethingapi.club/images/comforts/cable-channel.svg'
+      }, {
+        name: 'bike-park',
+        icon: 'https://somethingapi.club/images/comforts/bike-park.svg'
+      }, {
+        name: 'car-parking',
+        icon: 'https://somethingapi.club/images/comforts/car-parking.svg'
+      }, {
+        name: 'drying-place',
+        icon: 'https://somethingapi.club/images/comforts/drying-place.svg'
+      }, {
+        name: 'washing-place',
+        icon: 'https://somethingapi.club/images/comforts/washing-place.svg'
+      }, {
+        name: 'oven',
+        icon: 'https://somethingapi.club/images/comforts/oven.svg'
+      }, {
+        name: 'barbecue',
+        icon: 'https://somethingapi.club/images/comforts/barbecue.svg'
+      }, {
+        name: 'balcony',
+        icon: 'https://somethingapi.club/images/comforts/balcony.svg'
+      }, {
+        name: 'great-views',
+        icon: 'https://somethingapi.club/images/comforts/great-views.svg'
+      }, {
+        name: 'sea-views',
+        icon: 'https://somethingapi.club/images/comforts/sea-views.svg'
+      }, {
+        name: 'golf',
+        icon: 'https://somethingapi.club/images/comforts/golf.svg'
+      }, {
+        name: 'fishing',
+        icon: 'https://somethingapi.club/images/comforts/fishing.svg'
+      }, {
+        name: 'garden',
+        icon: 'https://somethingapi.club/images/comforts/garden.svg'
+      }, {
+        name: 'relaxing',
+        icon: 'https://somethingapi.club/images/comforts/relaxing.svg'
+      }]
+    }
   }
-};
+}

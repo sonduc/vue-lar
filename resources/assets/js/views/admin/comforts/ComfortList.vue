@@ -31,7 +31,7 @@
           <tbody>
             <tr v-for="(comfort,index) in comforts" :key="index">
               <td width="20%">{{ index+1 }}</td>
-              <td width="30%" class="cell-content" >
+              <td width="30%" class="cell-content">
                 <div class="content">
                   <div class="content-name">{{ comfort.details.data[0].name }}</div>
                 </div>
@@ -39,14 +39,11 @@
               <td class="cell-content" width="40%">
                 <div class="content">
                   <div class="content-name">
-                    <div
-                      style="height: 25px;width: 25px;margin-left: 26px;"
-                      v-html="comfort.icon">
-                    </div>
+                    <img :src="comfort.icon" :alt="comfort.name">
                   </div>
                 </div>
               </td>
-               <td width="10%" style="text-align:center">
+              <td width="10%" style="text-align:center">
                 <div class="btn-group mb-3" role="group" aria-label="First group">
                   <button
                     @click="openUpdateComfort(comfort.id)"
@@ -118,7 +115,7 @@ export default {
           params: {
             include: "details",
             page: page,
-            limit: 10,
+            limit: 10
           }
         });
         let paginate = response.data.meta.pagination;
@@ -152,25 +149,15 @@ export default {
         showCloseButton: true
       }).then(result => {
         if (result.value) {
-          let response = axios
-            .delete('comforts/'+ id)
-            .then(result => {
-              if (result) {
-                this.reloadData(this.currentPage);
-                this.$swal(
-                  "Success!",
-                  "Tiện ích đã xóa thành công !",
-                  "success"
-                );
-              } else {
-                this.$swal(
-                  "Xin lỗi",
-                  "Tiện ích chưa được xóa",
-                  "error"
-                );
-              }
-            });
-          }
+          let response = axios.delete("comforts/" + id).then(result => {
+            if (result) {
+              this.reloadData(this.currentPage);
+              this.$swal("Success!", "Tiện ích đã xóa thành công !", "success");
+            } else {
+              this.$swal("Xin lỗi", "Tiện ích chưa được xóa", "error");
+            }
+          });
+        }
       });
     },
     reloadData(page) {

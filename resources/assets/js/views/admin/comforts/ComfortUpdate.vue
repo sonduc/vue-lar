@@ -9,7 +9,7 @@
         <li class="breadcrumb-item">
           <a href="#">Tiện ích</a>
         </li>
-        <li class="breadcrumb-item active" >Cập nhật</li>
+        <li class="breadcrumb-item active">Cập nhật</li>
       </ol>
     </div>
     <form>
@@ -43,17 +43,14 @@
                         :allow-empty="false"
                         @select.once="afterUpdateIcon"
                       >
-                        <template
-                          slot="singleLabel" slot-scope="props">
-                          <div
-                            v-if="icon_rechoose == 0"
-                            style="width: 25px; height: 6px;"
-                            v-html="comfort.icon">
+                        <template slot="singleLabel" slot-scope="props">
+                          <div v-if="icon_rechoose == 0" style="width: 25px; height: 6px;">
+                            <img width="25px" height="25px" :src="comfort.icon">
                           </div>
                           <span
                             v-if="icon_rechoose == 0"
-                            style="margin-left: 37px;">{{ comfort.icon_name }}
-                          </span>
+                            style="margin-left: 37px;"
+                          >{{ comfort.icon_name }}</span>
                           <img
                             v-if="icon_rechoose == 1"
                             height="25px"
@@ -65,8 +62,8 @@
                           >
                           <span
                             v-if="icon_rechoose == 1"
-                            class="option__title">{{ props.option.name }}
-                          </span>
+                            class="option__title"
+                          >{{ props.option.name }}</span>
                         </template>
 
                         <template slot="option" slot-scope="props">
@@ -91,7 +88,7 @@
                       </div>
                       <div class="col-lg-6">
                         <button
-                         :disabled="comfort.details[0].name === ''"
+                          :disabled="comfort.details[0].name === ''"
                           type="button"
                           v-if="checkCountLang"
                           @click="addNewLangEnglishForm"
@@ -155,10 +152,8 @@
                   </div>
                 </div>
                 <div class="btn-center">
-                  <button class="btn btn-success"
-                    @click.prevent="onSubmit">Cập nhật tiện ích</button>
-                  <button class="btn btn-danger"
-                    @click.prevent="returnComfortList">Quay lại</button>
+                  <button class="btn btn-success" @click.prevent="onSubmit">Cập nhật tiện ích</button>
+                  <button class="btn btn-danger" @click.prevent="returnComfortList">Quay lại</button>
                 </div>
               </div>
             </div>
@@ -201,7 +196,7 @@ export default {
         ]
       },
       currentTab: null,
-      permissions:"comfort.update",
+      permissions: "comfort.update"
     };
   },
   computed: {
@@ -222,11 +217,10 @@ export default {
       this.comfort = { ...this.comfort, ...dataComfort };
       this.svgChoose = {
         name: dataComfort.icon,
-        value: dataComfort.icon,
-
+        value: dataComfort.icon
       };
     },
-    afterUpdateIcon(){
+    afterUpdateIcon() {
       this.icon_rechoose = 1;
     },
     addNewLangEnglishForm() {
@@ -260,12 +254,14 @@ export default {
     },
     async getComfortById() {
       try {
-        const response = await axios.get(`comforts/${ this.$route.params.comfortId }`,
+        const response = await axios.get(
+          `comforts/${this.$route.params.comfortId}`,
           {
             params: {
               include: "details"
             }
-          });
+          }
+        );
         this.setInitData(response.data.data);
       } catch (error) {
         if (error) {
@@ -278,15 +274,17 @@ export default {
     },
     async onSubmit() {
       const result = await this.$validator.validateAll();
-      if(!result) {
-        if (this.comfort.details.length == 2 && this.comfort.details[1].name === '') {
+      if (!result) {
+        if (
+          this.comfort.details.length == 2 &&
+          this.comfort.details[1].name === ""
+        ) {
           window.toastr["error"](
-            'Trong tab English tên tiện ích là bắt buộc',
+            "Trong tab English tên tiện ích là bắt buộc",
             "Error"
           );
         }
-      }
-      else {
+      } else {
         try {
           this.$swal({
             title: "Đang xử lý",
@@ -297,8 +295,10 @@ export default {
             showCloseButton: false,
             showLoaderOnConfirm: false
           });
-          if(this.icon_rechoose == 1) {
-            this.comfort.icon = this.getContentFileSvg(this.svgChoose.icon);
+          if (this.icon_rechoose == 1) {
+            this.comfort.icon = `http://ws-api.lc/images/comforts/${
+              this.svgChoose.name
+            }.svg`;
             this.comfort.icon_name = this.svgChoose.name;
           }
 
