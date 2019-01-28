@@ -179,7 +179,7 @@ export const yearsList = {
         if (item.value == currentYear) {
           this.years.push({
             id: length + 1,
-            value: currentYear + 2 + ''
+            value: currentYear + 1 + ''
           })
         }
       })
