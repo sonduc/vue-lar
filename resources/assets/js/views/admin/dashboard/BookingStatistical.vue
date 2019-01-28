@@ -253,6 +253,26 @@
             </div>
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-lg-12 col-xl-12 mt-2">
+            <div class="card">
+              <div class="card-header">
+                <h6>
+                  <i class="icon-fa icon-fa-line-chart text-warning"/>Biểu đồ thống kê khách cũ
+                </h6>
+              </div>
+              <div class="card-body">
+                <old-customer
+                  :date_end="date_end.toISOString().substr(0, 10)"
+                  :date_start="date_start.toISOString().substr(0, 10)"
+                  :view="view"
+                  :status="status"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -272,6 +292,7 @@ import ChartBookingByAgeRange from "./ChartBookingByAgeRange.vue";
 import ChartBookingBySource from "./ChartBookingBySource.vue";
 import ChartBookingByCancelReason from "./ChartBookingByCancelReason.vue";
 import ChartBookingByRoomType from "./ChartBookingByRoomType.vue";
+import OldCustomer from "./OldCustomer.vue";
 import Multiselect from "vue-multiselect";
 
 export default {
@@ -287,6 +308,7 @@ export default {
     ChartBookingBySource,
     ChartBookingByCancelReason,
     ChartBookingByRoomType,
+    OldCustomer,
     Multiselect
   },
   data() {
