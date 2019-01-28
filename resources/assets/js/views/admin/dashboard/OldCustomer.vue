@@ -40,7 +40,7 @@ export default {
             //   enabled: true
             // }
             dataLabels: {
-              // enabled: true,
+              enabled: true,
               format:
                 "{point.y} khách <br/> {point.percentage:.1f} %"
             }
