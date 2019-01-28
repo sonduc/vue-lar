@@ -51,6 +51,18 @@ export default {
               "<br/><span>Thành công </span>: <b>" +
               this.series.userOptions.success[this.point.x] +
               "</b><br/>";
+            var is_usingText =
+              "<br/><span>Đang sử dụng</span>: <b>" +
+              this.series.userOptions.is_using[this.point.x] +
+              "</b>";
+            var confirmText =
+              "<br/><span>Xác nhận </span>: <b>" +
+              this.series.userOptions.confirm[this.point.x] +
+              "</b><br/>";
+            var pendingText =
+              "<br/><span>Mới </span>: <b>" +
+              this.series.userOptions.pending[this.point.x] +
+              "</b><br/>";
             return (
               this.x +
               '<br/>  <span style="color:' +
@@ -59,7 +71,10 @@ export default {
               this.series.name +
               ": </span>" +
               successText +
-              cancelText
+              cancelText +
+              is_usingText +
+              confirmText +
+              pendingText
             );
           }
         }
