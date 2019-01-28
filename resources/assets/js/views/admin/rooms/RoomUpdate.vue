@@ -22,7 +22,7 @@ export default {
       try {
         const response = await axios.get(`rooms/${this.$route.params.roomId}`, {
           params: {
-            include: "details,user,prices,comforts,media,city,district,status"
+            include: "details,prices,comforts,media,city,district,status"
           }
         });
         this.roomDetail = response.data.data;

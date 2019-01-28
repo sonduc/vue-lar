@@ -28,7 +28,8 @@
                   <input
                     type="text"
                     name="promotions.name"
-                    v-validate="{ required:true, min:10, max:255, regex:/^\+?[0-9-]*$/ }"
+                    v-validate="{ required:true, min:10, max:255,
+                      regex:/^[\d\-a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀẾỂưăạảấầẩẫậắằẳẵặẹẻẽềếểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ, ]*$/u }"
                     data-vv-as="Tên chương trình"
                     v-model="promotions.name"
                     class="form-control"
