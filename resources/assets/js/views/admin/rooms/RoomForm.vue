@@ -1122,13 +1122,14 @@ export default {
   computed: {
     merchant_id: {
       get() {
-        if (this.room.user.data.name == null) {
-          return null;
-        } else {
-          return {
-            name: this.room.user.data.name
-          };
-        }
+        // if (this.room.user.data.name == null) {
+        //   return null;
+        // } else {
+        return {
+          name: this.room.user.data.name,
+          id: this.room.user.data.id
+        };
+        // }
       },
       set(val) {
         this.room.user.data = val;
@@ -1328,7 +1329,8 @@ export default {
         let countImg = 0;
         dataRoom.media.data.forEach(item => {
           this.getBase64ImageFromUrl(
-            "https://s3-ap-southeast-1.amazonaws.com/d-beauty/" + item.image
+            "https://s3-ap-southeast-1.amazonaws.com/westay-img/lg/" +
+              item.image
           )
             .then(result => {
               let img = { source: null, type: null };

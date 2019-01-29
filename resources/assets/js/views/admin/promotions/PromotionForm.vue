@@ -232,7 +232,7 @@ export default {
 
       if(dataPromotion.image != null) {
         this.getBase64ImageFromUrl(
-          "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+ dataPromotion.image)
+          "https://s3-ap-southeast-1.amazonaws.com/westay-img/lg/"+ dataPromotion.image)
         .then(result => {
           this.images.push(result);
           this.loadedImages = true;

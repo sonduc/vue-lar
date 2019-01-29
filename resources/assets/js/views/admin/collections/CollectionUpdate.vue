@@ -392,7 +392,7 @@ export default {
 
       if(dataCollection.image != null) {
         this.getBase64ImageFromUrl(
-          "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+ dataCollection.image)
+          "https://s3-ap-southeast-1.amazonaws.com/westay-img/lg/"+ dataCollection.image)
         .then(result => {
           this.collection.image.push(result);
           this.loadedImages = true;

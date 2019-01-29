@@ -148,7 +148,7 @@
               <td>{{index + 1}}</td>
               <td class="cell-content" width="160">
                 <img
-                  :src="'https://s3-ap-southeast-1.amazonaws.com/d-beauty/'+blog.image"
+                  :src="'https://s3-ap-southeast-1.amazonaws.com/westay-img/lg/'+blog.image"
                   height="150px"
                   width="150px"
                 >

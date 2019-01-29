@@ -232,7 +232,7 @@
                   v-for="(item,index) in room.media.data"
                   :key="index"
                   v-if="item.type == 4"
-                  :src="'https://s3-ap-southeast-1.amazonaws.com/d-beauty/'+item.image"
+                  :src="'https://s3-ap-southeast-1.amazonaws.com/westay-img/lg/'+item.image"
                   height="150px"
                   width="150px"
                 >

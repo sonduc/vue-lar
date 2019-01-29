@@ -269,7 +269,7 @@ export default {
       this.blog.description = dataBlog.description;
       if (dataBlog.image != null) {
         this.getBase64ImageFromUrl(
-          "https://s3-ap-southeast-1.amazonaws.com/d-beauty/" + dataBlog.image
+          "https://s3-ap-southeast-1.amazonaws.com/westay-img/lg/" + dataBlog.image
         )
           .then(result => {
             this.images.push(result);

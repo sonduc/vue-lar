@@ -456,7 +456,7 @@ export default {
     setInitData(dataSettings) {
       if(dataSettings.homepage_image !== null) {
         this.getBase64ImageFromUrl(
-          "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+ dataSettings.homepage_image)
+          "https://s3-ap-southeast-1.amazonaws.com/westay-img/lg/"+ dataSettings.homepage_image)
         .then(result => {
           this.arrImgHomepage.push(result);
           this.loadedImages++;
@@ -465,7 +465,7 @@ export default {
       }
       if(dataSettings.image_logo !== null) {
         this.getBase64ImageFromUrl(
-          "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+ dataSettings.image_logo)
+          "https://s3-ap-southeast-1.amazonaws.com/westay-img/lg/"+ dataSettings.image_logo)
         .then(result => {
           this.arrImgLogo.push(result);
           this.loadedImages++;
