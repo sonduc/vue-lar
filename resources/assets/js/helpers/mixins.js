@@ -406,6 +406,19 @@ export const constant = {
           name: 'Chủ nhật'
         },
       ],
+      region_list: [{
+          id: 1,
+          value: 'Miền Bắc'
+        },
+        {
+          id: 2,
+          value: 'Miền Trung'
+        },
+        {
+          id: 3,
+          value: 'Miền Nam'
+        },
+      ],
     }
   },
   computed: {

@@ -64,6 +64,14 @@ import ComfortList from './views/admin/comforts/ComfortList.vue'
 import ComfortCreate from './views/admin/comforts/ComfortCreate.vue'
 import ComfortUpdate from './views/admin/comforts/ComfortUpdate.vue'
 
+// Cities
+import CityList from './views/admin/cities/CityList.vue'
+import CityUpdate from './views/admin/cities/CityUpdate.vue'
+
+// Districts
+import DistrictList from './views/admin/districts/DistrictList.vue'
+import DistrictUpdate from './views/admin/districts/DistrictUpdate.vue'
+
 // Collection
 import CollectionList from './views/admin/collections/CollectionList.vue'
 import CollectionCreate from './views/admin/collections/CollectionCreate.vue'
@@ -356,6 +364,30 @@ const routes = [
         path: 'comforts/update/:comfortId',
         name: 'comfort.update',
         component: ComfortUpdate
+      },
+
+      // Cities
+      {
+        path: 'cities/list',
+        name: 'city.list',
+        component: CityList
+      },
+      {
+        path: 'cities/update/:cityId',
+        name: 'city.update',
+        component: CityUpdate
+      },
+
+      // Districts
+      {
+        path: 'districts/list',
+        name: 'district.list',
+        component: DistrictList
+      },
+      {
+        path: 'districts/update/:districtId',
+        name: 'district.update',
+        component: DistrictUpdate
       },
 
       //  Settings
