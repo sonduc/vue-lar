@@ -505,9 +505,6 @@ export default {
 .custom-margin {
   margin-top: 1em;
 }
-.custom-margin {
-  margin-top: 1em;
-}
 .container-room {
   border: 1px solid lightgray;
   padding-top: 1rem;
