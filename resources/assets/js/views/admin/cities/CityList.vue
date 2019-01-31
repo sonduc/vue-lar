@@ -49,12 +49,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="(city,index) in cities"
-              :key="index"
-            >
+            <tr v-for="(city,index) in cities" :key="index">
               <td width="20%">{{index+1}}</td>
-              <td  width="20%" class="cell-content">
+              <td width="20%" class="cell-content">
                 <div class="content">
                   <div class="content-name">{{ city.name }}</div>
                 </div>
@@ -65,7 +62,7 @@
                 </div>
               </td>
               <td width="10%">
-               <div class="mb-3">Trạng thái</div>
+                <div class="mb-3">Trạng thái</div>
                 <div class="mb-3">Nổi bật</div>
                 <div class="mb-3">Độ ưu tiên</div>
               </td>
@@ -119,8 +116,7 @@
                     type="button"
                     v-tooltip.top-center="'Mức độ ưu tiên 0 (click để cập nhật lên 1)'"
                     class="btn btn-xs btn-icon btn-danger mailbox-action"
-                  >0
-                  </button>
+                  >0</button>
                   <button
                     style="width: 37px;"
                     @click="updateCityMinor('priority',city)"
@@ -128,8 +124,7 @@
                     v-tooltip.top-center="'Mức độ ưu tiên 1 (click để cập nhật lên 2)'"
                     type="button"
                     class="btn btn-xs btn-icon btn-warning mailbox-action"
-                  >1
-                  </button>
+                  >1</button>
                   <button
                     style="width: 37px;"
                     @click="updateCityMinor('priority',city)"
@@ -137,8 +132,7 @@
                     v-tooltip.top-center="'Mức độ ưu tiên 2 (click để cập nhật lên 3)'"
                     type="button"
                     class="btn btn-xs btn-icon btn-primary mailbox-action"
-                  >2
-                  </button>
+                  >2</button>
                   <button
                     style="width: 37px;"
                     @click="updateCityMinor('priority',city)"
@@ -146,8 +140,7 @@
                     v-tooltip.top-center="'Mức độ ưu tiên 3 (click để cập nhật xuống 0)'"
                     type="button"
                     class="btn btn-xs btn-icon btn-success mailbox-action"
-                  >3
-                  </button>
+                  >3</button>
                 </div>
               </td>
 
@@ -219,7 +212,7 @@ export default {
           params: {
             page: page,
             limit: 5,
-            q: this.name,
+            q: this.name
           }
         });
         let paginate = response.data.meta.pagination;
@@ -265,13 +258,15 @@ export default {
           .then(result => {
             if (result) {
               this.reloadData(this.currentPage);
-              window.toastr["success"]("Cập nhật nổi bật thành công !", "Success");
+              window.toastr["success"](
+                "Cập nhật nổi bật thành công !",
+                "Success"
+              );
             } else {
               window.toastr["error"]("Cập nhật nổi bật xảy ra lỗi !", "Error");
             }
           });
-      }
-      else if (option === "priority") {
+      } else if (option === "priority") {
         let priorityStatus;
         if (city.priority == 0) {
           priorityStatus = 1;
@@ -289,7 +284,10 @@ export default {
           .then(result => {
             if (result) {
               this.reloadData(this.currentPage);
-              window.toastr["success"]("Cập nhật ưu tiên thành công !", "Success");
+              window.toastr["success"](
+                "Cập nhật ưu tiên thành công !",
+                "Success"
+              );
             } else {
               window.toastr["error"]("Cập nhật nổi bật xảy ra lỗi !", "Error");
             }

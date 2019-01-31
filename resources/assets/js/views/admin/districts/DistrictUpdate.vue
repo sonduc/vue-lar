@@ -3,13 +3,16 @@
     <div class="page-header">
       <h3 class="page-title">Cập nhật quận/huyện</h3>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item">
+          <a href="#">Home</a>
+        </li>
         <li class="breadcrumb-item">
           <router-link :to="{ name: 'district.list'}">
             <a>Districts</a>
           </router-link>
         </li>
-        <li class="breadcrumb-item active"><a href="#">Cập nhật quận/huyện </a>
+        <li class="breadcrumb-item active">
+          <a href="#">Cập nhật quận/huyện</a>
         </li>
       </ol>
     </div>
@@ -22,43 +25,45 @@
           <div class="card-body">
             <form>
               <div class="form-row">
-
                 <div class="col-md-12 row">
                   <div class="form-group col-md-4">
-                    <label :style="errors.has('name') ? 'color:red;' : ''">
-                      {{errors.has('name')? errors.first('name') : 'Tên quận/huyện *'}}
-                    </label>
+                    <label
+                      :style="errors.has('name') ? 'color:red;' : ''"
+                    >{{errors.has('name')? errors.first('name') : 'Tên quận/huyện *'}}</label>
                     <input
                       name="name"
                       data-vv-as="Tên quận/huyện"
                       v-validate="'required'"
                       v-model="district.name"
                       type="text"
-                      class="form-control">
+                      class="form-control"
+                    >
                   </div>
                   <div class="form-group col-md-4">
-                    <label :style="errors.has('short_name') ? 'color:red;' : ''">
-                      {{errors.has('short_name')? errors.first('short_name') : 'Tên viết tắt *'}}
-                    </label>
+                    <label
+                      :style="errors.has('short_name') ? 'color:red;' : ''"
+                    >{{errors.has('short_name')? errors.first('short_name') : 'Tên viết tắt *'}}</label>
                     <input
                       name="short_name"
                       data-vv-as="Tên viết tắt"
                       v-validate="'required'"
                       v-model="district.short_name"
                       type="text"
-                      class="form-control">
+                      class="form-control"
+                    >
                   </div>
                   <div class="form-group col-md-4">
-                    <label :style="errors.has('code') ? 'color:red;' : ''">
-                      {{errors.has('code')? errors.first('code') : 'Mã vùng *'}}
-                    </label>
+                    <label
+                      :style="errors.has('code') ? 'color:red;' : ''"
+                    >{{errors.has('code')? errors.first('code') : 'Mã vùng *'}}</label>
                     <input
                       name="code"
                       data-vv-as="Mã vùng"
                       v-validate="'required|min:6'"
                       v-model="district.code"
                       type="text"
-                      class="form-control">
+                      class="form-control"
+                    >
                   </div>
                 </div>
 
@@ -71,7 +76,8 @@
                           v-model="district.status"
                           class="form-check-input"
                           type="radio"
-                          :value="0" />
+                          :value="0"
+                        >
                         <label class="form-check-label">Không khả dụng</label>
                       </div>
                       <div class="form-check form-check-inline">
@@ -79,7 +85,8 @@
                           v-model="district.status"
                           class="form-check-input"
                           type="radio"
-                          :value="1"/>
+                          :value="1"
+                        >
                         <label class="form-check-label">Khả dụng</label>
                       </div>
                     </div>
@@ -92,7 +99,8 @@
                           v-model="district.hot"
                           class="form-check-input"
                           type="radio"
-                          :value="0">
+                          :value="0"
+                        >
                         <label class="form-check-label">Không</label>
                       </div>
                       <div class="form-check form-check-inline">
@@ -100,7 +108,8 @@
                           v-model="district.hot"
                           class="form-check-input"
                           type="radio"
-                          :value="1">
+                          :value="1"
+                        >
                         <label class="form-check-label">Có</label>
                       </div>
                     </div>
@@ -113,7 +122,8 @@
                           v-model="district.priority"
                           class="form-check-input"
                           type="radio"
-                          :value="0">
+                          :value="0"
+                        >
                         <label class="form-check-label">Không ưu tiên</label>
                       </div>
                       <div class="form-check form-check-inline custom-checkbox">
@@ -121,15 +131,17 @@
                           v-model="district.priority"
                           class="form-check-input"
                           type="radio"
-                          :value="3">
+                          :value="3"
+                        >
                         <label class="form-check-label">Ưu tiên trung bình</label>
                       </div>
-                       <div class="form-check form-check-inline custom-checkbox">
+                      <div class="form-check form-check-inline custom-checkbox">
                         <input
                           v-model="district.priority"
                           class="form-check-input"
                           type="radio"
-                          :value="2">
+                          :value="2"
+                        >
                         <label class="form-check-label">Ưu tiên khá</label>
                       </div>
                       <div class="form-check form-check-inline">
@@ -137,7 +149,8 @@
                           v-model="district.priority"
                           class="form-check-input"
                           type="radio"
-                          :value="1">
+                          :value="1"
+                        >
                         <label class="form-check-label">Ưu tiên cao nhất</label>
                       </div>
                     </div>
@@ -148,8 +161,10 @@
                   <div class="form-group col-md-12">
                     <label v-if="images.length">Ảnh đại diện *</label>
                     <label v-else style="color: red;">Upload ảnh là bắt buộc *</label>
-                    <p>( Note: Ảnh chỉ được lưu dưới dạng .jpg, .jpeg, .png,
-                        kích thước < 5MB )</p>
+                    <p>
+                      ( Note: Ảnh chỉ được lưu dưới dạng .jpg, .jpeg, .png,
+                      kích thước < 5MB )
+                    </p>
                     <vue-dropzone
                       id="dropzone"
                       class="custom-vue-dropzone"
@@ -169,10 +184,7 @@
                     @click.prevent="updateDistrict"
                     class="btn btn-success"
                   >Cập nhật</button>
-                  <button
-                    @click.prevent="returnDistrictList"
-                    class="btn btn-danger"
-                  >Quay lại</button>
+                  <button @click.prevent="returnDistrictList" class="btn btn-danger">Quay lại</button>
                 </div>
               </div>
             </form>
@@ -187,7 +199,7 @@ import Auth from "../../../services/auth";
 import vue2Dropzone from "vue2-dropzone";
 export default {
   components: {
-    vueDropzone: vue2Dropzone,
+    vueDropzone: vue2Dropzone
   },
   data() {
     return {
@@ -199,7 +211,7 @@ export default {
         priority: 0,
         hot: 0,
         status: 0,
-        image: null,
+        image: null
       },
       images: [],
       loadedImages: false,
@@ -220,36 +232,35 @@ export default {
   },
   methods: {
     setInitData(dataDistrict) {
+      this.district = JSON.parse(
+        JSON.stringify({ ...this.district, ...dataDistrict })
+      );
 
-      this.district = JSON.parse(JSON.stringify({ ...this.district, ...dataDistrict }));
-
-      if(this.district.image != null) {
+      if (this.district.image != null) {
         this.getBase64ImageFromUrl(
-          "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+ this.district.image)
-        .then(result => {
-          this.images.push(result);
-          this.loadedImages = true;
-         })
-        .catch(err => console.error(err));
+          "https://s3-ap-southeast-1.amazonaws.com/westay-img/lg/" +
+            this.district.image
+        )
+          .then(result => {
+            this.images.push(result);
+            this.loadedImages = true;
+          })
+          .catch(err => console.error(err));
       }
     },
     checkLoadedImage() {
-      if(this.loadedImages){
+      if (this.loadedImages) {
         return true;
-      }
-      else {
+      } else {
         return false;
       }
     },
     removedImageInDropzone(file, error, xhr) {
-      if(file.name === "Ảnh quận/huyện"){
+      if (file.name === "Ảnh quận/huyện") {
         this.images.pop();
-      }
-      else {
-        let index = this.images.findIndex(
-          item => item === file.dataURL
-        );
-        if(index > -1) {
+      } else {
+        let index = this.images.findIndex(item => item === file.dataURL);
+        if (index > -1) {
           this.images.splice(index, 1);
         }
       }
@@ -270,15 +281,19 @@ export default {
       let res = await fetch(imageUrl);
       let blob = await res.blob();
       return new Promise((resolve, reject) => {
-        let reader  = new FileReader();
-        reader.addEventListener("load", function () {
+        let reader = new FileReader();
+        reader.addEventListener(
+          "load",
+          function() {
             resolve(reader.result);
-        }, false);
+          },
+          false
+        );
         reader.onerror = () => {
           return reject(this);
         };
         reader.readAsDataURL(blob);
-      })
+      });
     },
     async getDistrictById() {
       try {
@@ -309,7 +324,7 @@ export default {
               priority: this.district.priority,
               hot: this.district.hot,
               status: this.district.status,
-              image: this.images[0],
+              image: this.images[0]
             })
             .then(response => {
               this.$swal("Thành công", "Cập nhật thành công", "success");
@@ -329,7 +344,7 @@ export default {
     },
     returnDistrictList() {
       this.$router.push({
-        name: "district.list",
+        name: "district.list"
       });
     },
     hideSidebarOnMobile() {

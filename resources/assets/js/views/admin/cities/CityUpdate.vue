@@ -3,13 +3,16 @@
     <div class="page-header">
       <h3 class="page-title">Cập nhật tỉnh/thành phố</h3>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item">
+          <a href="#">Home</a>
+        </li>
         <li class="breadcrumb-item">
           <router-link :to="{ name: 'city.list'}">
             <a>Cities</a>
           </router-link>
         </li>
-        <li class="breadcrumb-item active"><a href="#">Cập nhật tỉnh/thành phố </a>
+        <li class="breadcrumb-item active">
+          <a href="#">Cập nhật tỉnh/thành phố</a>
         </li>
       </ol>
     </div>
@@ -22,36 +25,37 @@
           <div class="card-body">
             <form>
               <div class="form-row">
-
                 <div class="col-md-12 row">
                   <div class="form-group col-md-3">
-                    <label :style="errors.has('name') ? 'color:red;' : ''">
-                      {{errors.has('name')? errors.first('name') : 'Tên tỉnh/thành phố *'}}
-                    </label>
+                    <label
+                      :style="errors.has('name') ? 'color:red;' : ''"
+                    >{{errors.has('name')? errors.first('name') : 'Tên tỉnh/thành phố *'}}</label>
                     <input
                       name="name"
                       data-vv-as="Tên tỉnh/thành phố"
                       v-validate="'required'"
                       v-model="city.name"
                       type="text"
-                      class="form-control">
+                      class="form-control"
+                    >
                   </div>
                   <div class="form-group col-md-3">
-                    <label :style="errors.has('short_name') ? 'color:red;' : ''">
-                      {{errors.has('short_name')? errors.first('short_name') : 'Tên viết tắt *'}}
-                    </label>
+                    <label
+                      :style="errors.has('short_name') ? 'color:red;' : ''"
+                    >{{errors.has('short_name')? errors.first('short_name') : 'Tên viết tắt *'}}</label>
                     <input
                       name="short_name"
                       data-vv-as="Tên viết tắt"
                       v-validate="'required'"
                       v-model="city.short_name"
                       type="text"
-                      class="form-control">
+                      class="form-control"
+                    >
                   </div>
                   <div class="form-group col-md-3">
-                    <label :style="errors.has('region_id') ? 'color:red;' : ''">
-                      {{errors.has('region_id')? errors.first('region_id') : 'Khu vực *'}}
-                    </label>
+                    <label
+                      :style="errors.has('region_id') ? 'color:red;' : ''"
+                    >{{errors.has('region_id')? errors.first('region_id') : 'Khu vực *'}}</label>
                     <multiselect
                       style="z-index:4"
                       :allow-empty="false"
@@ -66,17 +70,18 @@
                       track-by="value"
                     ></multiselect>
                   </div>
-                   <div class="form-group col-md-3">
-                    <label :style="errors.has('code') ? 'color:red;' : ''">
-                      {{errors.has('code')? errors.first('code') : 'Mã vùng *'}}
-                    </label>
+                  <div class="form-group col-md-3">
+                    <label
+                      :style="errors.has('code') ? 'color:red;' : ''"
+                    >{{errors.has('code')? errors.first('code') : 'Mã vùng *'}}</label>
                     <input
                       name="code"
                       data-vv-as="Mã vùng"
                       v-validate="'required|min:6'"
                       v-model="city.code"
                       type="text"
-                      class="form-control">
+                      class="form-control"
+                    >
                   </div>
                 </div>
 
@@ -89,7 +94,8 @@
                           v-model="city.status"
                           class="form-check-input"
                           type="radio"
-                          :value="0" />
+                          :value="0"
+                        >
                         <label class="form-check-label">Không khả dụng</label>
                       </div>
                       <div class="form-check form-check-inline">
@@ -97,7 +103,8 @@
                           v-model="city.status"
                           class="form-check-input"
                           type="radio"
-                          :value="1"/>
+                          :value="1"
+                        >
                         <label class="form-check-label">Khả dụng</label>
                       </div>
                     </div>
@@ -106,19 +113,11 @@
                     <label>Nổi bật</label>
                     <div>
                       <div class="form-check form-check-inline custom-checkbox">
-                        <input
-                          v-model="city.hot"
-                          class="form-check-input"
-                          type="radio"
-                          :value="0">
+                        <input v-model="city.hot" class="form-check-input" type="radio" :value="0">
                         <label class="form-check-label">Không</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input
-                          v-model="city.hot"
-                          class="form-check-input"
-                          type="radio"
-                          :value="1">
+                        <input v-model="city.hot" class="form-check-input" type="radio" :value="1">
                         <label class="form-check-label">Có</label>
                       </div>
                     </div>
@@ -131,7 +130,8 @@
                           v-model="city.priority"
                           class="form-check-input"
                           type="radio"
-                          :value="0">
+                          :value="0"
+                        >
                         <label class="form-check-label">Không ưu tiên</label>
                       </div>
                       <div class="form-check form-check-inline custom-checkbox">
@@ -139,15 +139,17 @@
                           v-model="city.priority"
                           class="form-check-input"
                           type="radio"
-                          :value="3">
+                          :value="3"
+                        >
                         <label class="form-check-label">Ưu tiên trung bình</label>
                       </div>
-                       <div class="form-check form-check-inline custom-checkbox">
+                      <div class="form-check form-check-inline custom-checkbox">
                         <input
                           v-model="city.priority"
                           class="form-check-input"
                           type="radio"
-                          :value="2">
+                          :value="2"
+                        >
                         <label class="form-check-label">Ưu tiên khá</label>
                       </div>
                       <div class="form-check form-check-inline">
@@ -155,7 +157,8 @@
                           v-model="city.priority"
                           class="form-check-input"
                           type="radio"
-                          :value="1">
+                          :value="1"
+                        >
                         <label class="form-check-label">Ưu tiên cao nhất</label>
                       </div>
                     </div>
@@ -166,8 +169,10 @@
                   <div class="form-group col-md-6">
                     <label v-if="images.length">Ảnh đại diện *</label>
                     <label v-else style="color: red;">Upload ảnh là bắt buộc *</label>
-                    <p>( Note: Ảnh chỉ được lưu dưới dạng .jpg, .jpeg, .png,
-                        kích thước < 5MB )</p>
+                    <p>
+                      ( Note: Ảnh chỉ được lưu dưới dạng .jpg, .jpeg, .png,
+                      kích thước < 5MB )
+                    </p>
                     <vue-dropzone
                       id="dropzone"
                       class="custom-vue-dropzone"
@@ -211,10 +216,7 @@
                     @click.prevent="updateCity"
                     class="btn btn-success"
                   >Cập nhật</button>
-                  <button
-                    @click.prevent="returnCityList"
-                    class="btn btn-danger"
-                  >Quay lại</button>
+                  <button @click.prevent="returnCityList" class="btn btn-danger">Quay lại</button>
                 </div>
               </div>
             </form>
@@ -233,7 +235,7 @@ export default {
   mixins: [constant],
   components: {
     vueDropzone: vue2Dropzone,
-    Multiselect,
+    Multiselect
   },
   data() {
     return {
@@ -247,7 +249,7 @@ export default {
         priority: 0,
         hot: 0,
         status: 0,
-        image: null,
+        image: null
       },
       place: null,
       addressMap: null,
@@ -303,39 +305,36 @@ export default {
   },
   methods: {
     setInitData(dataCity) {
-
       this.city = JSON.parse(JSON.stringify({ ...this.city, ...dataCity }));
 
       this.center.lat = parseFloat(dataCity.latitude);
       this.center.lng = parseFloat(dataCity.longitude);
 
-      if(this.city.image != null) {
+      if (this.city.image != null) {
         this.getBase64ImageFromUrl(
-          "https://s3-ap-southeast-1.amazonaws.com/d-beauty/"+ this.city.image)
-        .then(result => {
-          this.images.push(result);
-          this.loadedImages = true;
-         })
-        .catch(err => console.error(err));
+          "https://s3-ap-southeast-1.amazonaws.com/westay-img/lg/" +
+            this.city.image
+        )
+          .then(result => {
+            this.images.push(result);
+            this.loadedImages = true;
+          })
+          .catch(err => console.error(err));
       }
     },
     checkLoadedImage() {
-      if(this.loadedImages){
+      if (this.loadedImages) {
         return true;
-      }
-      else {
+      } else {
         return false;
       }
     },
     removedImageInDropzone(file, error, xhr) {
-      if(file.name === "Ảnh tỉnh/thành phố"){
+      if (file.name === "Ảnh tỉnh/thành phố") {
         this.images.pop();
-      }
-      else {
-        let index = this.images.findIndex(
-          item => item === file.dataURL
-        );
-        if(index > -1) {
+      } else {
+        let index = this.images.findIndex(item => item === file.dataURL);
+        if (index > -1) {
           this.images.splice(index, 1);
         }
       }
@@ -377,15 +376,19 @@ export default {
       let res = await fetch(imageUrl);
       let blob = await res.blob();
       return new Promise((resolve, reject) => {
-        let reader  = new FileReader();
-        reader.addEventListener("load", function () {
+        let reader = new FileReader();
+        reader.addEventListener(
+          "load",
+          function() {
             resolve(reader.result);
-        }, false);
+          },
+          false
+        );
         reader.onerror = () => {
           return reject(this);
         };
         reader.readAsDataURL(blob);
-      })
+      });
     },
     async getCityById() {
       try {
@@ -418,7 +421,7 @@ export default {
               priority: this.city.priority,
               hot: this.city.hot,
               status: this.city.status,
-              image: this.images[0],
+              image: this.images[0]
             })
             .then(response => {
               this.$swal("Thành công", "Cập nhật thành công", "success");
@@ -438,7 +441,7 @@ export default {
     },
     returnCityList() {
       this.$router.push({
-        name: "city.list",
+        name: "city.list"
       });
     },
     hideSidebarOnMobile() {
