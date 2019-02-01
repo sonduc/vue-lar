@@ -307,7 +307,8 @@
                 <div class="mb-3">Phòng hot</div>
                 <div class="mb-3">Phòng nổi bật</div>
                 <div class="mb-3">Tự quản lý</div>
-                <div class="mb-3">Phòng khóa</div>
+                <div class="mb-3">Admin khóa</div>
+                <div class="mb-3">Chủ nhà khóa</div>
               </td>
               <td class="cell-fav">
                 <div class="content-subject mb-3">
@@ -367,6 +368,20 @@
                   >
                     <i class="icon-fa icon-fa-times"></i>
                   </button>
+                </div>
+                <div class="content-subject mb-3">
+                  <div class="content-subject mb-3">
+                    <button
+                      v-if="room.merchant_status !== 1"
+                      type="button"
+                      class="btn btn-xs btn-danger mailbox-action"
+                    >Đang khóa</button>
+                    <button
+                      v-else
+                      type="button"
+                      class="btn btn-xs btn-success mailbox-action"
+                    >Đang hoạt động</button>
+                  </div>
                 </div>
               </td>
               <td width="10%" style="text-align:center">
