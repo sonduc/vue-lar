@@ -97,7 +97,7 @@ export default {
           date_end: this.date_end
         }
       });
-      console.log(response.data.data);
+      // console.log(response.data.data);
       this.chartOptions.series = response.data.data.data;
       this.chartOptions.xAxis.categories = response.data.data.createdAt;
     }

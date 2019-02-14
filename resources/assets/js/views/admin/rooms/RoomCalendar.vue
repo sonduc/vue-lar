@@ -607,7 +607,7 @@ export default {
         this.actionDateCalendar = new Date(
           new Date(actionDate).setMonth(actionDate.getMonth() + 1)
         );
-        console.log(this.actionDateCalendar);
+        // console.log(this.actionDateCalendar);
         this.changeActionDateCalendar(
           new Date(new Date(actionDate).setMonth(actionDate.getMonth() + 1))
         );
@@ -623,7 +623,7 @@ export default {
           new Date(this.date_out).setDate(this.date_out.getDate() + 7)
         );
         let actionDate = this.actionDateCalendar;
-        console.log(actionDate);
+        // console.log(actionDate);
         this.actionDateCalendar = new Date(
           new Date(actionDate).setDate(actionDate.getDate() + 7)
         );

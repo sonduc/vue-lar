@@ -185,7 +185,7 @@ export default {
       });
     },
     remove(id) {
-      console.log(id)
+      // console.log(id)
       this.$swal({
         title: "Bạn có muốn xóa quyền không",
         type: "info",

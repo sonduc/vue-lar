@@ -23,10 +23,13 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-sm-12 col-xs-12 col-lg-6 col-xl-6 col-md-12">
               <div class="form-group row">
-                <label for="firstName" class="col-sm-2 col-form-label">Tên phòng</label>
-                <div class="col-sm-10">
+                <label
+                  for="firstName"
+                  class="col-lg-3 col-xs-2 col-md-12 col-xl-2 col-sm-2 col-form-label"
+                >Tên phòng</label>
+                <div class="col-lg-9 col-md-12 col-sm-10">
                   <input
                     v-model="q"
                     id="firstName"
@@ -37,8 +40,11 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="email" class="col-sm-2 col-form-label">Thành phố</label>
-                <div class="col-sm-4">
+                <label
+                  for="email"
+                  class="col-lg-3 col-xs-2 col-md-12 col-xl-2 col-sm-2 col-form-label"
+                >Thành phố</label>
+                <div class="col-lg-9 col-md-12 col-sm-4">
                   <multiselect
                     v-model="city"
                     label="name"
@@ -47,8 +53,11 @@
                     :show-labels="false"
                   />
                 </div>
-                <label for="email" class="col-sm-2 col-form-label">Quận</label>
-                <div class="col-sm-4">
+                <label
+                  for="email"
+                  class="col-lg-3 col-xs-2 col-md-12 col-xl-2 col-sm-2 col-form-label"
+                >Quận</label>
+                <div class="col-lg-9 col-md-12 col-sm-4">
                   <multiselect
                     :disabled="city == null"
                     v-model="district"
@@ -62,13 +71,19 @@
             </div>
             <div class="col-md-6">
               <div class="form-group row">
-                <label for="firstName" class="col-sm-2 col-form-label">Khoảng giá</label>
-                <div class="col-sm-4 mt-2">
+                <label
+                  for="firstName"
+                  class="col-lg-3 col-xs-2 col-md-12 col-xl-2 col-sm-2 col-form-label"
+                >Khoảng giá</label>
+                <div class="col-lg-9 col-md-12 col-sm-4 mt-2">
                   <vue-slider v-model="price_range" formatter="{value} Đ" :min="0" :max="10000000"></vue-slider>
                 </div>
 
-                <label for="lastName" class="col-sm-2 col-form-label">Phòng</label>
-                <div class="col-sm-4">
+                <label
+                  for="lastName"
+                  class="col-lg-3 col-xs-2 col-md-12 col-xl-2 col-sm-2 col-form-label"
+                >Phòng</label>
+                <div class="col-lg-9 col-md-12 col-sm-4">
                   <multiselect
                     id="inputUserName"
                     v-model="room_type"
@@ -80,8 +95,11 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="lastName" class="col-sm-2 col-form-label">Host</label>
-                <div class="col-sm-4">
+                <label
+                  for="lastName"
+                  class="col-lg-3 col-xs-2 col-md-12 col-xl-2 col-sm-2 col-form-label"
+                >Host</label>
+                <div class="col-lg-9 col-md-12 col-sm-4">
                   <multiselect
                     id="inputUserName"
                     v-model="merchant_id"
@@ -91,8 +109,11 @@
                     :show-labels="false"
                   />
                 </div>
-                <label for="email" class="col-sm-2 col-form-label">Thuê theo</label>
-                <div class="col-sm-4">
+                <label
+                  for="email"
+                  class="col-lg-3 col-xs-2 col-md-12 col-xl-2 col-sm-2 col-form-label"
+                >Thuê theo</label>
+                <div class="col-lg-9 col-md-12 col-sm-4">
                   <multiselect
                     v-model="rent_type"
                     label="value"
@@ -105,8 +126,11 @@
             </div>
             <div class="col-md-6">
               <div class="form-group row">
-                <label for="email" class="col-sm-2 col-form-label">Hiển thị</label>
-                <div class="col-sm-4 mt-2">
+                <label
+                  for="email"
+                  class="col-lg-3 col-xs-2 col-md-12 col-xl-2 col-sm-2 col-form-label"
+                >Hiển thị</label>
+                <div class="col-lg-9 col-md-12 col-sm-4 mt-2">
                   <div class="form-check form-check-inline">
                     <input
                       id="inlineCheckbox1"
@@ -141,8 +165,11 @@
                     <label class="form-check-label" for="inlineCheckbox3">Deal</label>
                   </div>
                 </div>
-                <label for="email" class="col-sm-2 col-form-label">Trạng thái</label>
-                <div class="col-sm-4">
+                <label
+                  for="email"
+                  class="col-lg-3 col-xs-2 col-md-12 col-xl-2 col-sm-2 col-form-label"
+                >Trạng thái</label>
+                <div class="col-lg-9 col-md-12 col-sm-4">
                   <multiselect
                     :disabled="city == null"
                     v-model="status"
@@ -157,12 +184,12 @@
             <div class="col-md-6">
               <!-- <div class="form-group row" v-if="rent_type.id == 2 || rent_type.id == 3"> -->
               <div class="form-group row">
-                <label for="lastName" class="col-sm-1 col-form-label">Từ</label>
-                <div class="col-sm-5">
+                <label for="lastName" class="col-md-12 col-lg-6 col-sm-2 col-form-label">Từ</label>
+                <div class="col-md-12 col-lg-6 col-sm-4">
                   <datepicker v-model="date_start" :format="format" input-class="form-control"/>
                 </div>
-                <label for="lastName" class="col-sm-1 col-form-label">Đến</label>
-                <div class="col-sm-5">
+                <label for="lastName" class="col-md-12 col-lg-6 col-sm-2 col-form-label">Đến</label>
+                <div class="col-md-12 col-lg-6 col-sm-4">
                   <datepicker
                     :disabled-dates="disabledCheckout"
                     v-model="date_end"
@@ -203,9 +230,9 @@
               </div>-->
             </div>
           </div>
-          <button @click="applyFilter(1)" class="btn btn-success btn-sm">Áp dụng</button>
-          <button @click="resetFilter(1)" class="btn btn-info btn-sm">Làm mới</button>
-          <button @click="openRoomGoogleMap" class="btn btn-primary btn-sm">
+          <button @click="applyFilter(1)" class="btn btn-success btn-xs">Áp dụng</button>
+          <button @click="resetFilter(1)" class="btn btn-info btn-xs">Làm mới</button>
+          <button @click="openRoomGoogleMap" class="btn btn-primary btn-xs">
             <i class="icon-fa icon-fa-map-marker"/>Tìm trên bản đồ
           </button>
         </div>
@@ -213,39 +240,20 @@
 
       <div class="mailbox-content">
         <lottie v-if="loading" :options="defaultOptions" :height="150" :width="150"></lottie>
-        <table class="table" v-else>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Ảnh</th>
-              <th>Phòng</th>
-              <th>Giá</th>
-              <th colspan="2">Trạng thái</th>
-              <th>Hành động</th>
+        <table role="table" v-else>
+          <thead role="rowgroup">
+            <tr role="row">
+              <th role="columnheader" width="5%">#</th>
+              <th role="columnheader">Phòng</th>
+              <th role="columnheader">Giá</th>
+              <th role="columnheader">Trạng thái</th>
+              <th role="columnheader">Hành động</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="(room,index) in filteredRooms" :key="index" :class="{'read' : room.status }">
-              <td>{{index+1}}</td>
-              <td v-if="room.media.data.length">
-                <img
-                  v-for="(item,index) in room.media.data"
-                  :key="index"
-                  v-if="item.type == 4"
-                  :src="'https://s3-ap-southeast-1.amazonaws.com/westay-img/lg/'+item.image"
-                  height="150px"
-                  width="150px"
-                >
-              </td>
-              <td v-else>
-                <img
-                  alt="Ảnh phòng hiện tại chưa có"
-                  src="https://via.placeholder.com/150"
-                  height="150px"
-                  width="150px"
-                >
-              </td>
-              <td class="cell-content">
+          <tbody role="rowgroup">
+            <tr role="row" v-for="(room,index) in filteredRooms" :key="index">
+              <td role="cell" width="5%">{{index+1}}&ensp;</td>
+              <td role="cell">
                 <div class="content">
                   <div class="content-name mb-3">
                     <router-link
@@ -277,12 +285,12 @@
                   <div class="content-subject mb-3">
                     <button
                       @click="openGuideBook(room.id)"
-                      class="btn btn-primary btn-sm"
-                    >Địa điểm xung quanh phòng</button>
+                      class="btn btn-primary btn-xs"
+                    >Địa điểm lân cận</button>
                   </div>
                 </div>
               </td>
-              <td>
+              <td role="cell">
                 <div class="content-subject mb-3">Giá theo ngày: {{ room.price_day | formatNumber }}</div>
                 <div class="content-subject mb-3">Giá theo giờ: {{ room.price_hour | formatNumber }}</div>
                 <div
@@ -295,23 +303,16 @@
                 <div class="content-subject mb-3">
                   <button
                     @click="openModalOptionalPrices(room)"
-                    class="btn btn-sm btn-secondary btn-pressable"
+                    class="btn btn-xs btn-secondary btn-pressable"
                   >Chi tiết giá</button>
-                  <button @click="openBookingCalendar(room.id)" class="btn btn-danger btn-sm">
-                    <i class="icon-fa icon-fa-calendar"></i>Lịch trống phòng
+                  <button @click="openBookingCalendar(room.id)" class="btn btn-danger btn-xs">
+                    <i class="icon-fa icon-fa-calendar"></i>Lịch trống
                   </button>
                 </div>
               </td>
-              <td width="10%">
-                <div class="mb-3">Phòng mới</div>
-                <div class="mb-3">Phòng hot</div>
-                <div class="mb-3">Phòng nổi bật</div>
-                <div class="mb-3">Tự quản lý</div>
-                <div class="mb-3">Admin khóa</div>
-                <div class="mb-3">Chủ nhà khóa</div>
-              </td>
-              <td class="cell-fav">
+              <td role="cell">
                 <div class="content-subject mb-3">
+                  Mới &ensp;
                   <button
                     @click="updateRoomMinor('new',room)"
                     type="button"
@@ -321,6 +322,7 @@
                   </button>
                 </div>
                 <div class="content-subject mb-3">
+                  Hot &ensp;
                   <button
                     @click="updateRoomMinor('hot',room)"
                     type="button"
@@ -329,7 +331,8 @@
                     <i :class="room.hot == 1? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"></i>
                   </button>
                 </div>
-                <div class="content-subject mb-3">
+                <!-- <div class="content-subject mb-3">
+                  Phòng nổi bật &ensp;
                   <button
                     @click="updateRoomMinor('latest_deal',room)"
                     type="button"
@@ -339,8 +342,9 @@
                       :class="room.latest_deal == 1 ? 'icon-fa icon-fa-check' : 'icon-fa icon-fa-times'"
                     ></i>
                   </button>
-                </div>
+                </div>-->
                 <div class="content-subject mb-3">
+                  Tự quản lý &ensp;
                   <button
                     @click="updateRoomMinor('is_manager',room)"
                     type="button"
@@ -352,44 +356,44 @@
                   </button>
                 </div>
                 <div class="content-subject mb-3">
+                  Khóa &ensp;
                   <button
                     @click="updateRoomMinor('status',room)"
                     v-if="room.status == 0"
                     type="button"
                     class="btn btn-xs btn-icon btn-danger mailbox-action"
-                  >
-                    <i class="icon-fa icon-fa-check"></i>
-                  </button>
+                  >Đang khóa</button>
                   <button
                     @click="updateRoomMinor('status',room)"
                     v-if="room.status == 1"
                     type="button"
                     class="btn btn-xs btn-icon btn-success mailbox-action"
-                  >
-                    <i class="icon-fa icon-fa-times"></i>
-                  </button>
+                  >Đang mở</button>
                 </div>
-                <div class="content-subject mb-3">
+                <div class="content-subject mb-3">Chủ nhà khóa &ensp;
                   <div class="content-subject mb-3">
                     <button
                       v-if="room.merchant_status !== 1"
                       type="button"
-                      class="btn btn-xs btn-danger mailbox-action"
+                      disabled
+                      class="btn btn-xs btn-icon btn-danger mailbox-action"
                     >Đang khóa</button>
                     <button
                       v-else
                       type="button"
-                      class="btn btn-xs btn-success mailbox-action"
-                    >Đang hoạt động</button>
+                      disabled
+                      class="btn btn-xs btn-icon btn-success mailbox-action"
+                    >Đang mở</button>
                   </div>
                 </div>
               </td>
-              <td width="10%" style="text-align:center">
+              <td role="cell" style="text-align:center">
                 <div class="btn-group mb-3" role="group" aria-label="First group">
                   <button
                     v-tooltip.top-center="'Chi tiết phòng'"
+                    @click.prevent="openRoomDetail(room.id)"
                     type="button"
-                    class="btn btn-sm btn-icon btn-outline-info"
+                    class="btn btn-xs btn-icon btn-outline-info"
                   >
                     <i class="icon-fa icon-fa-search"/>
                   </button>
@@ -397,22 +401,23 @@
                     @click="openUpdateHostModal(room)"
                     v-tooltip.top-center="'Cập nhật chủ nhà'"
                     type="button"
-                    class="btn btn-sm btn-icon btn-outline-info"
+                    class="btn btn-xs btn-icon btn-outline-info"
                   >
                     <i class="icon-fa icon-fa-user"/>
                   </button>
-                  <router-link
-                    :to="{ name: 'room.update', params: {roomId: room.id}}"
-                    v-tooltip.top-center="'Cập nhật phòng'"
+                  <button
+                    @click="openRoomUpdate(room.id)"
+                    v-tooltip.top-center="'Cập nhật chủ nhà'"
                     type="button"
-                    class="btn btn-sm btn-icon btn-outline-info"
+                    class="btn btn-xs btn-icon btn-outline-info"
                   >
                     <i class="icon-fa icon-fa-pencil"/>
-                  </router-link>
+                  </button>
                 </div>
+                <br>
 
                 <button class="btn btn-light btn-xs mb-3">Điểm quy chuẩn</button>
-                <button @click="createBooking(room.id)" class="btn btn-theme btn-sm">Đặt phòng</button>
+                <button @click="createBooking(room.id)" class="btn btn-theme btn-xs">Đặt phòng</button>
               </td>
             </tr>
           </tbody>
@@ -796,6 +801,22 @@ export default {
         }
       });
     },
+    openRoomUpdate(room_id) {
+      this.$router.push({
+        name: "room.update",
+        params: {
+          roomId: room_id
+        }
+      });
+    },
+    openRoomDetail(room_id) {
+      this.$router.push({
+        name: "room.detail",
+        params: {
+          roomId: room_id
+        }
+      });
+    },
     async updateHostConfirm() {
       let response = await axios
         .put(`rooms/prop-update/${this.update_room.id}?option=${this.option}`, {
@@ -918,3 +939,71 @@ export default {
   }
 };
 </script>
+<style>
+@media only screen and (max-width: 760px),
+  (min-device-width: 768px) and (max-device-width: 1024px) {
+  /* Force table to not be like tables anymore */
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tr {
+    margin: 0 0 1rem 0;
+  }
+
+  tr:nth-child(odd) {
+    background: #fff;
+  }
+
+  td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 0;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+
+  /*
+		Label the data
+    You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+		*/
+  td:nth-of-type(1):before {
+    content: "";
+  }
+  td:nth-of-type(2):before {
+    content: "Phòng";
+  }
+  td:nth-of-type(3):before {
+    content: "Giá";
+  }
+  td:nth-of-type(4):before {
+    content: "Trạng thái";
+  }
+  td:nth-of-type(5):before {
+    content: "Hành động";
+  }
+}
+</style>

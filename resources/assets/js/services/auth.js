@@ -54,7 +54,7 @@ export default {
         return permissions;
       }
     } catch (error) {
-      console.log("Error", error.message);
+      // console.log("Error", error.message);
     }
   },
 
@@ -64,7 +64,7 @@ export default {
       return response.data.data;
       // console.log(response.data.data);
     } catch (error) {
-      console.log("Error: ", error.message);
+      // console.log("Error: ", error.message);
     }
   },
 

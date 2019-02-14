@@ -371,7 +371,7 @@ export default {
                 date: this.date.toISOString().substr(0, 10)
               })
               .then(response => {
-                console.log(response);
+                // console.log(response);
                 this.$swal("Thành công", "Đã tạo đối soát", "success");
                 // this.getTransactions({});
                 this.reloadData(this.currentPage);

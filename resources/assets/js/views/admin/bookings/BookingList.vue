@@ -12,7 +12,7 @@
       </ol>
     </div>
     <div :class="{'is-open': isLeftSidebarVisible}" class="mailbox">
-      <button class="btn btn-theme btn-sm btn-block" @click="openBookingFilter">Bộ lọc</button>
+      <button class="btn btn-theme btn-xs btn-block" @click="openBookingFilter">Bộ lọc</button>
       <booking-sidebar
         :selected-category="selectedStatus"
         :categories="categories"
@@ -24,63 +24,27 @@
       <div class="mailbox-content">
         <div class="mailbox-content-header">
           <div class="mailbox-actions">
-            <div class="custom-control custom-checkbox mailbox-action" style="display:inline-block">
-              <input
-                id="customCheckAll"
-                v-model="selectAll"
-                type="checkbox"
-                class="custom-control-input"
-              >
-              <label class="custom-control-label" for="customCheckAll"/>
-            </div>
-
-            <v-dropdown active-url="/admin/dashboard" theme-light class="mailbox-action">
-              <a slot="activator" href="#" @click.prevent>
-                <button class="btn btn-light dropdown-toggle" type="button">Actions</button>
-              </a>
-
-              <v-dropdown-item>
-                <a href="#" @click.prevent="makeInvoice">Tạo hóa đơn</a>
-              </v-dropdown-item>
-              <v-dropdown-item>
-                <a href="#" @click.prevent="showCrossCheckingModal">Yêu cầu đối soát</a>
-              </v-dropdown-item>
-            </v-dropdown>
+            <div class="custom-control custom-checkbox mailbox-action" style="display:inline-block"></div>
           </div>
         </div>
 
         <lottie v-if="loading" :options="defaultOptions" :height="150" :width="150"></lottie>
-        <table v-else class="table table-hover">
-          <thead>
-            <tr>
-              <td></td>
-              <td>Booking</td>
-              <td>Phòng</td>
-              <td>Thanh toán</td>
-              <td>Khách hàng</td>
-              <td>Trạng thái</td>
-              <td>Hành động</td>
+        <table v-else role="table">
+          <thead role="rowgroup">
+            <tr role="row">
+              <td role="columnheader">&ensp;</td>
+              <td role="columnheader">Booking</td>
+              <td role="columnheader">Phòng</td>
+              <td role="columnheader">Thanh toán</td>
+              <td role="columnheader">Khách hàng</td>
+              <td role="columnheader" style="text-align:left">Trạng thái</td>
+              <td role="columnheader" style="text-align:left">Hành động</td>
             </tr>
           </thead>
-          <tbody>
-            <tr
-              v-for="(booking,index) in filteredBookings"
-              :key="index"
-              :class="{'read' : booking.status }"
-            >
-              <td class="cell-checkbox" @click.stop>
-                <div class="custom-control custom-checkbox">
-                  <input
-                    :id="index"
-                    v-model="selectedBookings"
-                    :value="booking.id"
-                    type="checkbox"
-                    class="custom-control-input"
-                  >
-                  <label :for="index" class="custom-control-label"/>
-                </div>
-              </td>
-              <td class="cell-content" @click="openBookingModal(booking)">
+          <tbody role="rowgroup">
+            <tr role="row" v-for="(booking,index) in filteredBookings" :key="index">
+              <td role="cell">&ensp;</td>
+              <td role="cell" @click="openBookingModal(booking)">
                 <div class="content">
                   <div class="content-name">#{{ booking.code }} - {{booking.id}}</div>
                   <div class="content-subject">
@@ -103,14 +67,14 @@
                   </div>
                 </div>
               </td>
-              <td class="cell-content">
+              <td role="cell">
                 <div class="content">
                   <div class="content-subject">
                     <p>{{booking.room.data.details.data[0].name}}</p>
                   </div>
                 </div>
               </td>
-              <td class="cell-content" @click="openBookingPaymentModal(booking)">
+              <td role="cell" @click="openBookingPaymentModal(booking)">
                 <div class="content-subject">
                   Hình thức:
                   <label class="label label-primary">{{booking.payment_method_txt}}</label>
@@ -126,43 +90,43 @@
                 </div>
                 <div class="content-subject">Tổng thu: {{(booking.total_fee) | formatNumber}}</div>
               </td>
-              <td class="cell-content">
+              <td role="cell">
                 <div class="content-subject">Tên: {{booking.name}}</div>
                 <div class="content-subject">Email: {{booking.email}}</div>
                 <div class="content-subject">Điện thoại: {{booking.phone}}</div>
                 <div class="content-subject">Số khách: {{booking.number_of_guests}}</div>
               </td>
-              <td class="cell-content" style="text-align: center">
+              <td role="cell" style="text-align: center">
                 <div class="content-subject">
                   <button
                     @click="showModalUpdateStatus(booking)"
-                    class="btn btn-outline-info btn-sm btn-pressable"
+                    class="btn btn-outline-info btn-xs btn-pressable"
                   >{{booking.payment_status_txt}}</button>
                 </div>
                 <hr>
                 <div class="content-subject">
                   <button
                     @click="showModalUpdatePaymentStatus(booking)"
-                    class="btn btn-warning btn-sm btn-pressable"
+                    class="btn btn-warning btn-xs btn-pressable"
                   >{{booking.status_txt}}</button>
                 </div>
               </td>
-              <td class="cell-content" style="text-align:center">
+              <td role="cell" style="text-align:center">
                 <div class="content-subject">
                   <button
                     @click="showModalDiscount(booking)"
-                    class="btn btn-primary btn-sm btn-pressable"
+                    class="btn btn-primary btn-xs btn-pressable"
                   >Giảm giá</button>
                   <button
                     @click="showModalSurcharge(booking)"
-                    class="btn btn-warning btn-sm btn-pressable"
+                    class="btn btn-warning btn-xs btn-pressable"
                   >Phụ thu</button>
                 </div>
                 <hr>
                 <div class="content-subject">Mã giảm giá</div>
                 <div class="content-subject">
                   <button
-                    class="btn btn-outline-primary btn-sm btn-pressable"
+                    class="btn btn-outline-primary btn-xs btn-pressable"
                   >{{booking.coupon_txt}}</button>
                 </div>
               </td>
@@ -262,7 +226,7 @@
           data-dismiss="modal"
           @click="resetFilter(1)"
         >Làm mới</button>
-
+        
         <button slot="button" type="button" class="btn btn-primary" @click="applyFilter(1)">Áp dụng</button>
       </sweet-modal>
       <sweet-modal ref="update_modal" overlay-theme="dark">
@@ -839,3 +803,81 @@ export default {
   }
 };
 </script>
+
+<style>
+/*
+	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+	*/
+@media only screen and (max-width: 760px),
+  (min-device-width: 768px) and (max-device-width: 1024px) {
+  /* Force table to not be like tables anymore */
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tr {
+    margin: 0 0 1rem 0;
+  }
+
+  tr:nth-child(odd) {
+    background: #fff;
+  }
+
+  td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 0;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+
+  /*
+		Label the data
+    You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+		*/
+  td:nth-of-type(1):before {
+    content: "";
+  }
+  td:nth-of-type(2):before {
+    content: "Booking";
+  }
+  td:nth-of-type(3):before {
+    content: "Phòng";
+  }
+  td:nth-of-type(4):before {
+    content: "Thanh toán";
+  }
+  td:nth-of-type(5):before {
+    content: "Khách hàng";
+  }
+  td:nth-of-type(6):before {
+    content: "Trạng thái";
+  }
+  td:nth-of-type(7):before {
+    content: "Hành động";
+  }
+}
+</style>
