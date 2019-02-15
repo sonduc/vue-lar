@@ -160,13 +160,13 @@ export default {
     };
   },
   methods: {
-    methods: {
-      resetFilter() {
-        this.date_start = null;
-        this.date_end = null;
-        this.view = "week";
-      }
+    // methods: {
+    resetFilter() {
+      this.date_start = null;
+      this.date_end = null;
+      this.view = "week";
     }
+    // }
   },
   mounted() {
     Auth.getProfile().then(res => {
