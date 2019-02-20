@@ -29,7 +29,7 @@
         </div>
 
         <lottie v-if="loading" :options="defaultOptions" :height="150" :width="150"></lottie>
-        <table v-else role="table">
+        <table v-else role="table" id="booking_table">
           <thead role="rowgroup">
             <tr role="row">
               <td role="columnheader">&ensp;</td>
@@ -879,5 +879,20 @@ export default {
   td:nth-of-type(7):before {
     content: "Hành động";
   }
+}
+
+#booking_table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#booking_table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#booking_table tr:hover {
+  background-color: #ddd;
 }
 </style>
