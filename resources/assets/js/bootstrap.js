@@ -48,7 +48,7 @@ global.Vue = require('vue')
 
 global.axios = require('axios')
 // global.axios.defaults.baseURL = 'http://ws-api.lc/api/'
-global.axios.defaults.baseURL = 'https://somethingapi.club/api/'
+global.axios.defaults.baseURL = 'https://api.westay.vn/api/'
 global.axios.defaults.headers.common = {
   'X-Requested-With': 'XMLHttpRequest'
 }

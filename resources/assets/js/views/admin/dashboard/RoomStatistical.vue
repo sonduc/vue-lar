@@ -245,7 +245,7 @@ export default {
       return this.current_status.id;
     }
   },
-  mounted() {
+  created() {
     Auth.getProfile().then(res => {
       if (res) {
         Auth.canAccess(res, this.permissions).then(response => {

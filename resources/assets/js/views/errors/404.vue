@@ -3,9 +3,9 @@
     <div class="row">
       <div class="col-sm-12 text-sm-center">
         <h1>404</h1>
-        <h5>Whoops! You got Lost!</h5>
-        <router-link class="btn btn-lg bg-yellow" to="/">
-          <i class="icon-fa icon-fa-arrow-left"/> Go Home
+        <h5>Whoops! Trang không tồn tại!</h5>
+        <router-link class="btn btn-lg bg-yellow" to="/admin/bookings/list">
+          <i class="icon-fa icon-fa-arrow-left"/> Quay lại
         </router-link>
       </div>
     </div>

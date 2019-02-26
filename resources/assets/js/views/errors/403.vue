@@ -4,8 +4,8 @@
       <div class="col-sm-12 text-sm-center">
         <h1>403</h1>
         <h5>Bạn không có quyền thực hiện thao tác này</h5>
-        <router-link class="btn btn-lg bg-yellow" to="/">
-          <i class="icon-fa icon-fa-arrow-left"/> Go Home
+        <router-link class="btn btn-lg bg-yellow" to="/admin/bookings/list">
+          <i class="icon-fa icon-fa-arrow-left"/> Quay lại
         </router-link>
       </div>
     </div>

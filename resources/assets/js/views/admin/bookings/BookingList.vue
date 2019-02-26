@@ -89,6 +89,13 @@
                   formatNumber}}
                 </div>
                 <div class="content-subject">Tổng thu: {{(booking.total_fee) | formatNumber}}</div>
+                <hr v-if="booking.coupon_txt !== ''">
+                <div v-if="booking.coupon_txt !== ''" class="content-subject">Mã giảm giá</div>
+                <div v-if="booking.coupon_txt !== ''" class="content-subject">
+                  <button
+                    class="btn btn-outline-primary btn-xs btn-pressable"
+                  >{{booking.coupon_txt}}</button>
+                </div>
               </td>
               <td role="cell">
                 <div class="content-subject">Tên: {{booking.name}}</div>
@@ -121,13 +128,6 @@
                     @click="showModalSurcharge(booking)"
                     class="btn btn-warning btn-xs btn-pressable"
                   >Phụ thu</button>
-                </div>
-                <hr>
-                <div class="content-subject">Mã giảm giá</div>
-                <div class="content-subject">
-                  <button
-                    class="btn btn-outline-primary btn-xs btn-pressable"
-                  >{{booking.coupon_txt}}</button>
                 </div>
               </td>
             </tr>
@@ -505,7 +505,7 @@ export default {
       } catch (error) {
         if (error) {
           window.toastr["error"](
-            "Dữ liệu danh sách quản lý phòng hiện thời chưa có sẵn, vui lòng thử lại sau",
+            "Dữ liệu danh sách chủ nhà hiện không có sẵn",
             "Error"
           );
         }
@@ -888,11 +888,15 @@ export default {
 }
 
 #booking_table th {
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   padding: 8px;
 }
 
 #booking_table tr:hover {
   background-color: #ddd;
+}
+
+#booking_table tr:nth-child(even) {
+  background-color: #e7e7e7;
 }
 </style>

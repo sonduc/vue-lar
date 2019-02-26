@@ -89,7 +89,7 @@ export default {
       if (!this.$v.$error) {
         Auth.login(this.loginData).then(res => {
           if (res) {
-            this.$router.push("/admin/dashboard/booking");
+            this.$router.push("/admin/bookings/list");
           }
         });
       }
